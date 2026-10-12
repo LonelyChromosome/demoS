@@ -95,6 +95,7 @@ async function main(){
     await page.waitForSelector('canvas',{timeout:30000});
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.getByText('Nhấp để sắp xếp tên của bạn',{exact:true}).waitFor({state:'visible',timeout:30000});
+    await page.waitForTimeout(600); // Original Material route/chip transitions must settle before visual QA.
     await capturePaintedNameScreen(page,qaDir+'/login-resume-name.png');
     await page.getByText('QALogin',{exact:true}).click();
     await page.waitForTimeout(250);
