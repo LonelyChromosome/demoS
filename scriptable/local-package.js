@@ -22,31 +22,56 @@ function sha256Data(data) {return sha256Raw(base64ByteView(data.toBase64String()
 function validBundlePath(path) {
   return typeof path==='string'&&path.length<300&&!path.startsWith('/')&&!path.includes('\\')&&!path.split('/').some(v=>v==='..'||v==='.'||v==='.git'||!v);
 }
-async function ensureLocalBundle() {
-  const active=readState('bundle.json',null);
-  const required=['main.dart.js','widget-renderer.js','widget-palette.js'];
-  if(active&&Array.isArray(active.files)&&required.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
-  const request=new Request(BPA_RESOURCE_ROOT+'bpa-package.json');request.timeoutInterval=30;
+const BPA_REQUIRED_BUNDLE_FILES=['main.dart.js','widget-renderer.js','widget-palette.js','scriptable/BPA.js'];
+async function ensureLocalBundle(allowPending=false) {
+  const active=readState('bundle.json',null),pending=readState('pending-bundle.json',null);
+  if(allowPending&&pending) {
+    if(pending.bootAttempted) {
+      if(pending.hostBackupPath&&bpaFM.fileExists(pending.hostBackupPath)){const host=bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA.js');if(bpaFM.fileExists(host))bpaFM.remove(host);bpaFM.move(pending.hostBackupPath,host);}
+      writeState('pending-bundle.json',null);writeState('install-status.json',{status:'failed',error:'new_runtime_did_not_boot'});
+      const backup=readState('update-preferences-backup.json',null);if(backup)writeState('preferences.json',backup);
+      if(active)return active;
+    }else {
+      writeState('update-preferences-backup.json',readState('preferences.json'));
+      writeState('pending-bundle.json',{...pending,bootAttempted:true});return {...pending,pendingActivation:true};
+    }
+  }
+  if(active&&active.versionCode>=BPA_UPDATE_CHANNEL.versionCode&&Array.isArray(active.files)&&BPA_REQUIRED_BUNDLE_FILES.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
+  const value=await stageLocalBundle(BPA_RESOURCE_ROOT+'bpa-package.json');writeState('bundle.json',value);return value;
+}
+async function stageLocalBundle(indexURL,release=null,progress=null,check=()=>{}) {
+  if(typeof indexURL!=='string'||!/^https:\/\/[^/?#\s]+\//.test(indexURL))throw errorCode('invalid_url','Gói cập nhật yêu cầu HTTPS.');
+  const request=new Request(indexURL);request.timeoutInterval=30;
   const text=await request.loadString();if(request.response.statusCode!==200)throw errorCode('bundle_unavailable','Tài nguyên BPA chưa được phát hành.');
+  check();
   const manifest=JSON.parse(text);
+  const resourceRoot=indexURL.replace(/[?#].*$/,'').slice(0,indexURL.replace(/[?#].*$/,'').lastIndexOf('/')+1);
+  const required=BPA_REQUIRED_BUNDLE_FILES;
+  if(!release&&manifest.versionCode<BPA_UPDATE_CHANNEL.versionCode)throw errorCode('bundle_compatibility','Tài nguyên mới chưa được phát hành.');
   if(manifest.schema!==1||!Array.isArray(manifest.files)||!manifest.files.length||manifest.files.length>1000||manifest.files.some(f=>!validBundlePath(f.path)||!Number.isInteger(f.size)||f.size<0||f.size>100000000||!/^[0-9a-f]{64}$/.test(f.sha256)))throw errorCode('invalid_bundle','Danh mục tài nguyên không hợp lệ.');
   if(required.some(name=>!manifest.files.some(file=>file.path===name)))throw errorCode('bundle_compatibility','Gói giao diện chưa có đầy đủ bộ vẽ widget của phiên bản này.');
   if(manifest.files.reduce((n,f)=>n+f.size,0)>350000000)throw errorCode('invalid_bundle','Gói tài nguyên vượt giới hạn.');
-  const digest=sha256Raw(unescape(encodeURIComponent(text))),directory=bpaPath('web-'+digest.slice(0,16));
+  const digest=sha256Raw(unescape(encodeURIComponent(text)));
+  const total=manifest.files.reduce((n,f)=>n+f.size,0)+unescape(encodeURIComponent(text)).length;
+  if(new Set(manifest.files.map(f=>f.path)).size!==manifest.files.length)throw errorCode('invalid_bundle','Gói có đường dẫn trùng nhau.');
+  if(release&&(digest!==release.sha256||unescape(encodeURIComponent(text)).length!==release.resourceIndexSize||total!==release.size||manifest.versionCode!==release.versionCode||manifest.versionName!==release.versionName))throw errorCode('bundle_integrity','Gói không khớp manifest có chữ ký.');
+  let bytes=unescape(encodeURIComponent(text)).length;
+  const directory=bpaPath('web-'+digest.slice(0,16));
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);
   // Files are staged under a content identity. The active pointer changes only
   // after every asset matches its declared size and digest.
   for(const file of manifest.files) {
+    check();
     const path=bpaFM.joinPath(directory,file.path);
-    if(bpaFM.fileExists(path)&&sha256Data(bpaFM.read(path))===file.sha256)continue;
-    const req=new Request(BPA_RESOURCE_ROOT+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
+    if(bpaFM.fileExists(path)&&dataSize(bpaFM.read(path))===file.size&&sha256Data(bpaFM.read(path))===file.sha256){bytes+=file.size;if(progress)await progress(bytes,total);continue;}
+    const req=new Request(resourceRoot+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
     const data=await req.load();
     if(req.response.statusCode!==200||dataSize(data)!==file.size||sha256Data(data)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
     const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
-    bpaFM.write(path,data);
+    check();bpaFM.write(path,data);bytes+=file.size;if(progress)await progress(bytes,total);
   }
-  const value={path:directory,versionCode:manifest.versionCode,digest,files:manifest.files.map(f=>f.path)};
-  writeState('bundle.json',value);return value;
+  const value={path:directory,versionCode:manifest.versionCode,versionName:manifest.versionName,digest,files:manifest.files.map(f=>f.path)};
+  check();return value;
 }
 function localAppHTML(bundle) {
   const read=name=>bpaFM.readString(bpaFM.joinPath(bundle.path,name));

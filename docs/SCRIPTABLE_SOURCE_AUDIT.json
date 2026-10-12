@@ -268,7 +268,7 @@
       "source": "lib/features/app_update/update_controller.dart",
       "android_sha256": "a8e2ed742f91b345b2894ca284b4040cfe70168bf49eab64c3c212e9610acf50",
       "present": true,
-      "sha256": "42b51baec21f0a6e185af5a2919125fb7b51ed82e10a0667b19b6f19bf96ad55",
+      "sha256": "4a82d08acf3c989edef458d86aa0812e345a5d8393ea6ac21e10467667fbabbc",
       "byte_identical": false,
       "classes": [
         "UpdateNotice",
@@ -302,8 +302,8 @@
       "source": "lib/features/app_update/update_manifest.dart",
       "android_sha256": "acbd9538ea65add04190e6af78cc5ce75ec5b796b492692066811c0703668d34",
       "present": true,
-      "sha256": "acbd9538ea65add04190e6af78cc5ce75ec5b796b492692066811c0703668d34",
-      "byte_identical": true,
+      "sha256": "010728dec2fd5cb7b8a8117c031418d86517fc2a7097054688cbd9080aa9bfa5",
+      "byte_identical": false,
       "classes": [
         "UpdateManifest",
         "UpdateManifestVerifier"

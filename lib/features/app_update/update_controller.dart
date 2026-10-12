@@ -259,6 +259,20 @@ final class UpdateController extends ChangeNotifier {
     if (call.method != 'event' || call.arguments is! Map) return;
     final event = Map<Object?, Object?>.from(call.arguments as Map);
     switch (event['type']) {
+      case 'verifyRelease':
+        try {
+          final verified = await _repository.fetch();
+          await _channel.invokeMethod<void>('verifyReply', {'requestId': event['requestId'], 'manifest': verified.installArguments()});
+        } on Object {
+          await _channel.invokeMethod<void>('verifyReply', {'requestId': event['requestId'], 'error': 'signature_verification_failed'});
+        }
+        break;
+      case 'installed':
+        phase = UpdatePhase.installed;
+        notice = null;
+        await (await SharedPreferences.getInstance()).remove(_noticeKey);
+        notifyListeners();
+        break;
       case 'cardBound':
         bindingCard = false;
         hasBoundCard = true;
@@ -368,12 +382,7 @@ final class UpdateController extends ChangeNotifier {
     downloaded = 0;
     total = manifest.apkSize;
     notifyListeners();
-    await _channel.invokeMethod<void>('downloadAndInstall', {
-      'url': manifest.apkUrl.toString(),
-      'sha256': manifest.apkSha256,
-      'size': manifest.apkSize,
-      'versionCode': manifest.versionCode,
-    });
+    await _channel.invokeMethod<void>('downloadAndInstall', manifest.installArguments());
     // The Android foreground service continues after this sheet closes.
     // It emits installerLaunched only when the verified package is committed.
   }

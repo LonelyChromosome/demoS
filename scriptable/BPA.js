@@ -159,6 +159,7 @@ const SCHEDULE_SCRIPT="\n      (function () {\n        function scheduleStage(va
 function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }
 const SESSION_SCRIPT="\n          (function () {\n            try {\n              var s = window.edu && edu.system;\n              if (!s || !s.userId || s.iM == null || !s.tokenJWT ||\n                  typeof s.makeRequest !== 'function') {\n                return null;\n              }\n              return JSON.stringify({\n                tokenJWT: String(s.tokenJWT),\n                userId: String(s.userId),\n                iM: String(s.iM),\n                appId: String(s.appId || ''),\n                strChucNangId: String(s.strChucNang_Id || ''),\n                cookie: String(document.cookie || ''),\n                name: ''\n              });\n            } catch (_) {\n              return null;\n            }\n          })();\n        ";
 const BPA_ASSISTANT_CATALOG={"normal": {"U1": "Bạn đã lâu chưa đồng bộ dữ liệu rồi. Đồng bộ một chút để lịch học và lịch thi luôn chính xác nhé.", "U2": "Đồng bộ xong rồi. Hiện chưa có thay đổi mới trong lịch của bạn.", "U3": "Lịch học của bạn vừa có thay đổi. Kiểm tra lại để tránh nhầm lịch nhé.", "U4": "Lịch thi của bạn vừa có thay đổi. Kiểm tra lại để tránh nhầm lịch nhé.", "U5": "Lịch học và lịch thi của bạn vừa có thay đổi. Bạn kiểm tra lại nhé.", "U6": "Còn 7 ngày nữa thi rồi. Bạn kiểm tra lịch nhé.", "U7": "Còn 3 ngày nữa thi rồi. Bạn kiểm tra lịch nhé.", "U8": "Ngày mai thi rồi. Bạn kiểm tra lại lịch nhé.", "U9": "Còn X ngày nữa thi. Bạn kiểm tra lịch nhé.", "U10": "Bạn đang trong kỳ thi. Nhớ kiểm tra lịch thi nhé.", "U11": "Còn X ngày nữa bạn có N môn thi. Kiểm tra lịch nhé.", "U12": "Đồng bộ xong rồi. Lịch của bạn có thay đổi.", "U13": "Đồng bộ xong rồi. Lịch của bạn vẫn như cũ.", "U14": "Lịch của bạn có thay đổi. Mở chi tiết để kiểm tra nhé.", "U15": "Hiện tại bạn chưa có lịch thi.", "U16": "Hôm nay không có lịch học.", "U17": "Đồng bộ chưa thành công. Bạn thử lại nhé.", "U18": "Đồng bộ mất quá lâu. Bạn thử lại sau nhé."}, "serious": {"U1": "Chúng tôi ghi nhận bạn đã 2 ngày chưa đồng bộ dữ liệu mới. Yêu cầu bạn hợp tác thực hiện đồng bộ để bảo đảm tính chính xác của dữ liệu.", "U2": "Đồng bộ hoàn tất. Không ghi nhận thay đổi mới trong dữ liệu lịch học hoặc lịch thi.", "U3": "Hệ thống ghi nhận thay đổi trong lịch học. Yêu cầu bạn kiểm tra lại thông tin trước khi đến lớp.", "U4": "Hệ thống ghi nhận thay đổi trong lịch thi. Yêu cầu bạn kiểm tra lại thông tin để bảo đảm tham gia đúng ca thi.", "U5": "Hệ thống ghi nhận thay đổi đồng thời trong lịch học và lịch thi. Yêu cầu bạn kiểm tra lại toàn bộ thông tin liên quan.", "U6": "Còn 7 ngày trước kỳ thi. Vui lòng kiểm tra lịch.", "U7": "Còn 3 ngày trước kỳ thi. Vui lòng kiểm tra lại lịch.", "U8": "Ngày mai là ngày thi. Vui lòng kiểm tra lại lịch.", "U9": "Còn X ngày trước kỳ thi. Vui lòng rà soát lại lịch.", "U10": "Bạn đang trong kỳ thi. Vui lòng theo dõi lịch thi thường xuyên.", "U11": "Còn X ngày, bạn có N môn thi. Vui lòng rà soát lịch.", "U12": "Đồng bộ hoàn tất. Hệ thống ghi nhận thay đổi trong dữ liệu.", "U13": "Đồng bộ hoàn tất. Không ghi nhận thay đổi mới.", "U14": "Hệ thống ghi nhận thay đổi. Vui lòng mở chi tiết để kiểm tra.", "U15": "Hiện chưa ghi nhận lịch thi trong dữ liệu của bạn.", "U16": "Hôm nay không ghi nhận lịch học.", "U17": "Đồng bộ không hoàn tất. Vui lòng thực hiện lại.", "U18": "Quá trình đồng bộ đã vượt thời gian chờ. Vui lòng thử lại."}, "playful": {"U1": "Fen ơi, 2 ngày rồi đấy! Cập nhật dữ liệu mới đi chứ fen!", "U2": "Xong rồi fen! Lịch vẫn y nguyên, chưa có gì mới hết á.", "U3": "Fen ơi, lịch học đổi rồi kìa! Vào xem lại lẹ đi.", "U4": "Fen ơi, lịch thi đổi rồi kìa! Vào check lại lẹ nha.", "U5": "Fen ơi, cả lịch học lẫn lịch thi đều đổi rồi kìa! Vào check nhanh đi fen!", "U6": "Fen ơi, 7 ngày nữa thi rồi đó!", "U7": "Fen ơi, còn 3 ngày nữa thi thôi đó!", "U8": "Fen ơi, mai thi rồi đó!", "U9": "Fen ơi, còn X ngày nữa thi đó!", "U10": "Fen đang trong kỳ thi đó nha, nhớ check lịch!", "U11": "Fen ơi, X ngày nữa có tận N môn thi đó!", "U12": "Fen ơi, sync xong có lịch mới nè!", "U13": "Xong rồi fen! Vẫn y nguyên nha.", "U14": "Fen ơi, có thay đổi nè! Vào xem chi tiết đi.", "U15": "Fen ơi, chưa có lịch thi nha!", "U16": "Fen ơi, nay được nghỉ!", "U17": "Fen ơi, sync hụt mất rồi! Thử lại nha.", "U18": "Fen ơi, chờ lâu quá rồi! Thử sync lại nha."}, "affectionate": {"U1": "Lâu rồi mình chưa thấy cậu đồng bộ í... để ý mình chút nha!", "U2": "Mình kiểm tra xong rồi nè, lịch vẫn như cũ thôi... chưa có gì mới đâu.", "U3": "Mình thấy lịch học bạn có thay đổi, bạn kiểm tra nhaaa.", "U4": "Mình thấy lịch thi của bạn có thay đổi, bạn xem lại nhaaa.", "U5": "Mình thấy cả lịch học với lịch thi của bạn đều có thay đổi, bạn kiểm tra nhaaa.", "U6": "Còn 7 ngày nữa thi rồi, bạn nhớ chuẩn bị nha.", "U7": "Còn 3 ngày nữa thi rồi, bạn nhớ giữ sức nha.", "U8": "Mai thi rồi, bạn ngủ sớm nha.", "U9": "Còn X ngày nữa thi rồi, bạn chuẩn bị dần nha.", "U10": "Bạn đang trong kỳ thi rồi, nhớ giữ sức và xem lịch nha.", "U11": "X ngày nữa bạn có N môn thi rồi, nhớ chuẩn bị nha.", "U12": "Mình sync xong rồi, lịch của bạn có thay đổi nha.", "U13": "Mình kiểm tra xong rồi, chưa có gì thay đổi đâu nha.", "U14": "Mình thấy có thay đổi đó, bạn mở xem thử nha.", "U15": "Mình chưa thấy lịch thi của bạn đâu, yên tâm nha.", "U16": "Hôm nay được nghỉ rồi, thư giãn chút nha.", "U17": "Mình chưa đồng bộ được cho bạn rồi... thử lại giúp mình nha.", "U18": "Mình chờ mãi mà chưa lấy được dữ liệu... thử lại chút nha."}, "flirtatious": {"U1": "Biết là bận rồi? Nhưng mà người ta cũng cần phải sync mà!", "U2": "Sync xong rồi nè, vẫn như cũ nha ❤️", "U3": "Có gì đó giữa chúng ta đã thay đổi ấy, kiểm tra lịch học nha ❤️", "U4": "Mình còn mập mờ nhưng lịch thi thì đổi rõ ❤️ Bạn kiểm tra nha.", "U5": "Mình và bạn rồi ai cũng thay đổi, cả lịch học và lịch thi cũng vậy! ❤️", "U6": "7 ngày nữa thi rồi đó... học đi nha ❤️", "U7": "3 ngày nữa thi rồi... học đi, đừng để mình phải lo ❤️", "U8": "Mai thi rồi đó... tối nay ngoan ngoãn học bài nha ❤️", "U9": "Còn X ngày nữa thi thôi... nhớ để ý lịch, với để ý mình nữa nha ❤️", "U10": "Nhớ mình thì nhớ, nhưng nhớ cả lịch thi nữa nha ❤️", "U11": "Chắc gì nhớ mỗi người ta... vậy mà mình nhớ người ta còn X ngày nữa có N môn thi đó ❤️", "U12": "Lịch của chúng mình vừa đổi rồi ấy ❤️", "U13": "Chúng mình vẫn như cũ nha ❤️", "U14": "Có một thay đổi mình chưa kể bạn nè ❤️ Mở xem đi.", "U15": "Lịch thi thì chưa có... còn lịch với mình thì sao? ❤️", "U16": "Nay không học... Mình muốn đi chơi! ❤️", "U17": "Hỏng rồi! Chúng mình làm lại nha ❤️", "U18": "Đợi mình thì được ❤️ chứ đống dữ liệu này thì sync lại thôi."}, "academic": {"U1": "Đã vượt quá khoảng thời gian khuyến nghị giữa hai lần đồng bộ. Tôi đề nghị bạn cập nhật dữ liệu để giảm nguy cơ sai lệch so với hệ thống QLĐT.", "U2": "Quá trình đồng bộ đã hoàn tất. Dữ liệu hiện tại không có sai khác so với lần đồng bộ thành công gần nhất.", "U3": "Phát hiện sai khác trong dữ liệu lịch học so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết thay đổi.", "U4": "Phát hiện sai khác trong dữ liệu lịch thi so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết thay đổi.", "U5": "Phát hiện sai khác đồng thời trong dữ liệu lịch học và lịch thi so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết các thay đổi.", "U6": "Kỳ thi còn 7 ngày. Hãy rà soát lịch thi.", "U7": "Kỳ thi còn 3 ngày. Hãy rà soát lịch và chuẩn bị.", "U8": "Kỳ thi diễn ra vào ngày mai. Hãy rà soát lịch thi.", "U9": "Kỳ thi còn X ngày. Hãy kiểm tra lịch và điều chỉnh kế hoạch ôn tập.", "U10": "Bạn đang trong giai đoạn thi. Hãy thường xuyên rà soát lịch thi.", "U11": "Trong X ngày tới có N môn thi. Hãy phân bổ thời gian ôn tập phù hợp.", "U12": "Đồng bộ hoàn tất và phát hiện sai khác so với dữ liệu trước đó.", "U13": "Đồng bộ hoàn tất. Không phát hiện sai khác so với dữ liệu trước đó.", "U14": "Phát hiện sai khác trong dữ liệu. Vui lòng kiểm tra phần chi tiết.", "U15": "Dữ liệu hiện tại chưa ghi nhận ca thi nào.", "U16": "Dữ liệu hiện tại không ghi nhận buổi học nào trong hôm nay.", "U17": "Quá trình đồng bộ không hoàn tất. Vui lòng thực hiện lại để cập nhật dữ liệu.", "U18": "Yêu cầu đồng bộ đã vượt ngưỡng thời gian chờ. Vui lòng thực hiện lại."}, "blunt": {"U1": "Có mỗi cái việc sync mà mày cũng lười? Mai đi học muộn đừng đổ tại tao nhé.", "U2": "Tao sync xong rồi đấy, mày chả được nghỉ buổi nào.", "U3": "Lịch học đổi rồi đấy, còn không mau check đi?", "U4": "Lịch thi đổi rồi đấy. Không check thì trượt ráng chịu.", "U5": "Mày làm gì mà người ta đổi cả lịch học lẫn lịch thi của mày rồi kìa.", "U6": "7 ngày nữa thi rồi mà mày chưa chịu học à?", "U7": "3 ngày nữa thi mà giờ vẫn ngồi lướt?", "U8": "Nói không nghe!? Mai thi giờ lại cắm đầu ôn.", "U9": "Còn X ngày nữa thi, giờ mới nhớ tới à?", "U10": "Đang trong kỳ thi đấy, quên lịch thì tự đi mà gánh.", "U11": "Còn X ngày nữa mày có N môn thi đấy, chơi ít thôi!", "U12": "Lịch đổi rồi đấy, vào xem đi? Lạy Bốốố!", "U13": "Sync xong rồi đấy, vẫn chả được nghỉ.", "U14": "Vào xem có gì đổi chi tiết kìa? Đợi tao đọc cho nghe à?", "U15": "Quẩy đê, nào có lịch tao báo.", "U16": "Mãi mới được nghỉ 1 hôm.", "U17": "Có mỗi cái sync mà mày cũng lỗi? Làm lại đê!", "U18": "Mày định chờ bao lâu nữa? Không biết đường mà sync lại à?"}, "cultivation": {"U1": "Pháp trận lâu ngày chưa được vận, truyền tống tắc nghẽn. Mau đồng bộ kẻo tu hành gặp sai sót.", "U2": "Pháp trận khai thông, truyền tống không có sai sót. Thiên đạo bất biến — an tâm tu hành.", "U3": "Thiên cơ đại biến, dễ sinh dị tượng. Còn không mau kiểm tra?", "U4": "Bí cảnh mới xuất hiện, thí luyện ắt biến. Mau kiểm tra lại!", "U5": "Thiên cơ hỗn loạn, bí cảnh đại biến. Còn không mau rà soát?", "U6": "7 ngày nữa, thiên kiếp giáng lâm. Trời sinh dị biến — mau chuẩn bị độ kiếp.", "U7": "3 ngày sau, thiên kiếp đã cận kề. Lôi vân tích tụ — còn không mau bế quan?", "U8": "Thiên kiếp giáng lâm. Giữ vững đạo tâm — chúc ngươi may mắn!", "U9": "X ngày sau, tu vi viên mãn. Lôi kiếp giáng lâm — hãy chuẩn bị thật tốt!", "U10": "Đã tới kỳ độ kiếp, Thiên đạo khảo hạch. Dị động lưu tâm — đạo này đi sai, vạn kiếp bất phục.", "U11": "Còn X ngày, N đạo thiên kiếp cùng lúc giáng xuống. Tu vi có hạn — chớ có lơ là!", "U12": "Pháp trận khai thông, truyền tống sinh biến. Thiên cơ nghịch vận — mau kiểm tra.", "U13": "Pháp trận vừa khai thông, truyền tống không có sai sót. Thiên đạo bất biến — an tâm tu hành.", "U14": "Thiên cơ khẽ động, bí cảnh ắt biến. Mau mở chi tiết kiểm tra.", "U15": "Bí cảnh chưa mở, chớ vội khảo hạch. Hãy chuẩn bị thật tốt!", "U16": "Nay vô biến vô mưu, an tâm tĩnh dưỡng.", "U17": "Pháp trận phản phệ, truyền tống không thành. Còn không mau thử lại?", "U18": "Pháp trận đình trệ, thiên đạo khó dung. Chớ cưỡng cầu — hãy quay lại sau."}};
+const BPA_UPDATE_CHANNEL={"manifestUrl": "https://raw.githubusercontent.com/LonelyChromosome/demoS/scriptable-release/latest.json", "publicKeyBase64": "62splcM91ZF6kt7ydxqmvN7Hc45c54n8bfCIVp8maFc=", "versionCode": 52, "versionName": "cooc.1.6"};
 // Direct algorithm port of DemoF3 ExamReminderPlanner.kt and AssistantText.kt.
 function examHash(text) {return sha256Raw(unescape(encodeURIComponent(text)));}
 function examLocalTime(text) {
@@ -290,31 +291,56 @@ function sha256Data(data) {return sha256Raw(base64ByteView(data.toBase64String()
 function validBundlePath(path) {
   return typeof path==='string'&&path.length<300&&!path.startsWith('/')&&!path.includes('\\')&&!path.split('/').some(v=>v==='..'||v==='.'||v==='.git'||!v);
 }
-async function ensureLocalBundle() {
-  const active=readState('bundle.json',null);
-  const required=['main.dart.js','widget-renderer.js','widget-palette.js'];
-  if(active&&Array.isArray(active.files)&&required.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
-  const request=new Request(BPA_RESOURCE_ROOT+'bpa-package.json');request.timeoutInterval=30;
+const BPA_REQUIRED_BUNDLE_FILES=['main.dart.js','widget-renderer.js','widget-palette.js','scriptable/BPA.js'];
+async function ensureLocalBundle(allowPending=false) {
+  const active=readState('bundle.json',null),pending=readState('pending-bundle.json',null);
+  if(allowPending&&pending) {
+    if(pending.bootAttempted) {
+      if(pending.hostBackupPath&&bpaFM.fileExists(pending.hostBackupPath)){const host=bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA.js');if(bpaFM.fileExists(host))bpaFM.remove(host);bpaFM.move(pending.hostBackupPath,host);}
+      writeState('pending-bundle.json',null);writeState('install-status.json',{status:'failed',error:'new_runtime_did_not_boot'});
+      const backup=readState('update-preferences-backup.json',null);if(backup)writeState('preferences.json',backup);
+      if(active)return active;
+    }else {
+      writeState('update-preferences-backup.json',readState('preferences.json'));
+      writeState('pending-bundle.json',{...pending,bootAttempted:true});return {...pending,pendingActivation:true};
+    }
+  }
+  if(active&&active.versionCode>=BPA_UPDATE_CHANNEL.versionCode&&Array.isArray(active.files)&&BPA_REQUIRED_BUNDLE_FILES.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
+  const value=await stageLocalBundle(BPA_RESOURCE_ROOT+'bpa-package.json');writeState('bundle.json',value);return value;
+}
+async function stageLocalBundle(indexURL,release=null,progress=null,check=()=>{}) {
+  if(typeof indexURL!=='string'||!/^https:\/\/[^/?#\s]+\//.test(indexURL))throw errorCode('invalid_url','Gói cập nhật yêu cầu HTTPS.');
+  const request=new Request(indexURL);request.timeoutInterval=30;
   const text=await request.loadString();if(request.response.statusCode!==200)throw errorCode('bundle_unavailable','Tài nguyên BPA chưa được phát hành.');
+  check();
   const manifest=JSON.parse(text);
+  const resourceRoot=indexURL.replace(/[?#].*$/,'').slice(0,indexURL.replace(/[?#].*$/,'').lastIndexOf('/')+1);
+  const required=BPA_REQUIRED_BUNDLE_FILES;
+  if(!release&&manifest.versionCode<BPA_UPDATE_CHANNEL.versionCode)throw errorCode('bundle_compatibility','Tài nguyên mới chưa được phát hành.');
   if(manifest.schema!==1||!Array.isArray(manifest.files)||!manifest.files.length||manifest.files.length>1000||manifest.files.some(f=>!validBundlePath(f.path)||!Number.isInteger(f.size)||f.size<0||f.size>100000000||!/^[0-9a-f]{64}$/.test(f.sha256)))throw errorCode('invalid_bundle','Danh mục tài nguyên không hợp lệ.');
   if(required.some(name=>!manifest.files.some(file=>file.path===name)))throw errorCode('bundle_compatibility','Gói giao diện chưa có đầy đủ bộ vẽ widget của phiên bản này.');
   if(manifest.files.reduce((n,f)=>n+f.size,0)>350000000)throw errorCode('invalid_bundle','Gói tài nguyên vượt giới hạn.');
-  const digest=sha256Raw(unescape(encodeURIComponent(text))),directory=bpaPath('web-'+digest.slice(0,16));
+  const digest=sha256Raw(unescape(encodeURIComponent(text)));
+  const total=manifest.files.reduce((n,f)=>n+f.size,0)+unescape(encodeURIComponent(text)).length;
+  if(new Set(manifest.files.map(f=>f.path)).size!==manifest.files.length)throw errorCode('invalid_bundle','Gói có đường dẫn trùng nhau.');
+  if(release&&(digest!==release.sha256||unescape(encodeURIComponent(text)).length!==release.resourceIndexSize||total!==release.size||manifest.versionCode!==release.versionCode||manifest.versionName!==release.versionName))throw errorCode('bundle_integrity','Gói không khớp manifest có chữ ký.');
+  let bytes=unescape(encodeURIComponent(text)).length;
+  const directory=bpaPath('web-'+digest.slice(0,16));
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);
   // Files are staged under a content identity. The active pointer changes only
   // after every asset matches its declared size and digest.
   for(const file of manifest.files) {
+    check();
     const path=bpaFM.joinPath(directory,file.path);
-    if(bpaFM.fileExists(path)&&sha256Data(bpaFM.read(path))===file.sha256)continue;
-    const req=new Request(BPA_RESOURCE_ROOT+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
+    if(bpaFM.fileExists(path)&&dataSize(bpaFM.read(path))===file.size&&sha256Data(bpaFM.read(path))===file.sha256){bytes+=file.size;if(progress)await progress(bytes,total);continue;}
+    const req=new Request(resourceRoot+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
     const data=await req.load();
     if(req.response.statusCode!==200||dataSize(data)!==file.size||sha256Data(data)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
     const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
-    bpaFM.write(path,data);
+    check();bpaFM.write(path,data);bytes+=file.size;if(progress)await progress(bytes,total);
   }
-  const value={path:directory,versionCode:manifest.versionCode,digest,files:manifest.files.map(f=>f.path)};
-  writeState('bundle.json',value);return value;
+  const value={path:directory,versionCode:manifest.versionCode,versionName:manifest.versionName,digest,files:manifest.files.map(f=>f.path)};
+  check();return value;
 }
 function localAppHTML(bundle) {
   const read=name=>bpaFM.readString(bpaFM.joinPath(bundle.path,name));
@@ -514,6 +540,93 @@ async function renderWidgetBitmap(payload) {
   const result=await renderer.evaluateJavaScript(`renderWidget(${JSON.stringify(payload)}).then(completion).catch(e=>completion({error:String(e)}));`,true);
   if(result.error)throw errorCode('widget_render',result.error);
   return result;
+}
+
+// The original Dart Ed25519 verifier re-fetches signed metadata on demand.
+// No resource is promoted until its index and every file match that metadata.
+let updateGeneration=0,bootingApp=null,bootingBundle=null;
+const releaseVerifications=new Map();
+function hostTimeout(ms,callback) {
+  if(typeof Timer!=='undefined'){const timer=Timer.schedule(ms,false,callback);return {cancel:()=>timer.invalidate()};}
+  const timer=setTimeout(callback,ms);return {cancel:()=>clearTimeout(timer)};
+}
+async function requestVerifiedRelease(app) {
+  const requestId=UUID.string();let resolve,reject;
+  const result=new Promise((yes,no)=>{resolve=yes;reject=no;});
+  const timeout=hostTimeout(16000,()=>{releaseVerifications.delete(requestId);reject(errorCode('update_verification_timeout','Chưa xác minh được chữ ký cập nhật.'));});
+  releaseVerifications.set(requestId,{resolve,reject,timeout});
+  try {await sendNativeEvent(app,'update','verifyRelease',{requestId});return await result;}
+  finally {timeout.cancel();releaseVerifications.delete(requestId);}
+}
+function acceptVerifiedRelease(reply) {
+  const pending=releaseVerifications.get(reply.requestId);if(!pending)throw errorCode('update_stale_reply','Kết quả xác minh không thuộc yêu cầu hiện tại.');
+  releaseVerifications.delete(reply.requestId);pending.timeout.cancel();
+  if(reply.error)pending.reject(errorCode('update_signature','Chữ ký cập nhật không hợp lệ.'));
+  else pending.resolve(reply.manifest);
+  return null;
+}
+async function stageWebUpdate(args,app) {
+  if(readState('pending-bundle.json',null))throw errorCode('update_pending','Bản cập nhật đã sẵn sàng cho lần mở tiếp theo.');
+  const generation=++updateGeneration;
+  const check=()=>{if(generation!==updateGeneration)throw errorCode('cancelled','Đã hủy cập nhật.');};
+  let preparedHostBackup=null;
+  const hostPath=bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA.js');
+  try {
+    const verified=await requestVerifiedRelease(app);check();
+    for(const key of ['url','sha256','size','versionCode','versionName','resourceIndexSize','minimumVersionCode'])if(verified?.[key]!==args?.[key])throw errorCode('update_changed','Bản cập nhật thay đổi sau khi ủy quyền.');
+    const active=readState('bundle.json',null);
+    if(!Number.isInteger(verified.versionCode)||verified.versionCode<=(active?.versionCode||51)||!Number.isInteger(verified.minimumVersionCode)||(active?.versionCode||51)<verified.minimumVersionCode)throw errorCode('update_not_newer','Bản cập nhật không mới hơn bản đang chạy.');
+    writeState('install-status.json',{status:'downloading',versionCode:verified.versionCode});
+    const bundle=await stageLocalBundle(verified.url,verified,async(bytes,total)=>{check();await sendNativeEvent(app,'update','downloading',{bytes,total});},check);
+    check();await sendNativeEvent(app,'update','verifying');
+    check();const hostSource=bpaFM.readString(bpaFM.joinPath(bundle.path,'scriptable/BPA.js'));
+    preparedHostBackup=commitScriptSource(hostPath,hostSource);
+    writeState('pending-bundle.json',{...bundle,bootAttempted:false,hostSourcePrepared:true,hostBackupPath:preparedHostBackup});
+    writeState('install-status.json',{status:'ready',versionCode:verified.versionCode});
+    check();await sendNativeEvent(app,'update','installerLaunched');check();return null;
+  }catch(error){
+    if(preparedHostBackup&&bpaFM.fileExists(preparedHostBackup)){if(bpaFM.fileExists(hostPath))bpaFM.remove(hostPath);bpaFM.move(preparedHostBackup,hostPath);}
+    writeState('pending-bundle.json',null);
+    writeState('install-status.json',{status:error.code==='cancelled'?'cancelled':'failed'});
+    await sendNativeEvent(app,'update',error.code==='cancelled'?'cancelled':'updateFailed');throw error;
+  }
+}
+function commitScriptSource(path,source) {
+  const staged=path+'.bpa-pending',backup=path+'.bpa-backup';
+  new Function(source); // Compile the signed host before changing the script file.
+  bpaFM.writeString(staged,source);if(bpaFM.readString(staged)!==source)throw errorCode('script_write','Không xác minh được script cập nhật.');
+  if(bpaFM.fileExists(backup))bpaFM.remove(backup);
+  const existed=bpaFM.fileExists(path);if(existed)bpaFM.move(path,backup);
+  try {bpaFM.move(staged,path);}catch(error){if(existed&&bpaFM.fileExists(backup)&&!bpaFM.fileExists(path))bpaFM.move(backup,path);throw error;}
+  return backup;
+}
+async function commitBootedBundle(app) {
+  if(app!==bootingApp||!bootingBundle?.pendingActivation)return null;
+  const pending=readState('pending-bundle.json',null);if(!pending||pending.digest!==bootingBundle.digest)throw errorCode('update_stale_boot','Gói khởi chạy không thuộc cập nhật hiện tại.');
+  const previous=readState('bundle.json',null),hostPath=bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA.js');let backup=null;
+  try {
+    const source=bpaFM.readString(bpaFM.joinPath(pending.path,'scriptable/BPA.js'));
+    backup=pending.hostSourcePrepared?pending.hostBackupPath:commitScriptSource(hostPath,source);
+    writeState('bundle-rollback.json',previous);writeState('bundle.json',pending);
+    installWidgetScripts(source);
+    writeState('install-status.json',{status:'installed',versionCode:pending.versionCode});
+    writeState('pending-bundle.json',null);writeState('update-preferences-backup.json',null);
+    if(backup&&bpaFM.fileExists(backup))bpaFM.remove(backup);
+    bootingBundle=null;await sendNativeEvent(app,'update','installed');return null;
+  }catch(error){
+    if(backup&&bpaFM.fileExists(backup)){if(bpaFM.fileExists(hostPath))bpaFM.remove(hostPath);bpaFM.move(backup,hostPath);}
+    if(previous)writeState('bundle.json',previous);
+    writeState('install-status.json',{status:'failed'});writeState('pending-bundle.json',null);throw error;
+  }
+}
+
+function cancelWebUpdate() {
+  updateGeneration++;
+  const pending=readState('pending-bundle.json',null);
+  if(pending?.hostBackupPath&&bpaFM.fileExists(pending.hostBackupPath)){
+    const host=bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA.js');if(bpaFM.fileExists(host))bpaFM.remove(host);bpaFM.move(pending.hostBackupPath,host);
+  }
+  writeState('pending-bundle.json',null);writeState('install-status.json',{status:'cancelled'});
 }
 
 // Unified Scriptable host. All app UI is the original Flutter release.
@@ -766,12 +879,14 @@ async function handlePlatform(call,app) {
     const data=await request.load();if(dataSize(data)>args.limit)throw errorCode('manifest_too_large','Manifest quá lớn.');return data.toBase64String();
   }
   if(channel==='update') {
-    if(method==='versionCode')return 51;
-    if(method==='versionName')return 'cooc.1.6';
-    if(method==='installStatus')return 'idle';
+    if(method==='versionCode')return readState('bundle.json',{versionCode:51}).versionCode;
+    if(method==='versionName')return readState('bundle.json',{versionName:'cooc.1.6'}).versionName||'cooc.1.6';
+    if(method==='installStatus')return readState('install-status.json',{status:'idle'}).status;
+    if(method==='verifyReply')return acceptVerifiedRelease(args);
+    if(method==='runtimeReady')return await commitBootedBundle(app);
     if(method==='hasBoundCard')return Keychain.contains('BPA.bound-card-uid');
     if(method==='removeBoundCard'){if(Keychain.contains('BPA.bound-card-uid'))Keychain.remove('BPA.bound-card-uid');return null;}
-    if(['stopCard','cancel'].includes(method)){cardGeneration++;return null;}
+    if(['stopCard','cancel'].includes(method)){cardGeneration++;if(method==='cancel')cancelWebUpdate();return null;}
     if(method==='startBindCard'||method==='startCard') {
       const generation=++cardGeneration;
       if(method==='startBindCard'&&Keychain.contains('BPA.bound-card-uid'))throw errorCode('already_bound','Thẻ đã được liên kết.');
@@ -784,22 +899,23 @@ async function handlePlatform(call,app) {
       }
       return null;
     }
-    if(method==='canInstall')return false;
-    if(['downloadAndInstall','installSettings'].includes(method))throw errorCode('web_update_unconfigured','Chưa có kênh cập nhật web đã ký tương đương updater Android.');
+    if(method==='canInstall')return true;
+    if(method==='downloadAndInstall')return await stageWebUpdate(args,app);
+    if(method==='installSettings')return null;
   }
   if(channel==='widget_session'&&['clear','invalidate'].includes(method))return null;
   throw errorCode('unsupported_platform_method',`${channel}/${method} chưa có cầu Scriptable.`);
 }
-function installWidgetScripts() {
-  const source=bpaFM.readString(module.filename);
+function installWidgetScripts(sourceOverride=null) {
+  const source=sourceOverride||bpaFM.readString(module.filename);
   for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']]) {
     const content=source.replace(/const DEFAULT_KIND='(?:small|overview|widget2)';/,`const DEFAULT_KIND='${kind}';`);
     bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),name+'.js'),content);
   }
 }
 async function openOriginalApp() {
-  const bundle=await ensureLocalBundle();
-  const app=new WebView();
+  const bundle=await ensureLocalBundle(true);
+  const app=new WebView();bootingApp=app;bootingBundle=bundle;
   await app.loadHTML(localAppHTML(bundle),'https://bpa.local/');
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');

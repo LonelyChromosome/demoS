@@ -16,11 +16,11 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | Renderer chưa đạt pixel parity, Tiên Môn/glow/timeline/trạng thái còn phải đối chiếu |
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
 | NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; Actions có action đọc identifier miễn phí; NFC.cool automation trả phí nên loại | Chưa có Shortcut NFC cài được/kiểm chứng; Actions bản hiện tại cần iOS 26, tương thích phiên bản cũ chưa xác minh |
-| Báo thức | NOT STARTED | Có cầu callback tới Shortcut, chỉ nhận thành công khi callback xác nhận | Shortcut thật chưa được tạo/cài/test, hẹn đúng ngày chưa được chứng minh |
+| Báo thức | COMPILED / UNVERIFIED | Workflow 35 action có Clock CreateAlarmIntent thật; receipt có nonce và đối tượng Alarm trả về | Ký artifact thực đang chờ đồng ý gửi source tới Shortcuty; import/chuông đúng ngày trên iPhone chưa thử |
 | Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Port planner Android: 09:00, gộp môn, due range 7/3/1, SHA-256 identity, catalog trợ lý gốc; Notification API | Delivery/reconcile khi app tắt, quyền và hủy/đổi lịch phải so trên iPhone |
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
 | Đồng bộ theo lịch | NOT STARTED | Không thêm auto 06:00 vì người dùng đã bác việc coi đó là chức năng mới | Chỉ triển khai nếu có hành vi tương ứng trong bản chuẩn đã chốt |
-| Updater web tương đương Android | NOT STARTED | Giữ UI/controller/verifier; không tải APK để giả cập nhật web | Kênh web có chữ ký, áp dụng bản, gate thẻ NFC và rollback |
+| Updater web tương đương Android | IMPLEMENTED / UNVERIFIED | Schema web riêng, Ed25519 gốc, staged resources, cập nhật host và rollback, giữ UI/gate ủy quyền | Đang kiểm tra build/browser và ký feed thật; áp dụng trên iPhone và gate NFC chưa thử |
 | Một file chuẩn bị scripts | IMPLEMENTED / UNVERIFIED | `BPA.js` tự chuẩn bị 3 scripts widget và vùng dữ liệu, không iCloud | Loader đã qua Chromium/WebKit, gói tài nguyên và file import đã phát hành; import iPhone và updater chưa xong |
 
 ## Bằng chứng thử nghiệm và hành vi API
@@ -119,3 +119,13 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Thêm source `BPA-Alarm.cherri`: Clock CreateAlarmIntent thật, không nhắc việc hay notification giả; không lặp theo ngày. Chỉ tạo receipt khi action Clock trả đối tượng Alarm, gửi kèm nonce yêu cầu. Không tạo UUID báo thức giả.
 - Pipeline compile bằng Cherri source cố định `a66db15b7f247f3121726c2a2b72becfeef3d96b`, ký qua Shortcuty một lần với timeout, kiểm tra AEA1 và cả hai digest. Không gửi giá trị runtime hoặc dữ liệu tài khoản.
 - Chưa công nhận Clock DONE: còn kiểm tra compiler, gói ký thật, import và thời điểm chuông trên iPhone. NFC vẫn cần schema/export thật của action Read NFC Tag, không bịa AppIntent identifier.
+
+## Updater Scriptable có chữ ký
+
+- Kênh web schema 2 riêng (`platform: scriptable`), dùng Ed25519 verifier gốc; không dùng manifest/APK Android để giả cập nhật.
+- Khóa riêng nằm ngoài git; chỉ khóa công khai và URL kênh nằm trong source/build. Metadata ký trên đúng bytes index của bản compile, root tài nguyên ghim vào commit bất biến.
+- Sau ủy quyền gốc, host yêu cầu Dart tải/xác minh chữ ký lần nữa bằng key đã ghim; nonce và toàn bộ tuple URL/hash/size/version phải khớp trước khi tải tài nguyên.
+- Mọi file được staged và kiểm tra SHA-256/size. Giữ bundle đang chạy, chỉ promote khi runtime mới khởi chạy thành công; có backup script/pointer/preferences và fallback nếu lần boot mới thất bại.
+- Build mới dùng code 52, cùng tên `cooc.1.6` (bản port Scriptable; không đổi release Android). Producer feed còn phải chạy sau khi artifact mới compile thành công, không tạo thông báo cập nhật giả.
+- 38 kiểm tra Node qua, thêm fixture chữ ký cho Flutter/Dart và Chromium/WebKit. Fixture browser ký một index compile cũ thật, chỉ dùng trong QA, không copy vào bộ cài hoặc feed phát hành.
+- Clock workflow đã compile cục bộ: 35 action, một `com.apple.clock/CreateAlarmIntent`, tên/giờ/no-repeat từ input. Ký artifact thực bị automatic approval review chặn vì chưa có đồng ý gửi source tới Shortcuty; pipeline đã ngừng gửi và chỉ giữ bản unsigned cho chẩn đoán. Không dùng CI để vòng qua chặn này.

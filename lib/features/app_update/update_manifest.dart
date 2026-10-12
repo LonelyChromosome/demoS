@@ -6,6 +6,7 @@ const updateManifestUrl = String.fromEnvironment('UPDATE_MANIFEST_URL');
 const updatePublicKeyBase64 = String.fromEnvironment(
   'UPDATE_PUBLIC_KEY_BASE64',
 );
+const scriptableUpdateBuild = bool.fromEnvironment('BPA_SCRIPTABLE');
 const updatePackageName = 'vn.edu.phenikaa.better_phenikaa_schedule';
 
 final class UpdateManifest {
@@ -18,6 +19,7 @@ final class UpdateManifest {
     required this.apkSize,
     required this.publishedAt,
     required this.notes,
+    this.resourceIndexSize = 0,
   });
 
   final int versionCode;
@@ -28,6 +30,13 @@ final class UpdateManifest {
   final int apkSize;
   final DateTime publishedAt;
   final String notes;
+  final int resourceIndexSize;
+
+  Map<String, Object> installArguments() => {
+    'url': apkUrl.toString(), 'sha256': apkSha256, 'size': apkSize,
+    'versionCode': versionCode, 'versionName': versionName, 'minimumVersionCode': minimumVersionCode,
+    if (scriptableUpdateBuild) 'resourceIndexSize': resourceIndexSize,
+  };
 
   bool appliesTo(int installed) =>
       versionCode > installed && installed >= minimumVersionCode;
@@ -35,19 +44,18 @@ final class UpdateManifest {
   static UpdateManifest parseVerified(List<int> bytes) {
     final raw = jsonDecode(utf8.decode(bytes, allowMalformed: false));
     if (raw is! Map<String, dynamic> ||
-        raw['schema'] != 1 ||
+        raw['schema'] != (scriptableUpdateBuild ? 2 : 1) ||
         raw['packageName'] != updatePackageName) {
       throw const FormatException('Invalid update manifest');
     }
-    const fields = <String>{
+    final fields = <String>{
       'schema',
       'packageName',
       'versionCode',
       'versionName',
       'minimumVersionCode',
-      'apkUrl',
-      'apkSha256',
-      'apkSize',
+      if (scriptableUpdateBuild) ...{'resourceUrl','resourceSha256','resourceSize','resourceIndexSize','platform'}
+      else ...{'apkUrl','apkSha256','apkSize'},
       'publishedAt',
       'notes',
     };
@@ -57,12 +65,14 @@ final class UpdateManifest {
     }
     final version = raw['versionCode'];
     final minVersion = raw['minimumVersionCode'];
-    final size = raw['apkSize'];
+    final size = raw[scriptableUpdateBuild ? 'resourceSize' : 'apkSize'];
+    final indexSize = scriptableUpdateBuild ? raw['resourceIndexSize'] : 0;
+    if (scriptableUpdateBuild && (raw['platform'] != 'scriptable' || indexSize is! int || indexSize < 1 || indexSize > 1000000)) throw const FormatException('Invalid Scriptable release');
     final name = raw['versionName'];
     final url = Uri.tryParse(
-      raw['apkUrl'] is String ? raw['apkUrl'] as String : '',
+      raw[scriptableUpdateBuild ? 'resourceUrl' : 'apkUrl'] is String ? raw[scriptableUpdateBuild ? 'resourceUrl' : 'apkUrl'] as String : '',
     );
-    final hash = raw['apkSha256'];
+    final hash = raw[scriptableUpdateBuild ? 'resourceSha256' : 'apkSha256'];
     final notes = raw['notes'];
     final timestamp = raw['publishedAt'];
     if (version is! int ||
@@ -100,6 +110,7 @@ final class UpdateManifest {
       apkSize: size,
       publishedAt: published,
       notes: notes,
+      resourceIndexSize: indexSize as int,
     );
   }
 }

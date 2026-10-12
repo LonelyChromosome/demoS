@@ -31,7 +31,7 @@ Bản ghi học kỳ chỉ thay sau xác minh; lỗi lưu phục hồi bản cũ
 - Pixel parity, tương tác, animation và Tiên Môn của widget.
 - Shortcut quét UID NFC và tạo báo thức thật: có consumer callback, chưa có
   Shortcut cài được và chưa kiểm chứng phần cứng.
-- Updater có chữ ký, áp dụng/rollback và gate thẻ như Android.
+- Updater Ed25519 cho gói web đã có source staging/rollback, đang kiểm tra trước khi mở feed; gate NFC chưa thử trên thiết bị.
 - Toàn bộ kiểm thử chức năng/ảnh/hiệu ứng trên iPhone.
 
 Chi tiết hướng đã thử và hướng tiếp theo: `docs/SCRIPTABLE_PARITY.md`.

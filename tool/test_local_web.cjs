@@ -19,14 +19,19 @@ async function main(){
     if(!files.includes(request.path))return {id:request.id,error:'Unknown local asset '+request.path};
     assetRequests.push(request.path);return {id:request.id,data:fs.readFileSync(path.join(root,request.path)).toString('base64')};
   });
-  await page.addInitScript(()=>{
+  const signatureText=fs.readFileSync('test/scriptable/fixtures/release/latest.json.sig','utf8'),badSignature=Buffer.from(signatureText.trim(),'base64');badSignature[0]^=1;
+  const qaUpdate={manifest:fs.readFileSync('test/scriptable/fixtures/release/latest.json').toString('base64'),signature:Buffer.from(signatureText).toString('base64'),badSignature:Buffer.from(badSignature.toString('base64')+'\n').toString('base64')};
+  await page.addInitScript(qaUpdate=>{
+    window.__bpaVerifiedReplies=[];
     window.addEventListener('bpa-asset-request',async event=>{const result=await window.readAsset(event.detail);window.bpaAssetResult(result);});
     window.addEventListener('bpa-platform-call',event=>{
       const call=JSON.parse(event.detail),method=call.method;
-      const result=method==='versionCode'?51:method==='versionName'?'cooc.1.6':method==='hasBoundCard'?false:method==='installStatus'?'idle':method==='status'?{lastSuccessAtMillis:0}:null;
+      let result=method==='versionCode'?51:method==='versionName'?'cooc.1.6':method==='hasBoundCard'?false:method==='installStatus'?'idle':method==='status'?{lastSuccessAtMillis:0}:null;
+      if(call.channel==='better_phenikaa/update_http'&&method==='fetch')result=call.arguments.url.endsWith('.sig')?(window.__bpaBadSignature?qaUpdate.badSignature:qaUpdate.signature):qaUpdate.manifest;
+      if(call.channel==='better_phenikaa/update'&&method==='verifyReply')window.__bpaVerifiedReplies.push(call.arguments);
       window.dispatchEvent(new CustomEvent('bpa-platform-result',{detail:JSON.stringify({id:call.id,result})}));
     });
-  });
+  },qaUpdate);
   let failure=null,vfxCallbacks=0;
   try {
     await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
@@ -36,6 +41,15 @@ async function main(){
     await page.waitForSelector('canvas',{timeout:30000});
     await page.waitForTimeout(6000);
     await page.screenshot({path:qaDir+'/local-loader-login.png'});
+    await page.evaluate(()=>window.bpaHost.event('better_phenikaa/update','event',{type:'verifyRelease',requestId:'qa-good-signature'}));
+    await page.waitForFunction(()=>window.__bpaVerifiedReplies.some(r=>r.requestId==='qa-good-signature'),{},{timeout:16000});
+    const good=await page.evaluate(()=>window.__bpaVerifiedReplies.find(r=>r.requestId==='qa-good-signature'));
+    if(good.error||good.manifest?.versionCode!==51)throw Error('Original Dart verifier rejected the signed QA resource index');
+    await page.evaluate(()=>{window.__bpaBadSignature=true;window.bpaHost.event('better_phenikaa/update','event',{type:'verifyRelease',requestId:'qa-bad-signature'});});
+    await page.waitForFunction(()=>window.__bpaVerifiedReplies.some(r=>r.requestId==='qa-bad-signature'),{},{timeout:16000});
+    const bad=await page.evaluate(()=>window.__bpaVerifiedReplies.find(r=>r.requestId==='qa-bad-signature'));
+    if(!bad.error)throw Error('Original Dart verifier accepted a tampered signature');
+    fs.writeFileSync(qaDir+'/signed-web-update.json',JSON.stringify({good,bad,note:'QA fixture over an actual prior compiled index; not the public update feed'},null,2));
     // Clearly labelled synthetic fixtures, confined to QA, exercise persisted
     // schedules and the original premium renderer. Never copied into BPA data.
     const local=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;

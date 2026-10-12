@@ -248,12 +248,14 @@ async function handlePlatform(call,app) {
     const data=await request.load();if(dataSize(data)>args.limit)throw errorCode('manifest_too_large','Manifest quá lớn.');return data.toBase64String();
   }
   if(channel==='update') {
-    if(method==='versionCode')return 51;
-    if(method==='versionName')return 'cooc.1.6';
-    if(method==='installStatus')return 'idle';
+    if(method==='versionCode')return readState('bundle.json',{versionCode:51}).versionCode;
+    if(method==='versionName')return readState('bundle.json',{versionName:'cooc.1.6'}).versionName||'cooc.1.6';
+    if(method==='installStatus')return readState('install-status.json',{status:'idle'}).status;
+    if(method==='verifyReply')return acceptVerifiedRelease(args);
+    if(method==='runtimeReady')return await commitBootedBundle(app);
     if(method==='hasBoundCard')return Keychain.contains('BPA.bound-card-uid');
     if(method==='removeBoundCard'){if(Keychain.contains('BPA.bound-card-uid'))Keychain.remove('BPA.bound-card-uid');return null;}
-    if(['stopCard','cancel'].includes(method)){cardGeneration++;return null;}
+    if(['stopCard','cancel'].includes(method)){cardGeneration++;if(method==='cancel')cancelWebUpdate();return null;}
     if(method==='startBindCard'||method==='startCard') {
       const generation=++cardGeneration;
       if(method==='startBindCard'&&Keychain.contains('BPA.bound-card-uid'))throw errorCode('already_bound','Thẻ đã được liên kết.');
@@ -266,22 +268,23 @@ async function handlePlatform(call,app) {
       }
       return null;
     }
-    if(method==='canInstall')return false;
-    if(['downloadAndInstall','installSettings'].includes(method))throw errorCode('web_update_unconfigured','Chưa có kênh cập nhật web đã ký tương đương updater Android.');
+    if(method==='canInstall')return true;
+    if(method==='downloadAndInstall')return await stageWebUpdate(args,app);
+    if(method==='installSettings')return null;
   }
   if(channel==='widget_session'&&['clear','invalidate'].includes(method))return null;
   throw errorCode('unsupported_platform_method',`${channel}/${method} chưa có cầu Scriptable.`);
 }
-function installWidgetScripts() {
-  const source=bpaFM.readString(module.filename);
+function installWidgetScripts(sourceOverride=null) {
+  const source=sourceOverride||bpaFM.readString(module.filename);
   for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']]) {
     const content=source.replace(/const DEFAULT_KIND='(?:small|overview|widget2)';/,`const DEFAULT_KIND='${kind}';`);
     bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),name+'.js'),content);
   }
 }
 async function openOriginalApp() {
-  const bundle=await ensureLocalBundle();
-  const app=new WebView();
+  const bundle=await ensureLocalBundle(true);
+  const app=new WebView();bootingApp=app;bootingBundle=bundle;
   await app.loadHTML(localAppHTML(bundle),'https://bpa.local/');
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');

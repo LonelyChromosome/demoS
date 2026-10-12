@@ -6,7 +6,8 @@ async function renderWidget(p) {
   const t=p.theme||{},config=t.widgetConfig?JSON.parse(t.widgetConfig):{};
   const color=(n,fallback)=>typeof n==='number'?'#'+(n>>>0).toString(16).padStart(8,'0').slice(2):fallback;
   const textOverride=config[p.kind==='small'?'smallTextColor':p.kind==='overview'?'largeTextColor':'widget2TextColor'];
-  const start=color(t.widgetStart,'#1747b5'),end=color(t.widgetEnd,'#4c79d8'),text=color(textOverride,color(t.widgetText,'#ffffff')),sub=color(t.widgetSubtext,'#e2edff');
+  const smallPremium=p.kind==='small'&&t.theme==='tien_mon_premium';
+  const start=smallPremium?'#082d2b':color(t.widgetStart,'#1747b5'),end=smallPremium?'#667e7b':color(t.widgetEnd,'#4c79d8'),text=smallPremium?'#ffd66b':color(textOverride,color(t.widgetText,'#ffffff')),sub=smallPremium?'#ffe7a3':color(t.widgetSubtext,'#e2edff');
   const raw=(n,f)=>typeof n==='number'?n>>>0:f;
   const palette=BPAWidgetPalette.make(raw(t.widgetStart,0xff1747b5),raw(t.widgetEnd,0xff4c79d8),raw(textOverride,raw(t.widgetText,0xffffffff)),raw(t.widgetSubtext,0xffe2edff),t.theme||'classic'),pc=BPAWidgetPalette.css;
   let font='Arial';
@@ -31,7 +32,7 @@ async function renderWidget(p) {
   if(p.kind==='widget2')await photo(p.widget2ImagePath||(images[t.theme||'classic']?'widget-assets/widget2_themes/'+images[t.theme||'classic']:null),w-108,0,108,h);
   const icons={},iconNames={calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:p.examMode?'ic_widget_back':'ic_widget_bell',previous:p.kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:p.kind==='overview'?'ic_overview_chevron_right':'ic_widget_down',study:'ic_widget_study'};
   for(const [name,file]of Object.entries(iconNames)){const img=new Image();img.src=p.icons&&p.icons[name]||'widget-assets/icons/'+file+'.svg';await img.decode();icons[name]=img;}
-  const icon=(name,x,y,size=18)=>{if(!icons[name])return;const layer=document.createElement('canvas');layer.width=layer.height=size*2;const brush=layer.getContext('2d');brush.drawImage(icons[name],0,0,size*2,size*2);brush.globalCompositeOperation='source-in';brush.fillStyle=color(t.widgetIcon,text);brush.fillRect(0,0,size*2,size*2);ctx.drawImage(layer,x,y,size,size);};
+  const icon=(name,x,y,size=18)=>{if(!icons[name])return;const layer=document.createElement('canvas');layer.width=layer.height=size*2;const brush=layer.getContext('2d');brush.drawImage(icons[name],0,0,size*2,size*2);brush.globalCompositeOperation='source-in';brush.fillStyle=smallPremium?'#ffd66b':color(t.widgetIcon,text);brush.fillRect(0,0,size*2,size*2);ctx.drawImage(layer,x,y,size,size);};
   const hits=[];
   const hit=(action,x,y,width,height)=>hits.push({action,x,y,width,height});
   const time=r=>r.emptyDay?'':r.startAt.slice(11,16)+' – '+r.endAt.slice(11,16);
@@ -93,6 +94,7 @@ async function renderWidget(p) {
   }
   const border=config[p.kind==='small'?'smallBorder':p.kind==='overview'?'largeBorder':'widget2Border'];
   if(border&&border.enabled){const bw=border.widthDp||1;rounded(bw/2,bw/2,w-bw,h-bw,Math.max(0,radius-bw/2),null,color(border.color,'#ffd66b'),bw);}
+  if(smallPremium)rounded(.75,.75,w-1.5,h-1.5,17.25,null,'#ffd66b',1.5);
   ctx.restore();
   // Split into non-overlapping bands so Scriptable can assign exact hit URLs.
   for(const v of hits)v.y+=offset;
