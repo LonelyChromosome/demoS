@@ -26,7 +26,7 @@ async function main(){
       window.dispatchEvent(new CustomEvent('bpa-platform-result',{detail:JSON.stringify({id:call.id,result})}));
     });
   });
-  let failure=null;
+  let failure=null,vfxCallbacks=0;
   try {
     await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
     await page.evaluate(()=>window.bpaHost.init({}));
@@ -34,9 +34,31 @@ async function main(){
     // Flutter puts its CanvasKit canvas inside shadow DOM.
     await page.waitForSelector('canvas',{timeout:30000});
     await page.waitForTimeout(6000);
+    await page.screenshot({path:'build/qa/local-loader-login.png'});
+    // Exercise the exact source HTML. This is not an NFC hardware test.
+    const cardHTML=fs.readFileSync(path.join(root,'assets/assets/card_vfx/link.html'),'utf8');
+    await page.evaluate(html=>{
+      window.__bpaVfxCallbacks=0;
+      const frame=document.createElement('iframe');frame.id='bpa-vfx-qa';
+      frame.style='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:9999';
+      window.addEventListener('message',event=>{if(event.source===frame.contentWindow&&event.data?.type==='bpa-card-callback'&&event.data?.id==='qa'&&event.data?.name==='vfxComplete')window.__bpaVfxCallbacks++;});
+      const bridge='<script>window.flutter_inappwebview={callHandler:function(name,...args){parent.postMessage({type:"bpa-card-callback",id:"qa",name,args},"*");return Promise.resolve(null);}};<'+ '/script>';
+      frame.srcdoc=html.replace('<head>','<head>'+bridge);
+      document.body.appendChild(frame);
+    },cardHTML);
+    const frame=await (await page.locator('#bpa-vfx-qa').elementHandle()).contentFrame();
+    await frame.waitForFunction(()=>typeof window.paSetMode==='function');
+    await frame.evaluate(()=>window.paSetMode(false,'accepted','Kiểm tra VFX'));
+    await page.waitForFunction(()=>window.__bpaVfxCallbacks===1,{},{timeout:12000});
+    await page.screenshot({path:'build/qa/local-card-link.png'});
+    await frame.evaluate(()=>{window.paSetMode(true,'bound','Kiểm tra VFX');window.paStartDelete();});
+    await page.waitForFunction(()=>window.__bpaVfxCallbacks===2,{},{timeout:12000});
+    await page.screenshot({path:'build/qa/local-card-unlink.png'});
+    vfxCallbacks=await page.evaluate(()=>window.__bpaVfxCallbacks);
+    await page.locator('#bpa-vfx-qa').evaluate(element=>element.remove());
   } catch(error){failure=error.message;}
   await page.screenshot({path:'build/qa/local-loader-login.png'});
-  fs.writeFileSync('build/qa/local-loader.json',JSON.stringify({platform:'Chromium, 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,canvases:await page.locator('canvas').count()},null,2));
+  fs.writeFileSync('build/qa/local-loader.json',JSON.stringify({platform:'Chromium, 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,vfxCallbacks,canvases:await page.locator('canvas').count()},null,2));
   console.log(JSON.stringify({errors,messages,assetRequests,failure}));
   await browser.close();await new Promise(resolve=>server.close(resolve));
   if(failure)throw Error(failure);

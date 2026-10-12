@@ -597,6 +597,23 @@ async function scheduleExamReminders() {
   writeState('exam-reminders.json',{...ledger,delivered:[...delivered]});
   return null;
 }
+function assistantTemplate(useCase) {
+  const pack=preference('better_phenikaa_assistant_pack_v1')||'normal';
+  return (BPA_ASSISTANT_CATALOG[pack]||BPA_ASSISTANT_CATALOG.normal)['U'+useCase]||BPA_ASSISTANT_CATALOG.normal['U'+useCase];
+}
+function examChangeEvent(difference) {
+  if(!difference||difference.initial)return null;
+  const changed=key=>['added','removed','modified'].reduce((sum,k)=>sum+(difference[key]?.[k]||0),0)>0;
+  const study=changed('study'),exam=changed('exams');
+  return study&&exam?5:study?3:exam?4:null;
+}
+async function assistantNotification(useCase) {
+  if(![1,3,4,5,6,7,8,9,11].includes(useCase))return false;
+  const n=new Notification();n.identifier=useCase===1?'bpa.stale':useCase<=5?'bpa.changes':'bpa.exam.test';
+  n.threadIdentifier=n.identifier;n.title=useCase===1?'Đã lâu chưa đồng bộ':useCase<=5?'Lịch học kỳ thay đổi':'Nhắc lịch thi';
+  n.body=assistantTemplate(useCase).replace('X','5').replace('N','2');n.openURL=actionURL('open','overview','main');
+  await n.schedule();return true;
+}
 async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
   if(channel==='qldt_scriptable') {
@@ -619,18 +636,32 @@ async function handlePlatform(call,app) {
     installWidgetScripts();
     const a=new Alert();a.title='Widget BPA';a.message='Các script widget đã được chuẩn bị. Nhấn giữ màn hình chính → thêm widget Scriptable → chọn script BPA tương ứng. iOS không có API để BPA tự thêm widget lên Home Screen.';a.addAction('Xong');await a.presentAlert();return false;
   }
+  if(channel==='assistant_test'&&method==='trigger')return await assistantNotification(args);
   if(channel==='daily_sync') {
     if(method==='syncReminders')return await scheduleExamReminders();
-    if(method==='recordAppSyncSuccess'){writeState('sync-status.json',{lastSuccessAtMillis:Date.now()});return null;}
+    if(method==='recordAppSyncSuccess'){
+      writeState('sync-status.json',{lastSuccessAtMillis:Date.now()});
+      const event=examChangeEvent(preference('better_phenikaa_semester_difference_v1'));
+      // Android foreground sync records exam notice without a system notification.
+      if(event===4||event===5)writeState('exam-notice.json',{message:assistantTemplate(4),initialized:true});
+      return null;
+    }
     if(method==='refreshWidgetToday') {
       const selections=readState('widgets.json');
       for(const key of Object.keys(selections))selections[key]={...selections[key],day:isoDay(new Date()),index:0};
       writeState('widgets.json',selections);return null;
     }
     if(method==='status')return readState('sync-status.json',{lastSuccessAtMillis:0});
-    if(method==='examNotice')return null;
-    if(method==='clearReminders'){await Notification.removePending((await Notification.allPending()).filter(n=>n.identifier.startsWith('bpa.exam.')).map(n=>n.identifier));return null;}
-    if(['disable','ackExamNotice'].includes(method))return null;
+    if(method==='examNotice')return readState('exam-notice.json',{message:null}).message;
+    if(method==='clearReminders'){
+      await Notification.removePending((await Notification.allPending()).filter(n=>n.identifier.startsWith('bpa.exam.')||n.identifier==='bpa.stale'||n.identifier==='bpa.changes').map(n=>n.identifier));
+      await Notification.removeDelivered(['bpa.stale','bpa.changes']);writeState('exam-notice.json',{message:null});writeState('exam-reminders.json',{delivered:[],records:{}});return null;
+    }
+    if(method==='ackExamNotice'){
+      writeState('exam-notice.json',{message:null,initialized:true});
+      await Notification.removePending(['bpa.changes']);await Notification.removeDelivered(['bpa.changes']);return null;
+    }
+    if(method==='disable')return null;
     if(method==='enable')throw errorCode('automation_required','iOS yêu cầu thiết lập Automation; BPA không tự bật lịch đồng bộ.');
   }
   if(channel==='study_alarm'&&method==='setAlarm') {

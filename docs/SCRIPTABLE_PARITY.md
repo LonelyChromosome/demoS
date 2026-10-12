@@ -63,3 +63,7 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 
 - Run 38282458541 compile và chạy canvas, nhưng ảnh/log cho thấy splash trống và Flutter SecurityError khi replaceState tới origin tài nguyên. Không công nhận thành công từ trạng thái CI xanh. Đã sửa cầu history cho loadHTML và cho console error làm kiểm tra thất bại; đang chạy lại.
 - Planner nhắc thi đã port các nhánh 7/3/1, 09:00, gộp môn, due range và SHA-256 identity từ Kotlin; catalog trợ lý được tái sử dụng nguyên JSON. Delivery/reconcile nền chưa được kiểm chứng.
+
+- Run 38283032006: loader cục bộ đã render màn hình đăng nhập gốc 390×844 trong Chromium, ảnh và log đã kiểm tra trực tiếp; không có console error. Tài nguyên phát hành ở nhánh `scriptable-web`. Không suy ra iPhone đạt parity.
+- Plugin `flutter_inappwebview` web không triển khai `addJavaScriptHandler`; đã thêm adapter iframe cục bộ riêng cho HTML VFX thẻ nguyên gốc, kiểm tra callback liên kết/xóa đang chạy.
+- Trạng thái exam notice được nối từ diff Flutter gốc; đọc/ack/clear và các notification thử trợ lý có cầu Scriptable. Chưa kiểm chứng delivery trên iPhone.

@@ -10,8 +10,8 @@ và các màn hình gốc. Không yêu cầu chỉnh source khi dùng.
 
 ## Trạng thái cài đặt
 
-Bộ nạp đang được kiểm tra trong CI. Nhánh `scriptable-web` chỉ được phát hành
-sau khi kiểm tra bộ nạp qua. Chưa xác minh cài/chạy trên iPhone thật.
+Bộ nạp đã render màn hình đăng nhập gốc trong Chromium, ảnh/log đã kiểm tra.
+Nhánh `scriptable-web` đã có tài nguyên. Chưa xác minh cài/chạy trên iPhone thật.
 Không trình bày file host hiện tại là gói app đã hoàn tất.
 
 Khi tài nguyên đã được phát hành, mở `BPA.js` bằng Scriptable và chạy BPA.

@@ -243,8 +243,8 @@
       "source": "lib/features/app_update/card_link_vfx.dart",
       "android_sha256": "ca233037504b225488c52066100a9356ab9633d29171cd056b354b7a973e43b2",
       "present": true,
-      "sha256": "ca233037504b225488c52066100a9356ab9633d29171cd056b354b7a973e43b2",
-      "byte_identical": true,
+      "sha256": "ebf6d1bd36b4984808487e22c120ec550c519e04214f0ff656d9e45813c3d349",
+      "byte_identical": false,
       "classes": [
         "CardLinkVfx",
         "_CardLinkVfxState"

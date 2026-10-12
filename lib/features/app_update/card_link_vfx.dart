@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:better_phenikaa_schedule/platform/card_webview.dart';
 
 /// Local presentation only. Card UIDs and updater data never enter this view.
 class CardLinkVfx extends StatefulWidget {
