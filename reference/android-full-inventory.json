@@ -1,0 +1,3723 @@
+{
+  "repository": "LonelyChromosome/DemoF3",
+  "commit": "16f7ee232ad2b74699cf960f33c87c8caaadecc3",
+  "scope": "All tracked files at immutable commit; inventory only, not completed behavioral audit",
+  "file_count": 370,
+  "entries": [
+    {
+      "path": ".editorconfig",
+      "size": 207,
+      "sha256": "7951c7279ee7fc829295c96755b4192b3adeb99b9739ef0ba8a397c5a228b40c"
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "size": 270,
+      "sha256": "a25be2cb568f39a33c2712af8ad2ca1d763d7b215ba8cc6e153c532745327c38"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "size": 919,
+      "sha256": "078b7de1944a6499af369da49b05cd91c63f067a6f3ba66a2e4cdeefc4b75ecf"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "size": 259,
+      "sha256": "91dd3c967521be8c90a8d65fe6433441eb38ca3b027dd03da93018815e2e7e4a"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "size": 695,
+      "sha256": "41feec2032bf2c089d75c6a35e9b26580ec1fce67617489b6cf7b97e90bc0fd6"
+    },
+    {
+      "path": ".github/workflows/bpa-16-test-apk.yml",
+      "size": 2203,
+      "sha256": "def17dea90bc220c770f3204bf5791cb323415bb82661ec69ea20cb8a6f6a2f3"
+    },
+    {
+      "path": ".github/workflows/build-apk.yml",
+      "size": 14068,
+      "sha256": "2bc7021759c2f201fb31ac76229dde5967957181417d129741ba8d2c69a44eda"
+    },
+    {
+      "path": ".gitignore",
+      "size": 421,
+      "sha256": "89ef3a3c860b7ef3e890662aca4f9bde994bf8de331b1191b779e9b48491ce34"
+    },
+    {
+      "path": ".metadata",
+      "size": 1114,
+      "sha256": "c1fbc51bcd1c27a397e183e06dd20f23b5362fe67fbafad4ca9da9622b4b9d40"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "size": 679,
+      "sha256": "9c0e8fa2b9071ae6a5fef883311a5d5987a017592f6537c006285ee659c22c77"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "size": 1524,
+      "sha256": "4aff1d29bdc0277d1b7c057248980ef22f24b7a90d71aeba96c181300b99ae01"
+    },
+    {
+      "path": "DemoF3.code-workspace",
+      "size": 371,
+      "sha256": "21393966a271b7b8891a3d37885e2e457077ac944c2bb4a7035ff43d37702c0f"
+    },
+    {
+      "path": "LICENSE",
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "NOTICE",
+      "size": 897,
+      "sha256": "fb34301b0343b833f06c44046daec4f2edba94f55b6bf39d9518bb23263e7967"
+    },
+    {
+      "path": "PRIVACY.md",
+      "size": 1981,
+      "sha256": "35037f9eca4cd4f90531afd1113c9a63cd46e9a5e08a777320162bd3877ac6b1"
+    },
+    {
+      "path": "README.md",
+      "size": 4757,
+      "sha256": "482def893c2f7b3325b9d8f7c5c315381700e6068899ad000f3aec81992ff2ff"
+    },
+    {
+      "path": "RELEASING.md",
+      "size": 2402,
+      "sha256": "9b475073e11686c0f6c539e5ab114fdfca6b9407976d67560c54c07cb6726f2d"
+    },
+    {
+      "path": "SECURITY.md",
+      "size": 2378,
+      "sha256": "95564d80f1b2de3213b3aa92974da9cc035276340f05afbbf06951a3f3ba24a9"
+    },
+    {
+      "path": "TRADEMARK.md",
+      "size": 1652,
+      "sha256": "d2a88621a65d771441495f20710e5eb70d3542f980f6cd4750773d217066174c"
+    },
+    {
+      "path": "analysis_options.yaml",
+      "size": 645,
+      "sha256": "c04ed3cd83197f1d0726477a9a3cd48339dcbf194202dcb96db2dbc816fa1f48"
+    },
+    {
+      "path": "android/.gitignore",
+      "size": 253,
+      "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1"
+    },
+    {
+      "path": "android/app/build.gradle.kts",
+      "size": 3080,
+      "sha256": "e600f60e03d1812a471e4d38db28627eecb3bf1c2afbe7e43b7409c44d8ac9e1"
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "size": 378,
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "size": 7422,
+      "sha256": "5890854841fcbd8036379fbb3794ecdecd06a76aa48b39230f9ca3be168219f7",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_PROCESS_TEXT"
+      ]
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/ben10.png.webp",
+      "size": 74882,
+      "sha256": "f72cc96349a073af477a5d5428b59423d3366e3f14681f0af82de1c104f0f37f"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/facebooj.png",
+      "size": 1696320,
+      "sha256": "185815548396fb1867a7f50fe16f016eec6b2cef195d8fc891a4b0be339d4273"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/lol.jpg",
+      "size": 269822,
+      "sha256": "3414b3342cd562765400381203d2bed825d1657039da125104da2aeb1a4c62f2"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/macdinh.png",
+      "size": 2673373,
+      "sha256": "f28c84d177407ebbcd16716b05fa987d70417e1f46477ea1413d7b95c9dbb6be"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/minecraft.jpg",
+      "size": 184076,
+      "sha256": "1ce0adda74875425337e5c2fb2abf13232fba0c1be5ac51556a746518f9f5fa7"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/shoppee.png",
+      "size": 1979369,
+      "sha256": "287381f463538107d2d044b70d0f946b8a73e675beef710093096cf9006d4a96"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/steam.png",
+      "size": 2705456,
+      "sha256": "baba4f014c6b582d475371516d926d0cb4aef820262691d7950a19605a14a7a0"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/tienmon-sang.png",
+      "size": 3254549,
+      "sha256": "69ff1d1f4391a97e84ef0c96d2a495c5e15b6dd9e3ccdbfe3311086c9d4d07e5"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/tienmon-toi.png",
+      "size": 3453685,
+      "sha256": "1ba9368a3b530af1bc5eebd77499f6599e63ad8263edd8cf20476945423861db"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/tiktok.png",
+      "size": 2451950,
+      "sha256": "8fce31e82a89d736f1aa79462e17cee1c1289b776ff2426021ccdd76af50ecda"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/tinemon-trua.png",
+      "size": 3321189,
+      "sha256": "d3d936240901cfc271859b60b53fbd04cb63d3a5e1a5de934dcfbd25fdff3bba"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/vlr.jpg",
+      "size": 231295,
+      "sha256": "a47bb50127372ad25db4f5191fa552b9ff632a3a7e1f568dc1dccca75e9b0a80"
+    },
+    {
+      "path": "android/app/src/main/assets/widget2_themes/ytb.png",
+      "size": 1992054,
+      "sha256": "6a1e54198ec677bab44af3ec821e24771a2f6d9f6c809b3e6f1e84ee9fdd7b81"
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/AssistantCatalog.kt",
+      "size": 14494,
+      "sha256": "cbbec996c8835f350e6eb308be7972e03993227d92fc21caf481d6d881fa620e",
+      "classes": [
+        "AssistantCatalog"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/AssistantText.kt",
+      "size": 3492,
+      "sha256": "e81ea033d77a30740a5cc2ed6eef96616d3c771cb73a846edf83c446add700e6",
+      "classes": [
+        "AssistantPack",
+        "AssistantEvent",
+        "AssistantText"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/DailySyncRescheduleReceiver.kt",
+      "size": 445,
+      "sha256": "84c026d5848f7874213afc2dbdd0de38865b99697319531f3985189f8f461346",
+      "classes": [
+        "DailySyncRescheduleReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/DailySyncScheduler.kt",
+      "size": 5393,
+      "sha256": "4b4c507355d72351cbe9b04e109b8a02fb72801fcc446a53d547f4b0a898adf9",
+      "classes": [
+        "DailySyncScheduler"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ExamChangeNotifier.kt",
+      "size": 7152,
+      "sha256": "5410369e16d1731667ee260e69c3493444d84de80e8a110bab8a7e6d36f35823",
+      "classes": [
+        "ExamChangeNotifier"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ExamReminderPlanner.kt",
+      "size": 4855,
+      "sha256": "77d264d6857850f25e1ed8f07bd2ac6fb2f03f26d34253e83dee078ae633f4b7",
+      "classes": [
+        "PlannedExamReminder",
+        "ExamReminderPlan",
+        "ExamReminderPlanner"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ExamReminderScheduler.kt",
+      "size": 7023,
+      "sha256": "6417cae0500368984e7aed6bf8c16570b56594c7b8f6c111c216dabf4f1a95d5",
+      "classes": [
+        "ExamReminderScheduler",
+        "ExamReminderWorker"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/MainActivity.kt",
+      "size": 33694,
+      "sha256": "54b1b399495833e981865750ddf9e67ff475e20ae789d3073266f80bfb675dc4",
+      "classes": [
+        "MainActivity",
+        "WidgetThemeRequest"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/assistant_test",
+        "better_phenikaa/daily_sync",
+        "better_phenikaa/local_files",
+        "better_phenikaa/qldt_credentials",
+        "better_phenikaa/widget_pin",
+        "better_phenikaa/widget_render",
+        "better_phenikaa/widget_session",
+        "better_phenikaa/widget_theme"
+      ],
+      "android_actions": [
+        "ACTION_GET_CONTENT",
+        "ACTION_OPEN_DOCUMENT",
+        "ACTION_PICK_IMAGES"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeQldtWidgetSync.kt",
+      "size": 16915,
+      "sha256": "c8cb8963c5e35548f4085750bbadd0741958184469fac852f707b43b35209901",
+      "classes": [
+        "NativeQldtWidgetSync",
+        "Success",
+        "Failure",
+        "Session",
+        "Semester",
+        "SubjectRow",
+        "NativeSyncException"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_PLANS",
+        "ACTION_SCHEDULE",
+        "ACTION_SEMESTERS",
+        "ACTION_SUBJECTS"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSemesterDifference.kt",
+      "size": 5380,
+      "sha256": "ce8999ff326d789c720b788f5789ac91acbf3c61f9e3426425c9abb7204e0af5",
+      "classes": [
+        "NativeSemesterDifference"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSemesterVerifier.kt",
+      "size": 9514,
+      "sha256": "b49e1199313092f55749ba03e68dcebbfc23484d3e5dc12de823e505200be444",
+      "classes": [
+        "NativeSemesterVerifier",
+        "SnapshotBundle"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeWidgetPreviewRenderer.kt",
+      "size": 11191,
+      "sha256": "373b79096998f99046e85b8de59c3fc266ed974df8a6db2fc031112153acfcbe",
+      "classes": [
+        "NativeWidgetPreviewRenderer"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewFontBitmap.kt",
+      "size": 6240,
+      "sha256": "7f4e15d5497c3de2091211756f3ba8896520694c13f20e59015b4d097d4179eb",
+      "classes": [
+        "OverviewFontBitmap"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewPager.kt",
+      "size": 2187,
+      "sha256": "7d03c5ffb151ad611bd705fd7798beb9506de744b4118e658c6200fa69edc42b",
+      "classes": [
+        "OverviewPager"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewWidgetProvider.kt",
+      "size": 39640,
+      "sha256": "4b1c1dc45dae2f5124bd97a2e679278a318b5ffb1c7e3e071782aad1dae62f5b",
+      "classes": [
+        "OverviewWidgetProvider"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_MODE",
+        "ACTION_PAGE",
+        "ACTION_RELOAD"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewWindow.kt",
+      "size": 743,
+      "sha256": "4d3d842241eebe0db0e497a4370133cf046df4289d054c090032ad8188a4100a",
+      "classes": [
+        "OverviewWindow"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/QldtCredentialVault.kt",
+      "size": 3318,
+      "sha256": "78f660321f3345317da785f2bb0243b66fa911a85139f2d9636823d47d791e76",
+      "classes": [
+        "QldtCredentialVault",
+        "Credentials"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/QldtDailySyncWorker.kt",
+      "size": 53655,
+      "sha256": "faee1d51bd2527a7bdc4b354d55ccba848329f33b021b25e79e92bc4d2a0c2ec",
+      "classes": [
+        "QldtDailySyncWorker",
+        "HeadlessQldtSync",
+        "Success",
+        "Failure",
+        "JavascriptResultBridge",
+        "QldtSnapshotEncoder",
+        "SnapshotBundle",
+        "DateParts"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/QldtPageRetry.kt",
+      "size": 929,
+      "sha256": "47ea583ac3e9e1a323a8ef3750057c18b62b4bad91d2939842304f92a969d427",
+      "classes": [
+        "QldtPageRetry"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ScheduleWidgetProvider.kt",
+      "size": 61133,
+      "sha256": "33ca16f34d91f842d25bf4c9e4760ff6acdf3a1cab7f2c45d5ec3accfd6f3bdc",
+      "classes": [
+        "ScheduleWidgetProvider",
+        "ThemeColors"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_COLLECTION_FRAME_READY",
+        "ACTION_SMALL_MODE",
+        "ACTION_SMALL_RELOAD"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ScheduleWidgetService.kt",
+      "size": 25950,
+      "sha256": "2b1919179195728cdcc2828b73232a877f903c79c51ecba69fc1174dbd14ff1e",
+      "classes": [
+        "ScheduleWidgetService",
+        "ScheduleWidgetFactory",
+        "WidgetTheme",
+        "LegacyWidgetClass"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_COLLECTION_FRAME_READY"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/SmallWidgetMode.kt",
+      "size": 809,
+      "sha256": "54c4444021372c08a88b367b1963f0f7f63cb3f473ec7d78e41ac31ddb8d363c",
+      "classes": [
+        "SmallWidgetMode"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/StudyAlarmBridge.kt",
+      "size": 5536,
+      "sha256": "74dae9c5943d14a3d54d9f5b43f5f37103b533835a7c7852a5757342b2244419",
+      "classes": [
+        "StudyAlarmBridge"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/study_alarm"
+      ],
+      "android_actions": [
+        "ACTION_DISMISS_ALARM",
+        "ACTION_SET_ALARM"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/SyncStaleReminderScheduler.kt",
+      "size": 7480,
+      "sha256": "c9e77239dda7a069f2f8b0c55233dadcee61ad16ff37f0dc549f0f4f47444753",
+      "classes": [
+        "SyncStaleReminderPolicy",
+        "SyncStaleReminderScheduler",
+        "SyncStaleReminderWorker"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/UpdateBridge.kt",
+      "size": 15818,
+      "sha256": "6d7ff664471b091bcd795042c9f892a9a25e7f4fb8ecb9bf4855ad40921aae33",
+      "classes": [
+        "UpdateBridge",
+        "DigestRules",
+        "BoundCardStore"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/update"
+      ],
+      "android_actions": [
+        "ACTION_ADAPTER_STATE_CHANGED",
+        "ACTION_CANCEL",
+        "ACTION_MANAGE_UNKNOWN_APP_SOURCES",
+        "ACTION_START"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/UpdateDownloadService.kt",
+      "size": 8163,
+      "sha256": "d1de7b0b54daba2a8baf057df3a18572c694d38a092c81e46560aee4df4a8e0c",
+      "classes": [
+        "UpdateDownloadService",
+        "UpdateCancelled"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_CANCEL",
+        "ACTION_START"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/UpdateInstaller.kt",
+      "size": 11491,
+      "sha256": "39d712f324858b11b5922359f93062afc2bb2ca1b1d676ace11bb1b2de59a799",
+      "classes": [
+        "UpdateInstaller",
+        "CandidateRules",
+        "UpdateStatusReceiver",
+        "UpdateInstalledReceiver",
+        "UpdateConfirmation"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_MY_PACKAGE_REPLACED"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/Widget2BitmapRenderer.kt",
+      "size": 10907,
+      "sha256": "27e146e1f9d80d93ec4a0259445d62f92408482c218d9c878cbdf23ee9289aec",
+      "classes": [
+        "Widget2BitmapRenderer",
+        "VerticalOffsets"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/Widget2Provider.kt",
+      "size": 18388,
+      "sha256": "71ea019c1d862b7b44b8f2073242c4d5c26c373bf61e77274991a094faf48118",
+      "classes": [
+        "Widget2Provider"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_MODE",
+        "ACTION_NEXT",
+        "ACTION_PREVIOUS",
+        "ACTION_RELOAD"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/Widget2ThemeImage.kt",
+      "size": 1988,
+      "sha256": "102cf54b815ad48c74a059497225232dbd1c28035f72a0f5c297ec021f898284",
+      "classes": [
+        "Widget2ThemeImage"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetDatePickerActivity.kt",
+      "size": 17845,
+      "sha256": "f218123a4db97930f6d338b4bd484e4ad65464bf56ee7204736a4ca0f7385972",
+      "classes": [
+        "WidgetDatePickerActivity"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_APPWIDGET_UPDATE"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetDayChangeReceiver.kt",
+      "size": 4526,
+      "sha256": "da59f6d6c7710fba4141b9eb637fd1476700b3e343ea24f318a6a715b08ab606",
+      "classes": [
+        "WidgetDayChangeReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_MY_PACKAGE_REPLACED",
+        "ACTION_TIME_BOUNDARY"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetFont.kt",
+      "size": 3971,
+      "sha256": "63a11d17ad6033e4f4cd4daf169ba9e176f741547751454fd9ca967b0c738c5b",
+      "classes": [
+        "WidgetFont"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetGalleryDialog.kt",
+      "size": 5294,
+      "sha256": "e8db59b4e49a5cffa3cfd4567f6e649a5d0f6a0767b2f2d495c71efbe36e4409",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetManualSync.kt",
+      "size": 1295,
+      "sha256": "42a6c933e78e216b047e2122036d48ef7945f96a445ccdc6d1a997b901ba1a80",
+      "classes": [
+        "WidgetManualSync"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetRefreshCoordinator.kt",
+      "size": 6073,
+      "sha256": "242d506f33c0fa38dab1403a4664833ba1274444a755766cb1178525443850a0",
+      "classes": [
+        "WidgetRefreshCoordinator"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetRefreshDecision.kt",
+      "size": 743,
+      "sha256": "e2df7a4feb54d351d79e1851c40d1e9ac65cc73a3e1aaa12fd3d2c8c61323615",
+      "classes": [
+        "WidgetRefreshDecision"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetRenderContract.kt",
+      "size": 1708,
+      "sha256": "232d92d50d232df15c348ddd1d49e957bac9837c2839074c4392c7b5d7e0f364",
+      "classes": [
+        "WidgetSurface",
+        "WidgetRenderRequest",
+        "WidgetRenderDispatcher"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetSnapshotStore.kt",
+      "size": 11030,
+      "sha256": "d3b8a179b8f4a25979f22a5621fd430f510172992bda16f336f7728559d8d4e4",
+      "classes": [
+        "WidgetSnapshotStore",
+        "WidgetTimeline",
+        "WidgetCollection",
+        "WidgetClass"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetStaticLayerRenderer.kt",
+      "size": 24933,
+      "sha256": "56dd99ca3df664e060d045800014c4b45feb05e17e5e6892b2fbd2d32e1c58e7",
+      "classes": [
+        "NativeWidgetPalette",
+        "WidgetStaticLayerRenderer",
+        "FloatBounds"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetSyncIndicator.kt",
+      "size": 12000,
+      "sha256": "32fe9babddd2e4b57d4f63172c1827f9c35bbe64d5e062d6825c3612fb191958",
+      "classes": [
+        "WidgetSyncIndicator",
+        "Phase",
+        "WidgetSyncTimeoutReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetThemeV14.kt",
+      "size": 6322,
+      "sha256": "cea3b54c95dd51a874932720344d7b0dc2e70537ade0a9631ee687d3ad45aa3a",
+      "classes": [
+        "WidgetBorderConfig",
+        "WidgetImageCrop",
+        "WidgetThemeV14"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetTimeThemeReceiver.kt",
+      "size": 4491,
+      "sha256": "b12fcee10af458f3ec372839d400dc79ab14e23fdc9891134837137cc9521eb4",
+      "classes": [
+        "WidgetTimeThemeReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_MY_PACKAGE_REPLACED",
+        "ACTION_TIME_THEME"
+      ]
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetVisualPalette.kt",
+      "size": 6280,
+      "sha256": "ae7d346997fa93595993e52bbaea05bce685ab84583c47363c4f4e8f9ffd3089",
+      "classes": [
+        "WidgetVisualPalette"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/widget_vaccine/README.md",
+      "size": 1756,
+      "sha256": "d0779b73368de3a95476fdd8eb83a9af3dbe6801cd787fccef76ddf875315140"
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/widget_vaccine/WidgetGeometry.kt",
+      "size": 1847,
+      "sha256": "832b7e73d8d8c23963b54e220307efccd5efefcacbaf931e04929889c1a1c8fc",
+      "classes": [
+        "WidgetGeometry",
+        "Size",
+        "Overview"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/widget_vaccine/WidgetHostSizeResolver.kt",
+      "size": 2918,
+      "sha256": "857e94343e9c8e5ad25f94d4aa992a616c67faf2ce3ff9d11123f6c87902b836",
+      "classes": [
+        "WidgetHostSizeResolver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/animator/widget_instant_in.xml",
+      "size": 259,
+      "sha256": "6572a595add107d2101b6158e977a82c159deac5b171c02d859f78e26caa401f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/animator/widget_instant_out.xml",
+      "size": 259,
+      "sha256": "6572a595add107d2101b6158e977a82c159deac5b171c02d859f78e26caa401f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/ic_launcher_foreground.png",
+      "size": 57667,
+      "sha256": "2bd4295a622b23b1b9389f4b961fd40a55dfb681dd43ef6dfc7205c3cce37ca8"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/widget2_preview.png",
+      "size": 30089,
+      "sha256": "3027493c1f2758e74f2a23ff43d374dbe4acacfd74141d7056ceb41b7236066d"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/widget2_system_preview_photo.png",
+      "size": 2673373,
+      "sha256": "f28c84d177407ebbcd16716b05fa987d70417e1f46477ea1413d7b95c9dbb6be"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/widget_overview_preview.png",
+      "size": 18960,
+      "sha256": "6402b22ef827f0c0547b056016b604cadad00619aa89b1af9c67871f7d6f0ba8"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/widget_small_preview.png",
+      "size": 12250,
+      "sha256": "505980dd46edb40f92bbd9ffd71e0604b9c18299e5dd028e8ee71ecf4712b62b"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "size": 434,
+      "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v31/schedule_widget_outline.xml",
+      "size": 363,
+      "sha256": "0160f0c00591e074b129b0a7f09917c13f97721af7a60716330c0f47e2069447",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/bpa_launch_blank.xml",
+      "size": 196,
+      "sha256": "40a9ee2cef32635a40215d35ce17fda39250358d073ebe2e0edec24beeb6d404",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_launcher_better_phenikaa.xml",
+      "size": 389,
+      "sha256": "9c01ba9ee4c6c0f723a9d232c5b51b21e2f2ccde259bf3472eea808ba9edcaab",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_overview_chevron_left.xml",
+      "size": 429,
+      "sha256": "589edb20f37ac325775c158a506f3c63557cffc0640e1879141f69d31fd0b6da",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_overview_chevron_right.xml",
+      "size": 428,
+      "sha256": "83519ca225daa6fcea628ebc1a3664223ed7cf9c7717354405cea56525a94bd5",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_back.xml",
+      "size": 330,
+      "sha256": "8e20eea93a69f40ba9607d0c2a6935b9f7017bb5ea0bd5c7844b905296a3e0d0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_bell.xml",
+      "size": 414,
+      "sha256": "bae2db123948a8a0df121df02b8cee1e256ea7428da678003b0bde8efba89706",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_calendar.xml",
+      "size": 523,
+      "sha256": "22932327357a92596828e7efee04c8eb64f6cde0490c9ceb4e46acfeea9cff3d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_check.xml",
+      "size": 525,
+      "sha256": "93f9cb82ee50e7f1184cdca5bc5e8cc50d2b88e353fa5cc9791fb366bd206afa",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_down.xml",
+      "size": 296,
+      "sha256": "2edf050878670d66b8ef9ef0367c3f60deb055b4beead5d9125ead19ef3b8f53",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_failure.xml",
+      "size": 538,
+      "sha256": "43ce4eec64b5c866823f7f5e100ea09cd275854ac6e44aefd42209dd0bd36336",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_reload.xml",
+      "size": 493,
+      "sha256": "2a31ec30c30772a9d630b1ec091c39da8b3e310d6b34d5a0f75d0ddd7b51ad3a",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_study.xml",
+      "size": 389,
+      "sha256": "ab5e556137269ce89b0fb7c8858304f16056bd981a0af02dbca8385f41a26909",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_switch.xml",
+      "size": 503,
+      "sha256": "522ba409bc225ffda6ef52f901727906c9b3a623fd3021eafe96d1055e5f388d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_up.xml",
+      "size": 296,
+      "sha256": "e293446d088a83fbd66999371f2232a57fc390feb763bc82e4df61157d6412d3",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_warning.xml",
+      "size": 490,
+      "sha256": "6c5369a7020de0bc77cf27e7a4903f825611614bf9788a59da6eea420ad388cd",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/launch_background.xml",
+      "size": 434,
+      "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/overview_card_background.xml",
+      "size": 219,
+      "sha256": "e2181d980d3653a522957f4f2b76de97eab801f87106896c77bc15a1aaabda1f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/schedule_widget_background.xml",
+      "size": 294,
+      "sha256": "03a8fe52fa93239a964accf31495336253ae700bedd0c40b9460ac9175dc7b24",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/schedule_widget_outline.xml",
+      "size": 236,
+      "sha256": "9b599dc2ac53f269b5e6a1db1c54dc66618b4766cbc7c2f46ef0c8ac23b64bd5",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/schedule_widget_stack_peek_mask.xml",
+      "size": 256,
+      "sha256": "77112c3295a8c025f3d3ef706f18161649adc9d7e183bac64973382b6607c5c0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/tien_mon_widget_gold_frame.xml",
+      "size": 299,
+      "sha256": "92a3dfe4193330479c05f477d5ff924ca31edeba8abfd899455670f03470921c",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/widget2_system_preview_background.xml",
+      "size": 282,
+      "sha256": "038af8812098667f89a47503c24207c02e575b936e70386ad3e6f288e0ee1aa9",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/drawable/widget2_system_preview_card.xml",
+      "size": 253,
+      "sha256": "5995562fee1803a259a2036bae90f06777c3e75f2998838bd21e48c477cd55cd",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/font/minecraft_custom.ttf",
+      "size": 31240,
+      "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d"
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget.xml",
+      "size": 6734,
+      "sha256": "6a846b549fecfef68ca566c6f9a9c84d769f297aa3bbb87bbfcad6ab0892b4bd",
+      "classes": [],
+      "android_ids": [
+        "overview_background",
+        "overview_border_layer",
+        "overview_calendar",
+        "overview_cards",
+        "overview_content",
+        "overview_dots",
+        "overview_emblem",
+        "overview_empty",
+        "overview_empty_font",
+        "overview_footer",
+        "overview_header",
+        "overview_header_font",
+        "overview_mode",
+        "overview_navigation",
+        "overview_next",
+        "overview_page",
+        "overview_page_font",
+        "overview_panel",
+        "overview_previous",
+        "overview_progress",
+        "overview_reload",
+        "overview_root",
+        "overview_status",
+        "overview_status_font",
+        "overview_subtitle",
+        "overview_title"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_124.xml",
+      "size": 6731,
+      "sha256": "da54a81c5261e8c7cebfee0b8f73c7d2a06a95d0eac7d7326b491de86687d997",
+      "classes": [],
+      "android_ids": [
+        "overview_background",
+        "overview_border_layer",
+        "overview_calendar",
+        "overview_cards",
+        "overview_content",
+        "overview_dots",
+        "overview_emblem",
+        "overview_empty",
+        "overview_empty_font",
+        "overview_footer",
+        "overview_header",
+        "overview_header_font",
+        "overview_mode",
+        "overview_navigation",
+        "overview_next",
+        "overview_page",
+        "overview_page_font",
+        "overview_panel",
+        "overview_previous",
+        "overview_progress",
+        "overview_reload",
+        "overview_root",
+        "overview_status",
+        "overview_status_font",
+        "overview_subtitle",
+        "overview_title"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_140.xml",
+      "size": 6731,
+      "sha256": "6492e6486d2957da9fb6d97ca5e59c0b9ed77bc0cbc3bf5851cee4b6c576173a",
+      "classes": [],
+      "android_ids": [
+        "overview_background",
+        "overview_border_layer",
+        "overview_calendar",
+        "overview_cards",
+        "overview_content",
+        "overview_dots",
+        "overview_emblem",
+        "overview_empty",
+        "overview_empty_font",
+        "overview_footer",
+        "overview_header",
+        "overview_header_font",
+        "overview_mode",
+        "overview_navigation",
+        "overview_next",
+        "overview_page",
+        "overview_page_font",
+        "overview_panel",
+        "overview_previous",
+        "overview_progress",
+        "overview_reload",
+        "overview_root",
+        "overview_status",
+        "overview_status_font",
+        "overview_subtitle",
+        "overview_title"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_adaptive.xml",
+      "size": 6731,
+      "sha256": "70f4d0538c4858c16fa5d8bf22c34333904be881e1ed9cc0ec949b0dd4334e8b",
+      "classes": [],
+      "android_ids": [
+        "overview_background",
+        "overview_border_layer",
+        "overview_calendar",
+        "overview_cards",
+        "overview_content",
+        "overview_dots",
+        "overview_emblem",
+        "overview_empty",
+        "overview_empty_font",
+        "overview_footer",
+        "overview_header",
+        "overview_header_font",
+        "overview_mode",
+        "overview_navigation",
+        "overview_next",
+        "overview_page",
+        "overview_page_font",
+        "overview_panel",
+        "overview_previous",
+        "overview_progress",
+        "overview_reload",
+        "overview_root",
+        "overview_status",
+        "overview_status_font",
+        "overview_subtitle",
+        "overview_title"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_card.xml",
+      "size": 2128,
+      "sha256": "109ecee3517b96488332652c85b641c0a343df0f0240e0a2d98b7430364ec876",
+      "classes": [],
+      "android_ids": [
+        "overview_card_background",
+        "overview_card_date",
+        "overview_card_font",
+        "overview_card_form",
+        "overview_card_room",
+        "overview_card_root",
+        "overview_card_subject",
+        "overview_card_time"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_row.xml",
+      "size": 251,
+      "sha256": "bc23aaff4b84cdc314816e3df814256b38af5d2c7699ddc928565bb7224bda7c",
+      "classes": [],
+      "android_ids": [
+        "overview_row"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_spacer.xml",
+      "size": 324,
+      "sha256": "53ebf9d6247fdde4cd9775d204a635ee76ab58e43702d7f0b6930207dd8333a6",
+      "classes": [],
+      "android_ids": [
+        "overview_spacer_root"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/overview_widget_tall.xml",
+      "size": 6731,
+      "sha256": "0205351753265ebd9e16a5ed72fdc6c56edf4450f341675add7c70b072b6a16a",
+      "classes": [],
+      "android_ids": [
+        "overview_background",
+        "overview_border_layer",
+        "overview_calendar",
+        "overview_cards",
+        "overview_content",
+        "overview_dots",
+        "overview_emblem",
+        "overview_empty",
+        "overview_empty_font",
+        "overview_footer",
+        "overview_header",
+        "overview_header_font",
+        "overview_mode",
+        "overview_navigation",
+        "overview_next",
+        "overview_page",
+        "overview_page_font",
+        "overview_panel",
+        "overview_previous",
+        "overview_progress",
+        "overview_reload",
+        "overview_root",
+        "overview_status",
+        "overview_status_font",
+        "overview_subtitle",
+        "overview_title"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/schedule_widget.xml",
+      "size": 5863,
+      "sha256": "5c734d06cd11743a806053379b70826af198e621389b5993d51f27a98b0610d0",
+      "classes": [],
+      "android_ids": [
+        "widget_actions",
+        "widget_calendar",
+        "widget_calendar_hit",
+        "widget_custom_border",
+        "widget_empty",
+        "widget_list",
+        "widget_mode",
+        "widget_mode_hit",
+        "widget_premium_frame",
+        "widget_refresh_cover",
+        "widget_reload",
+        "widget_reload_hit",
+        "widget_root",
+        "widget_stack_peek_mask",
+        "widget_theme_background"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/schedule_widget_item.xml",
+      "size": 675,
+      "sha256": "bce4ffb4b669808545442dbaea58762450cfa6e61dc7c1964e94c74ea1a51d12",
+      "classes": [],
+      "android_ids": [
+        "widget_slide_image",
+        "widget_slide_item"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/widget2.xml",
+      "size": 3817,
+      "sha256": "de3e34a70991fc9852f1a24f94f736cf4d5dc28ef0cf1d05cc1f08844d143799",
+      "classes": [],
+      "android_ids": [
+        "widget2_actions",
+        "widget2_border_layer",
+        "widget2_calendar",
+        "widget2_content_layer",
+        "widget2_day_actions",
+        "widget2_mode",
+        "widget2_next",
+        "widget2_previous",
+        "widget2_reload",
+        "widget2_root",
+        "widget2_static_layer"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/layout/widget2_system_preview.xml",
+      "size": 3134,
+      "sha256": "19908e6fe7b498f1f80d0d7b1f83044f45033095ec70ee75c09e7ba442b2905d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "size": 272,
+      "sha256": "b69fdd7cb02097d11718cf2fe81a3ce10b7f34388744690035242b00f2c5aebc",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "size": 272,
+      "sha256": "b69fdd7cb02097d11718cf2fe81a3ce10b7f34388744690035242b00f2c5aebc",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "size": 3087,
+      "sha256": "4142c3d66d01693e67b9045bf7d637ac63391c91566ad7b0e8ab54240950ae27"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "size": 3886,
+      "sha256": "223ef9fbb3bd5d3bd6cfca78f725e7658f43e670a8dedace276995c4bfef39e5"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "size": 1821,
+      "sha256": "a5a16c72bb35d22947319a05d88fe6317e0fd6085ad1ca866a7b9093d47ee676"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "size": 2294,
+      "sha256": "fb2e42b16da202468929ad576667564ca5f4de56e1845126fd420e7d7ec26dc1"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "size": 4745,
+      "sha256": "ac3b7e71ff479a9c67255b2bcea80d33f3c84661e5202e66dd1773190173ee5d"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "size": 6011,
+      "sha256": "8a169e38e411a84c55713389dbb9a86c7a63ee6f9110b3ad50833427b100a8ba"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "size": 8401,
+      "sha256": "1293295cfde923d4435dcbbc96d28b5dd484cf1a594c65049be457a48aa1164c"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "size": 10502,
+      "sha256": "c554c74589df49f384ea801f2c807378b93136472e47c46558e6bbf706973da9"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "size": 12156,
+      "sha256": "e569ed89fcb313da4516d4c3ac6baf6f1ae1b4b52a222c164ef50d9904563903"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "size": 14994,
+      "sha256": "f997b8ed5af51b5c3a8593f254eaff67e0af26529d825a80b669fb2e314e7b82"
+    },
+    {
+      "path": "android/app/src/main/res/values-night-v31/styles.xml",
+      "size": 836,
+      "sha256": "a9b6ead97bc61c2582ed8907f7a4a6da15d5c474fe511d039f2dbd8cdb38af7e",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/values-night/styles.xml",
+      "size": 991,
+      "sha256": "5f0f2de6589ba1f4fab29bf7262b04064bb5760436e37a7a40769cdc77066b98",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/values-v31/styles.xml",
+      "size": 836,
+      "sha256": "a9b6ead97bc61c2582ed8907f7a4a6da15d5c474fe511d039f2dbd8cdb38af7e",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/values/colors.xml",
+      "size": 123,
+      "sha256": "1e5111ab706b7d07585b2e09ae456910961a19a21e0a9995a5b5cf7323b22825",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "size": 764,
+      "sha256": "55a0a426e0c1a4cb9d1eb7feec20dfabfc73174a511ee072900a1b0fc5e9558e",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "size": 992,
+      "sha256": "7ffb3755c8febb87f6ec0a1909be4b56e2e8c350365d7c60e5f56b6bf706f84c",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/xml/overview_widget_info.xml",
+      "size": 612,
+      "sha256": "0d6b1dfb4e37ce879ae60d24674529c71088d6d53e0f33c0d277c5ea76529ad3",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/xml/schedule_widget_info.xml",
+      "size": 560,
+      "sha256": "cdf024aecd334995b4909db13fe423b78f4d3351707841cff734bb78163580a7",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/main/res/xml/widget2_info.xml",
+      "size": 647,
+      "sha256": "b0b9d6bc69e2152bdf61d0fd6102507cda2446dd207082b148d8448acb86b2f7",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/profile/AndroidManifest.xml",
+      "size": 378,
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/AssistantTextTest.kt",
+      "size": 1667,
+      "sha256": "8451102e80a636b16b3be08bf2bfa7afdecb002ceb31c91c99e693098dc19673",
+      "classes": [
+        "AssistantTextTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ExamChangeNotifierTest.kt",
+      "size": 1628,
+      "sha256": "caae13aa3c4b71568583e03f24ecf1e6273b5496b1d105b2887460a090545ac6",
+      "classes": [
+        "ExamChangeNotifierTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ExamReminderPlannerTest.kt",
+      "size": 3584,
+      "sha256": "949f22db7c4f3b28857b8cd49fcee523005318f3504d26a4b76938f5be296feb",
+      "classes": [
+        "ExamReminderPlannerTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSchedulingTest.kt",
+      "size": 3206,
+      "sha256": "f9dc0b35dd202bb3ce6b1a11bbe515188006be02c1dd5463816544527c74b961",
+      "classes": [
+        "NativeSchedulingTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSemesterDifferenceTest.kt",
+      "size": 2757,
+      "sha256": "d3455a87b471f7cec101ee3c557f7e8aad6bbdc7c04dab55d6761ccdde643333",
+      "classes": [
+        "NativeSemesterDifferenceTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSemesterVerifierTest.kt",
+      "size": 5259,
+      "sha256": "dc2d1cdb0d22420486b980c81dae05821dbe7ae470be67931f3c9c43fad87696",
+      "classes": [
+        "NativeSemesterVerifierTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewPagerTest.kt",
+      "size": 2992,
+      "sha256": "b203a4a22d4774b394de52967bee814bb7748504e89beba3c73deb2c4206b14e",
+      "classes": [
+        "OverviewPagerTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/OverviewWindowTest.kt",
+      "size": 1244,
+      "sha256": "a3230cfe962fdd83efe91352cf2dccc947b544eb114e53c1260732621e191e8c",
+      "classes": [
+        "OverviewWindowTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/QldtPageRetryTest.kt",
+      "size": 1332,
+      "sha256": "d6f06b249fa10bbe5cacbbb8e5505cc6f39f6865de254a509e0d13da3cb1cca4",
+      "classes": [
+        "QldtPageRetryTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/SyncStaleReminderPolicyTest.kt",
+      "size": 1001,
+      "sha256": "c39583ffad7be2c086613ebd5c5499bb37852f6dc21bd03ef36d3da21c4e4a4b",
+      "classes": [
+        "SyncStaleReminderPolicyTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/UpdateSecurityTest.kt",
+      "size": 1853,
+      "sha256": "1a9e9d57dae1acb4a4cd14b99dcf6bf3571434857da581b08057fdd0989b997b",
+      "classes": [
+        "UpdateSecurityTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/Widget2ContractTest.kt",
+      "size": 4710,
+      "sha256": "3d0ed4d6f8e89501a174b274d9f729364b189bddaeabdab68a30bd836e8b79c6",
+      "classes": [
+        "Widget2ContractTest"
+      ],
+      "android_ids": [
+        "widget2_content_layer",
+        "widget2_next",
+        "widget2_previous",
+        "widget2_static_layer"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetGeometryTest.kt",
+      "size": 1607,
+      "sha256": "0f9e1298471d171eac64fcda0dfeb97b65f08f9657dccabd373538c39cbbced8",
+      "classes": [
+        "WidgetGeometryTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetLayoutContractTest.kt",
+      "size": 3774,
+      "sha256": "802ae9762cb507aec3daecfee11d1e247ce5c976bd28951a63e217864e114eb0",
+      "classes": [
+        "WidgetLayoutContractTest"
+      ],
+      "android_ids": [
+        "widget_root"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetRefreshDecisionTest.kt",
+      "size": 3040,
+      "sha256": "e76f25d6a352d33605f14d7eca915a87f5c24a175a098d7d26b9b308bb98f58b",
+      "classes": [
+        "WidgetRefreshDecisionTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetThemeTokenTest.kt",
+      "size": 785,
+      "sha256": "a22ce3cd0008dfc5f1fcefff8972a377cf034ec063b5e345dcb5f8d935eb4e35",
+      "classes": [
+        "WidgetThemeTokenTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetTimelineDateTest.kt",
+      "size": 2529,
+      "sha256": "fa07e20bc4d3f175aedae893ece92c864191fa1c6fde053bbbe6dfb2f3e29672",
+      "classes": [
+        "WidgetTimelineDateTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "size": 537,
+      "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba"
+    },
+    {
+      "path": "android/gradle.properties",
+      "size": 351,
+      "sha256": "8dcd9054be36e859460941bd9239431dfe00d017824622bcac9b00464906fd16"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "size": 53636,
+      "sha256": "16caeaf66d57a0d1d2087fef6a97efa62de8da69afa5b908f40db35afc4342da"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "size": 202,
+      "sha256": "b690d26223576fe4e63889fad9a00df81945cb870b9476cc5a563152a1a88a74"
+    },
+    {
+      "path": "android/gradlew",
+      "size": 4971,
+      "sha256": "ec56c02543666d92d9ac5ae7fcc48f88ce4de0deb8b7f9b39928ca46f68c1b2b"
+    },
+    {
+      "path": "android/gradlew.bat",
+      "size": 2404,
+      "sha256": "c13c6e91b9a517783976de213d46398c661ea9e17651376d7301e839eaedcc62"
+    },
+    {
+      "path": "android/key.properties.example",
+      "size": 95,
+      "sha256": "205d691b09d272120326df1b1d37e2aaa1805158362b902b6359cfdb3a6b9fef"
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "size": 770,
+      "sha256": "a4b5e2c0a9b1b28eb08854e97706146542c7d950b77dd1290d0cc9d26f4369b8"
+    },
+    {
+      "path": "assets/card_vfx/link.html",
+      "size": 25141,
+      "sha256": "d539afe7dfca74a080b337ba36e97e11e11027267b92dbf9ba806211e2e2d390",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "assets/card_vfx/unlink.html",
+      "size": 17788,
+      "sha256": "5b4cf882702b5858204f5dd9e93fe80827cf2e9556f81a2d3b67e57d481f0c4d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "assets/fonts/minecraft.ttf",
+      "size": 31240,
+      "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d"
+    },
+    {
+      "path": "assets/tien_mon_premium/README.md",
+      "size": 894,
+      "sha256": "491e4305fd127a1d2dd9eda4b574181202542ad9c2c5db09395a89abb11e3b7f"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_1_1440x2560.png",
+      "size": 6490215,
+      "sha256": "3cf6aea2aa50bfeb6e2579f73675d7c0b2b8796eac0288c39386972ef840cbc3"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_2_1440x2560.png",
+      "size": 6575341,
+      "sha256": "001e9ee15101ec7fe88b5f1f6d7b78c38637506c2bcf89c0139ff91398f1511f"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_3_1440x2560.png",
+      "size": 6469795,
+      "sha256": "330bb9539d5a093bc1e86230a122c266bf8a6e378fdd34c898ff52ce26dc8b52"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_4_1440x2560.png",
+      "size": 6676294,
+      "sha256": "e36ee371ebfbc4637f1f0e3a654306eefcb3b2500032686230ae1842b8f0d659"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_5_1440x2560.png",
+      "size": 6044507,
+      "sha256": "b5f40b34567ea7db08d45fca86fd15619c100c003e0b5db3586c1d7f30b99bfe"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_6_1440x2560.png",
+      "size": 5825270,
+      "sha256": "1a953c5cd9febbd5dafbbab95fcc2e2b26dfe52f1fe02817339bf946de1e8f76"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_7_1440x2560.png",
+      "size": 6077958,
+      "sha256": "b815b90165177c98c9ca3c872d52f519715deae58dcfb773ef8d8092dae6675d"
+    },
+    {
+      "path": "assets/tien_mon_premium/app_backgrounds/tienmon_8_1440x2560.png",
+      "size": 6619392,
+      "sha256": "5edef3e6c2180ea36105208326227922f523b26abc7c346afd63a76b3cafd786"
+    },
+    {
+      "path": "assets/tien_mon_premium/fonts/FzCoTrang.ttf",
+      "size": 223100,
+      "sha256": "1a7b3066c5bb45bf7d3073280a8f27d77dc5b050a4dd564390468dd9071aaeea"
+    },
+    {
+      "path": "assets/tien_mon_premium/scene_manifest.json",
+      "size": 3023,
+      "sha256": "1e9edcca5ebd3c6628f8983adf4b6c1f7f5c3a3231896e3f76a2047e15f8bdf7",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "assets/tien_mon_premium/widget_overview/w_toi.png",
+      "size": 3015617,
+      "sha256": "5a4b62a7a81b6ac62798bd41ea9f2f88ec55da707421b341fdfcd77b9bac510a"
+    },
+    {
+      "path": "assets/tien_mon_premium/widget_overview/wid_chieu.png",
+      "size": 3124925,
+      "sha256": "c0612706eecf76ee32cbd02401ad1d094f322de9da1432b56ccee6c0fe404fa0"
+    },
+    {
+      "path": "assets/tien_mon_premium/widget_overview/wid_sang.png",
+      "size": 3120053,
+      "sha256": "77ab81b16374d894f036dcddf40deaefe1c1f50f95dd3adbe2bf723d55c042e4"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "size": 2021,
+      "sha256": "80622ea03440372504179ee30d47fd0a57da556cf392568d4d039567fab5bbfc"
+    },
+    {
+      "path": "docs/COOC_1_2_UPDATE.md",
+      "size": 3917,
+      "sha256": "73c5707800ef2262d14a6be4a3f32dafab59eefae8894cf8f296b67a283fa3e8"
+    },
+    {
+      "path": "docs/INTERACTION_UPGRADE.md",
+      "size": 1010,
+      "sha256": "2761149db7febfd26047e0d007e5ce6f4863c63e3c3a8266dff98b95b8fe9bb4"
+    },
+    {
+      "path": "docs/TIEN_MON_PREMIUM_HANDOFF.md",
+      "size": 5207,
+      "sha256": "0f295abdffc4c0f0eb8ddf2afe76ddb3d3123848c189320b6a61f23dbbd27104"
+    },
+    {
+      "path": "docs/TIEN_MON_PREMIUM_REFERENCE.md",
+      "size": 8885,
+      "sha256": "44addd5eb483647f80ba6d4d006a2390e89248ada186048ec2457fdf8999ed1f"
+    },
+    {
+      "path": "docs/WORKFLOW.md",
+      "size": 1378,
+      "sha256": "227f316eddc1a786ac40ace13d79c6d2259ef3d8caa8a9c34466dd246738ddca"
+    },
+    {
+      "path": "experiments/vfx/bpa_pen_trace_splash.html",
+      "size": 6588,
+      "sha256": "8891bb94762873845f7fb73a31454090ac106d0aa000008e91cccbfdbd257d51",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "integration_test/app_flow_test.dart",
+      "size": 3532,
+      "sha256": "18fdc542a80bfe2e79228c3a45b990b273c03e812ce01a8ce20517e05ae412fd",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "integration_test/qldt_login_flow_test.dart",
+      "size": 5043,
+      "sha256": "70a66ac101bc8ed839d17121630aa55f15c7fa73cc267382640112d1bff91c43",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/app/app.dart",
+      "size": 174485,
+      "sha256": "533bd9228563182a31fa66dcb6369cb459b11f412acb9bb538353effbd4aa5ee",
+      "classes": [
+        "BetterPhenikaaScheduleApp",
+        "_BetterPhenikaaScheduleAppState",
+        "_AppRoot",
+        "_AppRootState",
+        "hours",
+        "_SplashScreen",
+        "_LoginScreen",
+        "_MainShell",
+        "_MainShellState",
+        "_TimetableScreen",
+        "_TimetableScreenState",
+        "_ExamScreen",
+        "_NotificationCenterScreen",
+        "_NotificationUpdateLogCard",
+        "_NotificationExamCard",
+        "_NotificationChangeCard",
+        "_AccountScreen",
+        "_TopTitle",
+        "_TimetableModeSelector",
+        "_TimetableModeSelectorPainter",
+        "_DateNavigator",
+        "_ScheduleCalendarPicker",
+        "_ScheduleCalendarPickerState",
+        "_ScheduleCard",
+        "_ExamCard",
+        "_ExamCountdownTag",
+        "_ExamAlertDot",
+        "_SegmentTabs",
+        "_TabButton",
+        "_InfoPanel",
+        "_AccountInfoRow",
+        "_WidgetPreview",
+        "_OverviewWidgetPreview",
+        "_Widget2LauncherPreview",
+        "_WidgetValorantClipper",
+        "_WidgetLolClipper",
+        "_ControlPanel",
+        "_ArcPanelAction",
+        "_PanelAction",
+        "_MetaLine",
+        "_EmptyState",
+        "_ErrorBanner",
+        "_PhoneSurface",
+        "_AppMark",
+        "_MicrosoftMark",
+        "_MsTile"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/assistant_test",
+        "better_phenikaa/update",
+        "better_phenikaa/widget_pin",
+        "better_phenikaa/widget_session"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/app/bpa_pen_trace_splash.dart",
+      "size": 5503,
+      "sha256": "9592395d13069956939158a7f56b5bc873bca905bda2439c0ad2b5337ff29310",
+      "classes": [
+        "BpaPenTraceSplash",
+        "_BpaPenTraceSplashState",
+        "BpaPenTracePainter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/core/contracts/models.dart",
+      "size": 1737,
+      "sha256": "46ed46283a68f3caa264aebce6ae21c236c0347db3aff55b39d1cfeb9636aca6",
+      "classes": [
+        "UserDto",
+        "SemesterDto",
+        "ClassDto",
+        "ExamDto",
+        "QldtImportPayload",
+        "WidgetSnapshot"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/core/contracts/repositories.dart",
+      "size": 795,
+      "sha256": "0e5ce09b138cf5f3ec24564e4e8d955d422d5cc9b6b44172acc9f390eae1bf39",
+      "classes": [
+        "QldtIntakeRepository",
+        "ScheduleRepository",
+        "ExamRepository",
+        "WidgetSnapshotRepository"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/README.md",
+      "size": 1146,
+      "sha256": "f22bd00d6ff0b4b1c2ed55cbc94ffa6b1415fa083bb64e5b2a6c78b57c652ccc"
+    },
+    {
+      "path": "lib/features/app_update/card_link_vfx.dart",
+      "size": 8635,
+      "sha256": "ca233037504b225488c52066100a9356ab9633d29171cd056b354b7a973e43b2",
+      "classes": [
+        "CardLinkVfx",
+        "_CardLinkVfxState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/henshin_vfx.dart",
+      "size": 9727,
+      "sha256": "e39cfd1ba91e65129de3dc31df77d5df1bb401e17ba3ea90ee96d957cedc9bf0",
+      "classes": [
+        "HenshinVfx",
+        "_HenshinVfxState",
+        "_HenshinPainter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_controller.dart",
+      "size": 13490,
+      "sha256": "a8e2ed742f91b345b2894ca284b4040cfe70168bf49eab64c3c212e9610acf50",
+      "classes": [
+        "UpdateNotice",
+        "UpdateController"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/update"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_http_io.dart",
+      "size": 848,
+      "sha256": "5a65637ce8ff6424ba3cae0343f6d559410b7713d137e70cb330a6a5e16fdec8",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_http_stub.dart",
+      "size": 123,
+      "sha256": "767b3cb19705e6ee8826f289387e39a9cc4254997d0a08d9066118dbeba313b6",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_manifest.dart",
+      "size": 4089,
+      "sha256": "acbd9538ea65add04190e6af78cc5ce75ec5b796b492692066811c0703668d34",
+      "classes": [
+        "UpdateManifest",
+        "UpdateManifestVerifier"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_name_match.dart",
+      "size": 6298,
+      "sha256": "2352f4a051f34489b1bd874c08ab4d02d678ee05dcde4c7e2636b995e06ed797",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_repository.dart",
+      "size": 1509,
+      "sha256": "917fa1568553e3932dde517b8b13eb582fdc7ec3dcfe5d65f3a84e1fc36f9793",
+      "classes": [
+        "UpdateRepository"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/app_update/update_ui.dart",
+      "size": 20529,
+      "sha256": "d091cb93fa0bf4e0a4bfdf6938942a1f8fd52bbe5964581858901c3b20906ea9",
+      "classes": [
+        "UpdateFlowSheet",
+        "_UpdateFlowSheetState",
+        "CardBindingSheet",
+        "_CardBindingSheetState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/diagnostics/README.md",
+      "size": 906,
+      "sha256": "ac69d8377d65b45b324a694bbe0afb036e3190f40f25f60ccdac9baf9447a6c8"
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/diagnostics/qldt_sync_diagnostics.dart",
+      "size": 8458,
+      "sha256": "70d6947357723e46cffdc7ec24fa1b4c6454d8ff340123238dc7b15f3923b4a4",
+      "classes": [
+        "QldtSyncDiagnostics"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/diagnostics/verification_diagnostics.dart",
+      "size": 4826,
+      "sha256": "11540b9318ee8291bc4540993b1aa633a65a66b81d7b85f836884a96f7b8de31",
+      "classes": [
+        "VerificationDiagnostics"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/exam_period.dart",
+      "size": 1230,
+      "sha256": "b698d2336d4d3edb45b82ff782dbb971fdbdac69824dde6ad8cb7162f785ba81",
+      "classes": [
+        "ExamCountdown",
+        "ExamPeriod"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/exam_reminder_plan.dart",
+      "size": 1773,
+      "sha256": "e15290bfb248d6dce5e0b6b718a7573edb4dabbbff6f8be2249950a64d0ad5db",
+      "classes": [
+        "ExamReminder",
+        "ExamReminderPlan",
+        "ExamReminderPlanner"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_login.dart",
+      "size": 944,
+      "sha256": "4130618028eabc5e0d1429e977c8153b984bb32b97f946af41d636fbb2f94ef4",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_login_mobile.dart",
+      "size": 74833,
+      "sha256": "7a594fc30e90b76b1b147bbb0a220781622561c4c37081b2edd54373ba66d01f",
+      "classes": [
+        "_QldtWebLoginScreen",
+        "_QldtWebLoginScreenState",
+        "_QldtNameToken",
+        "_QldtNameArrangeScreen",
+        "_QldtNameArrangeScreenState",
+        "_AnimatedNameChip"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/qldt_credentials"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_login_result.dart",
+      "size": 465,
+      "sha256": "c876e0d62e032dd004755c4d383997f1f9739a11721195c1acb69d323aab1034",
+      "classes": [
+        "QldtLoginResult"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_login_web.dart",
+      "size": 7694,
+      "sha256": "08f2ba3eb07b8242b9f0832c6a7e677ac57cd68808a473ffe62533548f974085",
+      "classes": [
+        "_WebQldtBridgeDialog",
+        "_WebQldtBridgeDialogState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_models.dart",
+      "size": 10221,
+      "sha256": "35cbba010b81129cecb457b9506c5f34dfefe59242498513886d4347f6c6e60e",
+      "classes": [
+        "ScheduleRecord",
+        "ImportedScheduleData",
+        "QldtParser"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/qldt_native_transport.dart",
+      "size": 10969,
+      "sha256": "ca928f10c49465cd1d8f003f2969725e88335ee830a33d715453eba9a5d4a88a",
+      "classes": [
+        "QldtNativeSession",
+        "QldtNativeRegistration",
+        "QldtNativeTransport"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/registration_parser.dart",
+      "size": 4995,
+      "sha256": "1e6789c3fd31a24186270d5e124b3cba6fe5e5d454effbf63b83761450b39c2f",
+      "classes": [
+        "QldtRegistrationParser",
+        "_SemesterOption"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/schedule_difference_sheet.dart",
+      "size": 4155,
+      "sha256": "cbce4ff0092ee26d4d7b6cf4ceb08b8173741f39435244801705fed288ffd165",
+      "classes": [
+        "ScheduleDifferenceSheet"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_changes.dart",
+      "size": 10123,
+      "sha256": "773fa480e316a433eeb07f60d6edd6ad31c1c67dc6cbbf2922ccdad7e0e0262f",
+      "classes": [
+        "ScheduleDifference",
+        "ScheduleChange",
+        "SemesterDifference",
+        "SemesterDifferenceStore",
+        "SemesterChangeDetector"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_data.dart",
+      "size": 11070,
+      "sha256": "295f524d6fbcda784782b3cc8925f43036458133721561bbf65dad88933057c9",
+      "classes": [
+        "RegisteredSemester",
+        "RegisteredClassSection",
+        "SemesterSubject",
+        "CurrentSemester",
+        "SemesterDataBuilder",
+        "CurrentSemesterStore"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_retention.dart",
+      "size": 2807,
+      "sha256": "7815d02f1d06679b2b2f399c986aaf1bdbe4644d1d03ebc4972f1ea1c0992cd2",
+      "classes": [
+        "RetainedSemester",
+        "SemesterRetention"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_schedule_range.dart",
+      "size": 1089,
+      "sha256": "489dc71bc77dba9a35f474b2b2033a61bffa4fdb3ddae5be332e93ee4e28faf8",
+      "classes": [
+        "SemesterScheduleRange"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_schedule_verifier.dart",
+      "size": 4384,
+      "sha256": "8fdb14982d3b4d51d4a789fd88ec9c010d7d549db078c27002407f1cfa19f3ad",
+      "classes": [
+        "VerifiedSemesterSchedules",
+        "SemesterScheduleVerifier",
+        "name",
+        "code",
+        "date"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_sync.dart",
+      "size": 717,
+      "sha256": "b05dde3a3632731b4a2690b60c30fbc561654df5c7d7a42d54adf18d40138ffc",
+      "classes": [
+        "SemesterSyncCoordinator"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/semester_sync_message.dart",
+      "size": 840,
+      "sha256": "793fc4f4f0cf5e22e485003898032a8605880a1dbf0694a46e7b214b51f736f5",
+      "classes": [
+        "SemesterSyncMessage"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/sync_reminder_policy.dart",
+      "size": 583,
+      "sha256": "514cac5066206f6d5e518fffcbbae693b8b662078ae2a0d61db78102605763e6",
+      "classes": [
+        "SyncReminderPolicy"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/tracuu_api.dart",
+      "size": 13996,
+      "sha256": "2bde32f7d13e8e9b1a37a38afa09021cc88b9f45c8e2257a2e3c14e70a28a57d",
+      "classes": [
+        "TracuuApi"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dang_nhap_qldt/tracuu_webview_probe.dart",
+      "size": 4744,
+      "sha256": "e1e89d598912765c07726be19858a09a352d343d133d6879d74bac27396c55ed",
+      "classes": [
+        "TracuuWebViewProbe"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/dong_bo_hang_ngay/daily_sync.dart",
+      "size": 2421,
+      "sha256": "3fa71b09e610362260ef458c1b76b6f6a9dc5d1c078ab2750f78b69213b5f3b7",
+      "classes": [
+        "DailySync"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/daily_sync"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/bang_mau_anh/palette_extractor.dart",
+      "size": 3994,
+      "sha256": "7797ec24b9eeb4b98fe6bf2ef41e3a548eab549a3d48e0f5ba0b485199a60697",
+      "classes": [
+        "ExtractedSwatch",
+        "PaletteExtractor",
+        "_ColorBucket"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/bo_may/theme_generator.dart",
+      "size": 8761,
+      "sha256": "40c3159067cece2ab2f4dde18690b52236361ca5367499384a13b5b1e4b8b065",
+      "classes": [
+        "ThemeGenerationSettings",
+        "ThemeGenerator"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/bo_may/theme_source.dart",
+      "size": 1540,
+      "sha256": "d768c30937f80dcb8f702dec85c93d6f6d4873ddd6b35f1d7d58e1a7f9541ca1",
+      "classes": [
+        "ThemeSourceData"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/bo_may/theme_tokens.dart",
+      "size": 6135,
+      "sha256": "dbf1fa76974c7fd700af6c2c4bd683a75756815e5fc5477181aca4b18c175313",
+      "classes": [
+        "ThemeTokens"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/du_lieu/custom_theme.dart",
+      "size": 3123,
+      "sha256": "5df12b4ef8385a74466e1d2b406af17ec89172eeba00811330fb2e4911bd57d9",
+      "classes": [
+        "CustomThemeDefinition"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/du_lieu/custom_theme_repository.dart",
+      "size": 1367,
+      "sha256": "3892e90783cbcb966a1ee9c79efa9652e212dd33098b068411db373b33be3b2c",
+      "classes": [
+        "CustomThemeRepository"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/du_lieu/widget_theme_configuration.dart",
+      "size": 7490,
+      "sha256": "1d4ce1395092261a3ae869d5d0dd918d82aa2e9cab6110bfc310951c93157031",
+      "classes": [
+        "WidgetImageCrop",
+        "WidgetBorderDefinition",
+        "WidgetThemeConfiguration"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/phoi_mau/color_mixer.dart",
+      "size": 1653,
+      "sha256": "9f365f902a2165fa046164851274341b0c1b00ac432b9deb78bace85cb07c5e1",
+      "classes": [
+        "ColorMixer"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/phong_chu/font_choice.dart",
+      "size": 1724,
+      "sha256": "07b5712d54454889ff9634882169ea68a1fc170c8f4ac7cdcdf1a349bc1b0cbc",
+      "classes": [
+        "AppFontChoice"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/phong_chu/font_manager.dart",
+      "size": 2852,
+      "sha256": "36f5bd105a5c692ed9dfed53e6dc6cbdd3e182788bc4808f6b159069b4809a3c",
+      "classes": [
+        "ThemeFontManager"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tep_cuc_bo/file_bytes.dart",
+      "size": 151,
+      "sha256": "8d78d753b58ac18da794059c5591313bbf95a4a5819319bb2e613e799d9e0586",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tep_cuc_bo/file_bytes_io.dart",
+      "size": 614,
+      "sha256": "81626442d6e5e047a93223304f3b2ec1c490f1c0b991281231443f6cff585fb9",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tep_cuc_bo/file_bytes_stub.dart",
+      "size": 391,
+      "sha256": "d8e90ecf2d0ad3a538f4434c3d2ef3aa1dacdb7f3156d7ec4e4732ad34aa8527",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tep_cuc_bo/local_file_bridge.dart",
+      "size": 1406,
+      "sha256": "a221c4ab9ff151d7805d8c95c2b11f991b2d85f6da7f6e562bcd4c16d4dbfc07",
+      "classes": [
+        "ManagedLocalFile",
+        "LocalFileBridge"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/local_files"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/README.md",
+      "size": 865,
+      "sha256": "a12fd08fbfc552e898d9128a1e554ae85c575f75e051a301927e47d06c279730"
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/background/tien_mon_background.dart",
+      "size": 22385,
+      "sha256": "e222a3bee76b6f4159ec7778ef7b7aa8b41567b0c3aecc81aac1fd628a12c0ff",
+      "classes": [
+        "_AmbientProfile",
+        "TienMonSceneController",
+        "TienMonPersistentBackground",
+        "_TienMonPersistentBackgroundState",
+        "TienMonPersistentAmbient",
+        "_TienMonPersistentAmbientState",
+        "_FullBleedSceneArtwork",
+        "_EdgeBlendMist",
+        "_SceneEdgeExtension",
+        "_AmbientMotion",
+        "_AmbientMotionState",
+        "_AmbientPainter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/glass/tien_mon_glass.dart",
+      "size": 4871,
+      "sha256": "9b8b93f810f152678eb5d17821992f2b8ae63221d5fd8ae2d9010e8811301837",
+      "classes": [
+        "TienMonGlassTokens",
+        "TienMonGlass",
+        "TienMonPressable",
+        "_TienMonPressableState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/schedule/tien_mon_schedule_views.dart",
+      "size": 16850,
+      "sha256": "1157862333f8a7a0c381dda52ef778c3e177faf41ddb8a63bc27737c2a9086fa",
+      "classes": [
+        "TienMonEdgeSurface",
+        "_TienMonEdgeSurfaceState",
+        "TienMonScheduleCard",
+        "_TienMonScheduleCardState",
+        "TienMonDayView",
+        "TienMonWeekView",
+        "_ProductionEmptyDay"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_contract.dart",
+      "size": 4100,
+      "sha256": "9a0ff9344a6a6b9ad20adddd56f65c00516f6d662d5cec94846baf56cd4a107e",
+      "classes": [
+        "TienMonPremiumContract"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_engine.dart",
+      "size": 2048,
+      "sha256": "a18c4304fe6b61006416a11b03a5f2e58fbe93e7e1fab2fd5fb2ba021f59f13b",
+      "classes": [
+        "TienMonPremiumEngine"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_models.dart",
+      "size": 2883,
+      "sha256": "2e5b1ae51105ca00c7a42ddce0c1f49719ab92f8d2c6ce91784fd07e9cab03a3",
+      "classes": [
+        "TienMonScheduleItem",
+        "TienMonDaySchedule",
+        "TienMonScheduleAdapter",
+        "TienMonDemoScheduleAdapter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/tien_mon_safe_text.dart",
+      "size": 1705,
+      "sha256": "1c4dff48794e9933dd36c5e53dfebcf40370242223f997965dc297eef1e62791",
+      "classes": [
+        "TienMonSafeText",
+        "TienMonText"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/tien_mon_premium/widgets/tien_mon_widget_previews.dart",
+      "size": 32730,
+      "sha256": "a71f7a73ec858410f3aae6118b83506e2609b6bf16cb00ff947def535adc8b30",
+      "classes": [
+        "_OverviewPreviewItem",
+        "TienMonOverviewWidgetPreview",
+        "_TienMonOverviewWidgetPreviewState",
+        "_OverviewBody",
+        "_OverviewCards",
+        "_F3SkinnedCard",
+        "_PreviewIconButton",
+        "_PreviewRefreshButton",
+        "_F3TimelinePainter",
+        "TienMonSmallWidgetPreview",
+        "_TienMonSmallWidgetPreviewState",
+        "_SmallF3Content",
+        "_SmallRefreshButton",
+        "_BambooPainter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/xem_truoc/custom_theme_editor.dart",
+      "size": 48158,
+      "sha256": "1f55807677171453575675adf97939c24fe3b964544683a522818e8ccd6848fe",
+      "classes": [
+        "CustomThemeEditor",
+        "_CustomThemeEditorState",
+        "_SectionTitle",
+        "_SwatchRow",
+        "_ThemePreview",
+        "_RgbColorPicker",
+        "_RgbColorPickerState",
+        "_RgbSpectrumPainter",
+        "_RgbSelectionPainter",
+        "_HueBar",
+        "_RgbSlider"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/xem_truoc/native_widget_preview.dart",
+      "size": 1715,
+      "sha256": "47d3d3b073955308a386a895bf389e0205ad4e46acc5d59e31286b3b5cf1c480",
+      "classes": [
+        "NativeWidgetPreview"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/widget_render"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/xem_truoc/theme_dust_transition.dart",
+      "size": 8430,
+      "sha256": "ebe4a44c452883c7d054d7b54000f2c24632ff3921f3d5931356ab8f677786a5",
+      "classes": [
+        "ThemeDustSurface",
+        "_ThemeDustSurfaceState",
+        "_DustPainter"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/xem_truoc/theme_picker.dart",
+      "size": 53086,
+      "sha256": "2a38cbfe321d0f2e2925c42642a96f409ce5940eb76ea883e6c9dd23eeb89e68",
+      "classes": [
+        "_ThemePickerSheet",
+        "_RgbColorPicker",
+        "_RgbColorPickerState",
+        "_RgbSpectrumPainter",
+        "_RgbSelectionPainter",
+        "_HueBar",
+        "_RgbSlider",
+        "_FontColorChip",
+        "_DefaultThemeLoading",
+        "_DefaultThemeLoadingState",
+        "_TienMonThemeLoading",
+        "_TienMonThemeLoadingState",
+        "_PresetCard",
+        "_CustomThemeCard",
+        "AppThemeSettingButton"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/giao_dien/xem_truoc/widget_image_crop_editor.dart",
+      "size": 6848,
+      "sha256": "6107d6a4aab5cf8c0cb7ba0179e7dd3c47970d6a88b48dbe8527b63dd4578e9a",
+      "classes": [
+        "WidgetImageCropEditor",
+        "_WidgetImageCropEditorState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/lich_hoc/alarm_test_fixture.dart",
+      "size": 2154,
+      "sha256": "668929894422dcbcff49149646b647bf8ab5f82ba598453dd1073665fa1bbff4",
+      "classes": [
+        "starts",
+        "time"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_SET_ALARM"
+      ]
+    },
+    {
+      "path": "lib/features/lich_hoc/study_alarm_card.dart",
+      "size": 21226,
+      "sha256": "fcc19eaf081b384c90b7839e96c95ce4155667282fa7bbe235f943b25654a257",
+      "classes": [
+        "time",
+        "less",
+        "date",
+        "date",
+        "StudyAlarmCard",
+        "_StudyAlarmCardState",
+        "_WheelColumn"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/study_alarm"
+      ],
+      "android_actions": [
+        "ACTION_DISMISS_ALARM",
+        "ACTION_SET_ALARM"
+      ]
+    },
+    {
+      "path": "lib/features/lich_hoc/week_timetable.dart",
+      "size": 11947,
+      "sha256": "0c55c03bca511fa463a9d7a10abc129dce99bc6139fed71eb345cff4f67c9a27",
+      "classes": [
+        "WeekTimetable"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/tien_ich_lich_hoc/widget_publisher.dart",
+      "size": 2566,
+      "sha256": "5e0ed350023e4fa8a2b710f0f4f9b26bff6273f83d80de19333b8c9ea601205c",
+      "classes": [
+        "WidgetPublisher"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/tro_li/assistant_catalog.dart",
+      "size": 12911,
+      "sha256": "853717651b12fe5fbf808b2540bf9926732ff01f516a0e035b30cb9fb7a92e03",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/features/tro_li/assistant_text.dart",
+      "size": 4553,
+      "sha256": "b0d9f97e0df5b182e7277c7cba23e534a67114c2f316d97741885b82b63855b6",
+      "classes": [
+        "AssistantSelection",
+        "AssistantText"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/main.dart",
+      "size": 2680,
+      "sha256": "5a61d450d3fd3d608c7183d622d5a5acf2ec62e251286e5d376b466f422b3fd8",
+      "classes": [
+        "_LoginCreditOverlay",
+        "_LoginCreditOverlayState"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "lib/theme/app_theme.dart",
+      "size": 47945,
+      "sha256": "f6cd06043406129818155df74ed787aad8e02e3392d0419c4255ba7077bb9c20",
+      "classes": [
+        "AppThemePalette",
+        "AppThemeController",
+        "AppThemeBackdrop",
+        "_AppThemeBackdropState",
+        "_ThemeBackdropPainter",
+        "AppThemePanel",
+        "_ValorantClipper",
+        "_LolClipper"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/widget_theme"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "lib/tien_mon_premium_demo.dart",
+      "size": 30118,
+      "sha256": "fa10e9f926446e81117c027921cd01dc5273197ea8b77f4d368a1c1e79a45022",
+      "classes": [
+        "TienMonPremiumDemoApp",
+        "TienMonPremiumHarness",
+        "_TienMonPremiumHarnessState",
+        "_Header",
+        "_DateNavigator",
+        "_Segmented",
+        "_OptionHeading",
+        "_NotificationTile"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/DailySyncRescheduleReceiver.kt",
+      "size": 445,
+      "sha256": "84c026d5848f7874213afc2dbdd0de38865b99697319531f3985189f8f461346",
+      "classes": [
+        "DailySyncRescheduleReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/DailySyncScheduler.kt",
+      "size": 5277,
+      "sha256": "b1aa1670a38ebda768583777e5c208ba95efa3d776e09afac07c88695b71c08b",
+      "classes": [
+        "DailySyncScheduler"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/MainActivity.kt",
+      "size": 15410,
+      "sha256": "c69cb173b40f34f52b4e4f2543d50f8cc6858dc9a9ca80ff91d0e22fc02c3cd7",
+      "classes": [
+        "MainActivity",
+        "WidgetThemeRequest"
+      ],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/daily_sync",
+        "better_phenikaa/local_files",
+        "better_phenikaa/widget_theme"
+      ],
+      "android_actions": [
+        "ACTION_OPEN_DOCUMENT"
+      ]
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/QldtDailySyncWorker.kt",
+      "size": 21799,
+      "sha256": "5280c8395d20405d15364b0fcd0bf1d2a674278e8d6b4ed8820032d3682c2c3a",
+      "classes": [
+        "QldtDailySyncWorker",
+        "HeadlessQldtSync",
+        "Success",
+        "Failure",
+        "JavascriptResultBridge",
+        "QldtSnapshotEncoder",
+        "SnapshotBundle",
+        "DateParts"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ScheduleWidgetProvider.kt",
+      "size": 27613,
+      "sha256": "ce6915b0e62dbc85faf7b7d27809a562fec69719d5949c4d5fbacc9c06ee6a9d",
+      "classes": [
+        "ScheduleWidgetProvider",
+        "ThemeColors"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_COLLECTION_FRAME_READY"
+      ]
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/ScheduleWidgetService.kt",
+      "size": 21892,
+      "sha256": "1a7d3b94e23f6b781713cfd8d5d30f76ea8f4fdff7ab26cdc4c5c028a9835567",
+      "classes": [
+        "ScheduleWidgetService",
+        "ScheduleWidgetFactory",
+        "WidgetTheme",
+        "LegacyWidgetClass"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_COLLECTION_FRAME_READY"
+      ]
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetDatePickerActivity.kt",
+      "size": 16390,
+      "sha256": "6f3ddae39818cc2561fb48619c0d8649b77ae3d2779f7315b913b5cd54e01327",
+      "classes": [
+        "WidgetDatePickerActivity"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": [
+        "ACTION_APPWIDGET_UPDATE"
+      ]
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetDayChangeReceiver.kt",
+      "size": 433,
+      "sha256": "84f20398b0725d0d14566c1a673db9cc0f9cf663503c745885b695ecce068be1",
+      "classes": [
+        "WidgetDayChangeReceiver"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetRefreshCoordinator.kt",
+      "size": 1696,
+      "sha256": "f49674b65862288694e0bc413ce8544154797433d5f3c5690e737b4449e617de",
+      "classes": [
+        "WidgetRefreshCoordinator"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/WidgetSnapshotStore.kt",
+      "size": 5736,
+      "sha256": "f7931316d1087bfae8e7c0d8718272e70b8f4f62688ee0b17989bbea1b7dd982",
+      "classes": [
+        "WidgetSnapshotStore",
+        "WidgetTimeline",
+        "WidgetCollection",
+        "WidgetClass"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/animator/widget_instant_in.xml",
+      "size": 259,
+      "sha256": "6572a595add107d2101b6158e977a82c159deac5b171c02d859f78e26caa401f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/animator/widget_instant_out.xml",
+      "size": 259,
+      "sha256": "6572a595add107d2101b6158e977a82c159deac5b171c02d859f78e26caa401f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable-nodpi/ic_launcher_foreground.png",
+      "size": 57667,
+      "sha256": "2bd4295a622b23b1b9389f4b961fd40a55dfb681dd43ef6dfc7205c3cce37ca8"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable/ic_launcher_better_phenikaa.xml",
+      "size": 389,
+      "sha256": "9c01ba9ee4c6c0f723a9d232c5b51b21e2f2ccde259bf3472eea808ba9edcaab",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable/ic_widget_calendar.xml",
+      "size": 523,
+      "sha256": "22932327357a92596828e7efee04c8eb64f6cde0490c9ceb4e46acfeea9cff3d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable/schedule_widget_background.xml",
+      "size": 294,
+      "sha256": "03a8fe52fa93239a964accf31495336253ae700bedd0c40b9460ac9175dc7b24",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable/schedule_widget_outline.xml",
+      "size": 236,
+      "sha256": "9b599dc2ac53f269b5e6a1db1c54dc66618b4766cbc7c2f46ef0c8ac23b64bd5",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/drawable/schedule_widget_stack_peek_mask.xml",
+      "size": 256,
+      "sha256": "77112c3295a8c025f3d3ef706f18161649adc9d7e183bac64973382b6607c5c0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/font/minecraft_custom.ttf",
+      "size": 31240,
+      "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/layout/schedule_widget.xml",
+      "size": 3270,
+      "sha256": "a7e7c9ae78bc1a8d3ba407008857c4817798e41dbe1c38b4cb5a8eba834b67f3",
+      "classes": [],
+      "android_ids": [
+        "widget_calendar",
+        "widget_empty",
+        "widget_host",
+        "widget_list",
+        "widget_refresh_cover",
+        "widget_root",
+        "widget_stack_peek_mask",
+        "widget_theme_background"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/layout/schedule_widget_item.xml",
+      "size": 675,
+      "sha256": "bce4ffb4b669808545442dbaea58762450cfa6e61dc7c1964e94c74ea1a51d12",
+      "classes": [],
+      "android_ids": [
+        "widget_slide_image",
+        "widget_slide_item"
+      ],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "size": 272,
+      "sha256": "b69fdd7cb02097d11718cf2fe81a3ce10b7f34388744690035242b00f2c5aebc",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "size": 272,
+      "sha256": "b69fdd7cb02097d11718cf2fe81a3ce10b7f34388744690035242b00f2c5aebc",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "size": 3087,
+      "sha256": "4142c3d66d01693e67b9045bf7d637ac63391c91566ad7b0e8ab54240950ae27"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "size": 3886,
+      "sha256": "223ef9fbb3bd5d3bd6cfca78f725e7658f43e670a8dedace276995c4bfef39e5"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "size": 1821,
+      "sha256": "a5a16c72bb35d22947319a05d88fe6317e0fd6085ad1ca866a7b9093d47ee676"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "size": 2294,
+      "sha256": "fb2e42b16da202468929ad576667564ca5f4de56e1845126fd420e7d7ec26dc1"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "size": 4745,
+      "sha256": "ac3b7e71ff479a9c67255b2bcea80d33f3c84661e5202e66dd1773190173ee5d"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "size": 6011,
+      "sha256": "8a169e38e411a84c55713389dbb9a86c7a63ee6f9110b3ad50833427b100a8ba"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "size": 8401,
+      "sha256": "1293295cfde923d4435dcbbc96d28b5dd484cf1a594c65049be457a48aa1164c"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "size": 10502,
+      "sha256": "c554c74589df49f384ea801f2c807378b93136472e47c46558e6bbf706973da9"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "size": 12156,
+      "sha256": "e569ed89fcb313da4516d4c3ac6baf6f1ae1b4b52a222c164ef50d9904563903"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "size": 14994,
+      "sha256": "f997b8ed5af51b5c3a8593f254eaff67e0af26529d825a80b669fb2e314e7b82"
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/values/colors.xml",
+      "size": 123,
+      "sha256": "1e5111ab706b7d07585b2e09ae456910961a19a21e0a9995a5b5cf7323b22825",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/values/strings.xml",
+      "size": 168,
+      "sha256": "ee6ca035a1fbd887c2a9187f195a992ff675a48f47816212c506f995e852c755",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/main/res/xml/schedule_widget_info.xml",
+      "size": 538,
+      "sha256": "03f09dc1656d1601205959a7a0d45a0dbd05aa7d633e308a9d3d0420230a91be",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "platform/android_widget/app/src/test/kotlin/vn/edu/phenikaa/better_phenikaa_schedule/NativeSchedulingTest.kt",
+      "size": 1746,
+      "sha256": "cc2ba08f88a7f9c6fcf24eb457eda68949538ecd645baeb0acfdacf175be2778",
+      "classes": [
+        "NativeSchedulingTest"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "pubspec.lock",
+      "size": 17721,
+      "sha256": "99755c5c549acd36576595665b92918e9f8ebdb5d2b988cfd00421ae9a043ab7"
+    },
+    {
+      "path": "pubspec.yaml",
+      "size": 884,
+      "sha256": "351564418a0a743d7fa7dd2459df3125018fbc62f4c8f0bb8e4b3ac7f6cc1e68"
+    },
+    {
+      "path": "shaders/theme_dust.frag",
+      "size": 746,
+      "sha256": "b512023ef3a5a277c7305e8df250dea1525b0358a25319e5b7026e9d2e06b170",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/alarm_test_fixture_test.dart",
+      "size": 2244,
+      "sha256": "4bda89b30337958aca64f1595ddcbb0563251aaf585cff708ab6d816b05c7bc6",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/app_smoke_test.dart",
+      "size": 10276,
+      "sha256": "86c68efb233576f31fb4dbca341f90097ab017d7a74f2b34c58a378fc6e6247b",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/app_update_controller_test.dart",
+      "size": 1475,
+      "sha256": "e678bc2e345d48b112dca13e9b7f936ca36c5d4fca30ec1f0d902c420d0ee2f5",
+      "classes": [],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/update"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "test/app_update_manifest_test.dart",
+      "size": 2253,
+      "sha256": "4b613d12aae52938e6994f6ed794407b3dd9215d67ef2a923348e3519e713c0f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/app_update_ui_test.dart",
+      "size": 1654,
+      "sha256": "65b1aa91239568ccffbdf7b2bd97994dcdf17ac36a8541bf671bbbf7db16f31e",
+      "classes": [],
+      "android_ids": [],
+      "channels": [
+        "better_phenikaa/update"
+      ],
+      "android_actions": []
+    },
+    {
+      "path": "test/assistant_text_test.dart",
+      "size": 4057,
+      "sha256": "83e7cc08d8684827563e8a04e8de01bc5f9b8a589a01d9ba78de0e524f00c60c",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/exam_period_test.dart",
+      "size": 2363,
+      "sha256": "541196278bacd72c67994db712b128880f77a6888e1802d01655c78da7fb2744",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/exam_period_ui_test.dart",
+      "size": 13021,
+      "sha256": "88aa39d5d4ac809dd2443ba9389ccbc0d3fcebfb0ed13aa4416c7f67e8e80fe0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/exam_reminder_plan_test.dart",
+      "size": 3386,
+      "sha256": "b26c561affb8231dd34a871cff6bc358cba1c2b6afb0dba04f31cbf368988d0c",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/fixtures/schedule_latest.json",
+      "size": 876,
+      "sha256": "87286619dcc2a6f2095a82ac2073fe2a97a809fc5b53ada773f49e8869f458f1",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/fixtures/tracuu_latest.html",
+      "size": 855,
+      "sha256": "58981d1aac8908d5207166173a6de4187011029e7fd231f26de3f62eddc6fbd8",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/qldt_parser_test.dart",
+      "size": 4038,
+      "sha256": "d22e2c447c69d15667c22f1f2c7b479b476823239b97a616699a35becedad94b",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/qldt_sync_diagnostics_test.dart",
+      "size": 3182,
+      "sha256": "18ace0508eefe188e12891428a659a6e5b9c091889ef8e61a746ef8a5020a3f4",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/registration_parser_test.dart",
+      "size": 5034,
+      "sha256": "623a5c6642e91f102b0222205af14a182fbceec6b8b0174c9e8f056f084a828b",
+      "classes": [
+        "components",
+        "date"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_changes_test.dart",
+      "size": 4980,
+      "sha256": "b7b95b3f65c2cedaadeb1f399c93115426b1d14378e83ed4e76114313037eb63",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_data_test.dart",
+      "size": 6563,
+      "sha256": "d670fe8406257e145ddb4b6eaceee0357a7ea69b36130bae5ba4c5b5271097ab",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_retention_test.dart",
+      "size": 900,
+      "sha256": "3f10537fc6b519b301ee25516c6a5e4128a785b1bb3040dd7baf948ffaf6b569",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_schedule_range_test.dart",
+      "size": 1620,
+      "sha256": "95495a9eae47ac99181b571e46204f7830a2db9e2663cad4f12179769d59713f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_schedule_verifier_test.dart",
+      "size": 9236,
+      "sha256": "fc9804e6941cba9790ee61efadf888cc75938df4f292ba03d1676cbc1538df0b",
+      "classes": [
+        "codes",
+        "name"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/semester_sync_test.dart",
+      "size": 3935,
+      "sha256": "229dc246233ed475023864b3ef59ad62c812509557cd41dc2c482b8101037ef3",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/study_alarm_card_test.dart",
+      "size": 2986,
+      "sha256": "5cda5fc6a7c4739adb47752dc3fbc6866eb086b84cf5d88a499af67ae76d15ba",
+      "classes": [
+        "later",
+        "time",
+        "also"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/sync_reminder_policy_test.dart",
+      "size": 2227,
+      "sha256": "678e2c4cc4cb5560caa071217b2c57edbdf6e05b29d99f4e6c88efbee807f08f",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/theme_engine_test.dart",
+      "size": 3355,
+      "sha256": "211d9d2efe9dcd46b8589a00655ddb97fb550439059909b33056a232823457b9",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/theme_font_layout_test.dart",
+      "size": 1259,
+      "sha256": "5d6d9db8e4617b51146d8cb346e2f4b97e1a479c9f8f03d5b1b73749d788cd5d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/tien_mon_premium_contract_test.dart",
+      "size": 3591,
+      "sha256": "a331f75eb0fb2e9fe9e8809d52a85021521f5ad95112db04247b7b53ced0f783",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/tien_mon_premium_state_test.dart",
+      "size": 2244,
+      "sha256": "5efc27a67b9665beab22e6627873308a1c4138626fb552ebae5935252992bf08",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/tracuu_api_test.dart",
+      "size": 5041,
+      "sha256": "8a5b451a99dc97bdf969130be994d672a2a1d788286772c562f26b82a6d4f98c",
+      "classes": [
+        "belonging"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/tracuu_webview_probe_test.dart",
+      "size": 996,
+      "sha256": "726656efed8dc259e36fd8f019b31416a44c43c09bfbeebd18d19219d53823d2",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/verification_diagnostics_test.dart",
+      "size": 2936,
+      "sha256": "52914a391751df5102b9ab3379092fab6f42f11cfeb07f3117c0fca1b50c924e",
+      "classes": [
+        "without"
+      ],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/week_timetable_test.dart",
+      "size": 1988,
+      "sha256": "55df2058b145ab0673460a6333b71844f9d90a3571672709fbd11a603907fd4d",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "test/widget_theme_v14_test.dart",
+      "size": 3783,
+      "sha256": "c4231b46be2ffa8889026cd9dc6d7a7563002f780d159331ae1137d2445f9e09",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "tool/assistant_pack_texts.json",
+      "size": 13104,
+      "sha256": "208117024745848f3e294cc2ac5f166e9d8699d575fed3e1721090670a2348f7",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "tool/bootstrap.sh",
+      "size": 9640,
+      "sha256": "c8a5c6fe1180c51a3206b6cb4ae67a33766ff306f7eecf307f1778115af699cd"
+    },
+    {
+      "path": "tool/create_release_keys.sh",
+      "size": 2289,
+      "sha256": "f5dbbf5761c6828ce15ac2533c93acd3aab7c8a3b80d317ee5f440853aab034e"
+    },
+    {
+      "path": "tool/generate_assistant_catalog.py",
+      "size": 2114,
+      "sha256": "de609f3f3aa9615adf4151735ca32ea6283d847d44c006065fa86ca6b1f6a6d5"
+    },
+    {
+      "path": "tool/quality.sh",
+      "size": 168,
+      "sha256": "72bda191283545ea117c71771a4fea347fb97b2d6f46cb640170a2e1884fa60c"
+    },
+    {
+      "path": "tool/release_update_manifest.py",
+      "size": 1604,
+      "sha256": "429f8be42fbc3fa7f825e7c5a1b846707b8be15bf39a964f2bc977ee2c8215b2"
+    },
+    {
+      "path": "tool/setup.sh",
+      "size": 356,
+      "sha256": "0cc1d3123df972559e624e7c0dcf2270aaf12996292cbe56a4f6cc0fa4442f13"
+    },
+    {
+      "path": "tool/tracuu_api_flow_test.cjs",
+      "size": 6558,
+      "sha256": "f1ed416db96494f52e41159bebde707e4c11a8da17923b9351ea2fa3f633d8b4"
+    },
+    {
+      "path": "tool/tracuu_probe_test.cjs",
+      "size": 3015,
+      "sha256": "95c44c312b8fefe5a76f39c2485d2bd3601aab926ecdcb4f5a518f88c05e05e1"
+    },
+    {
+      "path": "tools/web_qldt_bridge/README.md",
+      "size": 1635,
+      "sha256": "f005cbdd9f3280b927fb02437f5bd2cd7395fce49cb0baa2a750d385639fda58"
+    },
+    {
+      "path": "tools/web_qldt_bridge/app_bridge.js",
+      "size": 2236,
+      "sha256": "7655ddacd5f31d5fcb17ca24b1fcb8fe4f575019cb95949f931f5d5b4453f224",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "tools/web_qldt_bridge/background.js",
+      "size": 8223,
+      "sha256": "a4e2ead7c45756b4ca49cbfd4070864e48920c1bee3bce25a939c0dd763c5983",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "tools/web_qldt_bridge/manifest.json",
+      "size": 894,
+      "sha256": "9a2b1d485fec44a10373fb534c803d92cce911f076cbc71d58816f458b935da0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "updates/latest.json",
+      "size": 472,
+      "sha256": "a5df71942aa0df6f8c59bba22fea33dc75764ec1fe4d2cc81bb75f7cfd7a52a0",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "updates/latest.json.sig",
+      "size": 88,
+      "sha256": "74d1918112680e70c0f10a0eaa6c992b1dac57b3a25dfffaea40c7807d7c9397"
+    },
+    {
+      "path": "web/favicon.png",
+      "size": 917,
+      "sha256": "7ab2525f4b86b65d3e4c70358a17e5a1aaf6f437f99cbcc046dad73d59bb9015"
+    },
+    {
+      "path": "web/icons/Icon-192.png",
+      "size": 5292,
+      "sha256": "3dce99077602f70421c1c6b2a240bc9b83d64d86681d45f2154143310c980be3"
+    },
+    {
+      "path": "web/icons/Icon-512.png",
+      "size": 8252,
+      "sha256": "baccb205ae45f0b421be1657259b4943ac40c95094ab877f3bcbe12cd544dcbe"
+    },
+    {
+      "path": "web/icons/Icon-maskable-192.png",
+      "size": 5594,
+      "sha256": "d2c842e22a9f4ec9d996b23373a905c88d9a203b220c5c151885ad621f974b5c"
+    },
+    {
+      "path": "web/icons/Icon-maskable-512.png",
+      "size": 20998,
+      "sha256": "6aee06cdcab6b2aef74b1734c4778f4421d2da100b0ff9e52b21b55240202929"
+    },
+    {
+      "path": "web/index.html",
+      "size": 1553,
+      "sha256": "ed0eb9ed8028d6cd7885118e8c764199e916ec5cc03efef8ce8aae6b5dfcdb27",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    },
+    {
+      "path": "web/manifest.json",
+      "size": 944,
+      "sha256": "5699e3b257470f276429ff00cb9ba1a647ef6fbeda5979ffd2076075a9af9585",
+      "classes": [],
+      "android_ids": [],
+      "channels": [],
+      "android_actions": []
+    }
+  ]
+}

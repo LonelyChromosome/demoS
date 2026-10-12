@@ -67,3 +67,7 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 - Run 38283032006: loader cục bộ đã render màn hình đăng nhập gốc 390×844 trong Chromium, ảnh và log đã kiểm tra trực tiếp; không có console error. Tài nguyên phát hành ở nhánh `scriptable-web`. Không suy ra iPhone đạt parity.
 - Plugin `flutter_inappwebview` web không triển khai `addJavaScriptHandler`; đã thêm adapter iframe cục bộ riêng cho HTML VFX thẻ nguyên gốc, kiểm tra callback liên kết/xóa đang chạy.
 - Trạng thái exam notice được nối từ diff Flutter gốc; đọc/ack/clear và các notification thử trợ lý có cầu Scriptable. Chưa kiểm chứng delivery trên iPhone.
+
+- `reference/android-full-inventory.json` kiểm kê đủ 370 tệp tracked tại commit Android chuẩn, đọc blob Git nguyên bản; không đọc thay đổi ảnh cục bộ, không sửa DemoF3. Có hash, class, channel, action và XML ID; đây là kiểm kê, chưa phải đối chiếu hoàn tất từng thao tác.
+- Run 38283729172: build web qua, HTML VFX gốc chạy liên kết và xóa, phát đủ hai callback hoàn tất; ảnh/log đã lưu. Chưa kiểm chứng NFC hoặc vòng đời iframe trong Scriptable.
+- Data hướng dẫn action của nhà phát triển Actions tại gist chính thức (cập nhật 2026-08-06) chưa có NFC; không suy đoán identifier/parameters để tạo Shortcut giả. Cần xác minh export/action schema thật trước khi đóng gói.

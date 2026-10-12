@@ -9,11 +9,12 @@ async function main(){
   const html=vm.runInContext('localAppHTML(bundle)',ctx);
   const server=http.createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end(html);});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-  const {chromium}=require(path.join(process.env.BPA_QA_NODE_MODULES,'playwright'));
-  const browser=await chromium.launch({headless:true,executablePath:process.env.BPA_QA_CHROME||'/usr/bin/google-chrome',args:['--no-sandbox']});
+  const engine=process.env.BPA_QA_ENGINE||'chromium',drivers=require(path.join(process.env.BPA_QA_NODE_MODULES,'playwright'));
+  const browser=await drivers[engine].launch(engine==='chromium'?{headless:true,executablePath:process.env.BPA_QA_CHROME||'/usr/bin/google-chrome',args:['--no-sandbox']}:{headless:true});
+  const qaDir='build/qa/'+engine;
   const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2});
   const errors=[],assetRequests=[],messages=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{messages.push(m.type()+': '+m.text());if(m.type()==='error')errors.push(m.text());});
-  fs.mkdirSync('build/qa',{recursive:true});
+  fs.mkdirSync(qaDir,{recursive:true});
   await page.exposeFunction('readAsset',async request=>{
     if(!files.includes(request.path))return {id:request.id,error:'Unknown local asset '+request.path};
     assetRequests.push(request.path);return {id:request.id,data:fs.readFileSync(path.join(root,request.path)).toString('base64')};
@@ -34,7 +35,7 @@ async function main(){
     // Flutter puts its CanvasKit canvas inside shadow DOM.
     await page.waitForSelector('canvas',{timeout:30000});
     await page.waitForTimeout(6000);
-    await page.screenshot({path:'build/qa/local-loader-login.png'});
+    await page.screenshot({path:qaDir+'/local-loader-login.png'});
     // Exercise the exact source HTML. This is not an NFC hardware test.
     const cardHTML=fs.readFileSync(path.join(root,'assets/assets/card_vfx/link.html'),'utf8');
     await page.evaluate(html=>{
@@ -50,15 +51,15 @@ async function main(){
     await frame.waitForFunction(()=>typeof window.paSetMode==='function');
     await frame.evaluate(()=>window.paSetMode(false,'accepted','Kiểm tra VFX'));
     await page.waitForFunction(()=>window.__bpaVfxCallbacks===1,{},{timeout:12000});
-    await page.screenshot({path:'build/qa/local-card-link.png'});
+    await page.screenshot({path:qaDir+'/local-card-link.png'});
     await frame.evaluate(()=>{window.paSetMode(true,'bound','Kiểm tra VFX');window.paStartDelete();});
     await page.waitForFunction(()=>window.__bpaVfxCallbacks===2,{},{timeout:12000});
-    await page.screenshot({path:'build/qa/local-card-unlink.png'});
+    await page.screenshot({path:qaDir+'/local-card-unlink.png'});
     vfxCallbacks=await page.evaluate(()=>window.__bpaVfxCallbacks);
     await page.locator('#bpa-vfx-qa').evaluate(element=>element.remove());
   } catch(error){failure=error.message;}
-  await page.screenshot({path:'build/qa/local-loader-login.png'});
-  fs.writeFileSync('build/qa/local-loader.json',JSON.stringify({platform:'Chromium, 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,vfxCallbacks,canvases:await page.locator('canvas').count()},null,2));
+  await page.screenshot({path:qaDir+'/local-loader-login.png'});
+  fs.writeFileSync(qaDir+'/local-loader.json',JSON.stringify({platform:engine+', 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,vfxCallbacks,canvases:await page.locator('canvas').count()},null,2));
   console.log(JSON.stringify({errors,messages,assetRequests,failure}));
   await browser.close();await new Promise(resolve=>server.close(resolve));
   if(failure)throw Error(failure);

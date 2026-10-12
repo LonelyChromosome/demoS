@@ -42,6 +42,13 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/bpa-web-qa" playwright
           node tool/test_local_web.cjs
+      - name: Exercise local loader and original card HTML in WebKit
+        env:
+          BPA_QA_NODE_MODULES: ${{ runner.temp }}/bpa-web-qa/node_modules
+          BPA_QA_ENGINE: webkit
+        run: |
+          "$RUNNER_TEMP/bpa-web-qa/node_modules/.bin/playwright" install --with-deps webkit
+          node tool/test_local_web.cjs
       - name: Keep loader diagnostics
         if: always()
         uses: actions/upload-artifact@v4
