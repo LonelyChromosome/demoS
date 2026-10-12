@@ -7,7 +7,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 directory = root / 'scriptable/shortcuts'
-stem = 'BPA-NFC' if len(sys.argv) > 2 and sys.argv[2] == 'nfc' else 'BPA-Alarm'
+stem = {'nfc':'BPA-NFC','widgets':'BPA-Widgets'}.get(sys.argv[2] if len(sys.argv)>2 else '', 'BPA-Alarm')
 metadata = json.loads((directory / (stem + '.json')).read_text())
 signed = (directory / (stem + '.shortcut')).read_bytes()
 source = (directory / (stem + '.cherri')).read_bytes()
@@ -39,7 +39,7 @@ clock = [action for action in actions if action.get('WFWorkflowActionParameters'
 if stem == 'BPA-Alarm':
     assert len(clock) == metadata['clock_create_actions'] == 1, 'Expected one Clock create action'
     assert clock[0]['WFWorkflowActionParameters']['AppIntentDescriptor']['BundleIdentifier'] == 'com.apple.clock'
-else:
+elif stem == 'BPA-NFC':
     reader = [action for action in actions if action['WFWorkflowActionIdentifier'] == 'is.workflow.actions.openxcallbackurl']
     assert len(clock) == metadata['clock_create_actions'] == 0
     assert len(reader) == metadata['reader_callback_actions'] == 1
@@ -49,5 +49,13 @@ else:
     assert all(action['WFWorkflowActionIdentifier'] in allowed for action in actions)
     text = str(plistlib.loads(compiled))
     assert 'nfchelper://read?params=true&custom=' in text and 'nfchelper://write' not in text and 'post=' not in text
+else:
+    refresh=[action for action in actions if action['WFWorkflowActionIdentifier']=='dk.simonbs.Scriptable.RefreshAllWidgetsIntent']
+    inline=[action for action in actions if action['WFWorkflowActionIdentifier']=='dk.simonbs.Scriptable.RunScriptInlineIntent']
+    assert len(clock)==0 and len(refresh)==metadata['widget_refresh_actions']==1 and len(inline)==1
+    assert inline[0]['WFWorkflowActionParameters']['runInApp'] is False
+    assert any(action['WFWorkflowActionIdentifier']=='is.workflow.actions.returntohomescreen' for action in actions)
+    allowed={'is.workflow.actions.detect.dictionary','is.workflow.actions.dictionary','is.workflow.actions.gettext','is.workflow.actions.getvalueforkey','is.workflow.actions.output','is.workflow.actions.setvariable','is.workflow.actions.conditional','is.workflow.actions.returntohomescreen','is.workflow.actions.nothing','dk.simonbs.Scriptable.RefreshAllWidgetsIntent','dk.simonbs.Scriptable.RunScriptInlineIntent'}
+    assert all(action['WFWorkflowActionIdentifier'] in allowed for action in actions)
 assert metadata['device_verified'] is False, 'Do not infer device verification from signing'
 print('Packaged', stem, 'envelope, source and compiled input match; device execution unverified.')

@@ -51,7 +51,7 @@ Kiểm tra Node và Chromium không thay thế kiểm thử Scriptable trên iPh
 ## Một bộ cài BPA
 
 Người dùng chỉ nhận `BPA.scriptable`. Script tự chuẩn bị vùng dữ liệu/tài nguyên
-và widget. Workflow báo thức và cầu quét thẻ đã ký nằm ngay trong file BPA; không yêu cầu người
+và widget. Workflow báo thức, cầu quét thẻ và widget đã ký nằm ngay trong file BPA; không yêu cầu người
 dùng tải một module khác. Lần đầu đặt báo thức, BPA mở luồng import của iOS khi
 cần, rồi xác minh companion đã sẵn sàng trước khi tạo báo thức.
 

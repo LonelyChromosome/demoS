@@ -10,7 +10,7 @@ permissions:
   id-token: write
 concurrency:
   group: scriptable-app
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,6 +48,9 @@ jobs:
           cp scriptable/shortcuts/BPA-NFC.cherri build/shortcuts/
           "$RUNNER_TEMP/bpa-cherri" build/shortcuts/BPA-NFC.cherri --skip-sign --derive-uuids
           python3 tool/verify_shortcut.py "build/shortcuts/BPA — Quét thẻ_unsigned.shortcut" nfc
+          cp scriptable/shortcuts/BPA-Widgets.cherri build/shortcuts/
+          "$RUNNER_TEMP/bpa-cherri" build/shortcuts/BPA-Widgets.cherri --skip-sign --derive-uuids
+          python3 tool/verify_shortcut.py "build/shortcuts/BPA — Làm mới widget_unsigned.shortcut" widgets
           # Signing uses a verified public source outside CI; CI never submits code to the vendor.
       - name: Keep Shortcut compiler and source diagnostics
         if: always()

@@ -183,3 +183,13 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Gói code 55 vẫn chưa được gọi là toàn bộ app hoàn chỉnh: còn callback/UID/card technology trên iPhone, nền và Home Screen; không đánh dấu tự giảm yêu cầu.
 
 - Bản nhúng hai companion đã qua 55 Node test; cả hai signed envelope/source/compiled input khớp độc lập. Chỉ ghi cardBound sau scan receipt hợp lệ, không suy ra NFC hardware từ chữ ký.
+
+## Widget intent thật và xử lý nút không mở UI BPA
+
+- Metadata compiler Open-Jellycore e1ec31c2ee192c8721749f9eb3b50108e38891cf xác nhận RefreshAllWidgetsIntent và RunScriptInlineIntent/runInApp. Export thực của Shortcutomation a20b4438 (Brain Food) xác nhận identifier/parameter Magic ActionOutput của inline intent; không dựng tên API từ phỏng đoán.
+- Source công khai ở 2b97c85a471871cebe86e710b968da83c7214f59 được tải ẩn danh, SHA-256 669365980b6621e93e7efc830d0aa39704d60d84db66cc2f53ba273fce992bef, rồi compile/ký. Nhúng vào cùng BPA, không có module bàn giao riêng.
+- Khi bridge đã chuẩn bị, URL nút trước/sau/thi đi thẳng tới Shortcut: inline Scriptable xử lý selection, gọi refresh intent thật rồi Return to Home Screen. Calendar/sync/open vẫn đi luồng app. Đường cũ cũng yêu cầu refresh nhưng không áp dụng thao tác hai lần.
+- Engine JS nội bộ tự chuẩn bị từ cùng source BPA, chỉ export widgetCommand và tắt main entry. Kiểm tra compiled inline script bắt được lỗi thay nhầm chuỗi trong helper (main vẫn chạy); đã dùng marker đầu dòng và kiểm tra không sinh UI/tác vụ ngoài.
+- Cache restoration/theme load không gọi Shortcut mở ngoài; sync thành công và đổi theme bởi người dùng yêu cầu refresh nếu bridge đã sẵn sàng. Chưa chuẩn bị thì ghi setup_required, không công nhận đã refresh.
+- 60 Node test qua; verify compiled/signed/source cả ba companion khớp. Chữ ký/intent request không chứng minh frame, thời gian refresh hay animation ngoài Home Screen. Còn kiểm chứng iPhone; sync nền chưa khép kín.
+- Code 56 cho gói tích hợp, CI chỉ giữ build mới nhất để không chạy lại checkpoint đã bị thay thế. Không phát hành app chưa đủ dưới tên hoàn chỉnh.

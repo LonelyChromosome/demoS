@@ -1100,7 +1100,7 @@
       "source": "lib/theme/app_theme.dart",
       "android_sha256": "f6cd06043406129818155df74ed787aad8e02e3392d0419c4255ba7077bb9c20",
       "present": true,
-      "sha256": "95ebf7c455ab3edbd4b2848b3f4c94051e14cd0f0e577c27282d531246dec799",
+      "sha256": "002bdae9538dabba67e5f8f93bedeee8e6345524e76dbdd738d71fd66d821b2b",
       "byte_identical": false,
       "classes": [
         "AppThemePalette",

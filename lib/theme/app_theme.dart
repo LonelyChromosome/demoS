@@ -657,7 +657,7 @@ class AppThemeController extends ChangeNotifier {
     }
     notifyListeners();
     final widgetTheme = prefs.getString(_widgetPreferenceKey);
-    final nativeApplied = await _applyWidgetTheme(widgetKey, palette);
+    final nativeApplied = await _applyWidgetTheme(widgetKey, palette, refreshWidgets: false);
     if (widgetTheme != widgetKey && !nativeApplied) {
       await prefs.setString(_widgetPreferenceKey, widgetKey);
       await _syncWidgetTheme();
@@ -924,14 +924,16 @@ class AppThemeController extends ChangeNotifier {
 
   Future<bool> _applyWidgetTheme(
     String themeKey,
-    AppThemePalette target,
-  ) async {
+    AppThemePalette target, {
+    bool refreshWidgets = true,
+  }) async {
     if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return false;
     try {
       await _widgetThemeChannel.invokeMethod<int>(
         'applyTheme',
         <String, Object>{
           'theme': themeKey,
+          'refreshWidgets': refreshWidgets,
           'widgetStart': target.widgetStart.toARGB32(),
           'widgetEnd': target.widgetEnd.toARGB32(),
           'widgetText': target.widgetText.toARGB32(),

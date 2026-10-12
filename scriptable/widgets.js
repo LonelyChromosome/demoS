@@ -1,5 +1,6 @@
 // Widget state and real deep-link actions; iOS owns timeline refresh timing.
 function actionURL(action,kind,id,extra={}) {
+  if(['previous','next','mode'].includes(action)&&widgetShortcutReady())return widgetShortcutURL({mode:'home',action,kind,instance:id,requestId:UUID.string()});
   const params={scriptName:'BPA',action,kind,instance:id,...extra};
   return 'scriptable:///run?'+Object.entries(params).map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(String(v))).join('&');
 }
@@ -53,8 +54,8 @@ async function widgetAction(action,kind,id,params) {
   } else if(action==='sync') {
     writeState('pending-action.json',{kind,action:'sync'});await openOriginalApp();return;
   } else {writeState('pending-action.json',{kind,action:'open'});await openOriginalApp();return;}
-  // No preview sheet masquerading as a Home Screen update. The new selection
-  // is committed; actual launcher refresh behavior still needs device tests.
+  if(!params.engineOnly)await requestWidgetRefresh(true);
+  // Native refresh intent is requested; launcher rendering still needs tests.
 }
 async function renderBPAWidget(kind,id,preview=false) {
   if(!['small','overview','widget2'].includes(kind))throw errorCode('widget_kind','Loại widget không hợp lệ.');

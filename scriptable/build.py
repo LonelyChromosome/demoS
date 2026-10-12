@@ -29,7 +29,7 @@ host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n
 host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()),ensure_ascii=False)+';\n'
 host+='const BPA_UPDATE_CHANNEL='+json.dumps(json.loads((root/'scriptable/update-channel.json').read_text()))+';\n'
 shortcuts={}
-for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc','BPA-NFC','BPA — Quét thẻ')]:
+for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc','BPA-NFC','BPA — Quét thẻ'),('widgets','BPA-Widgets','BPA — Làm mới widget')]:
     directory=root/'scriptable/shortcuts'
     metadata=json.loads((directory/(stem+'.json')).read_text())
     binary=(directory/(stem+'.shortcut')).read_bytes()
@@ -39,7 +39,7 @@ for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc'
 host+='const BPA_BUNDLED_SHORTCUTS='+json.dumps(shortcuts,ensure_ascii=False)+';\n'
 
 host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'
-host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
+host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/widget-shortcut.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)
 
 # Export envelope matches a real Scriptable-exported file; device import unverified.

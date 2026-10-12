@@ -208,7 +208,8 @@ async function handlePlatform(call,app) {
     if(method==='publishSnapshot'){writeState('snapshot.json',args?JSON.parse(args):{classes:[],exams:[]});return null;}
     if(method==='selectWidgetDay'){const id=readState('last-widget.json',{id:'main'}).id;setWidgetSelection(args.kind,id,{...widgetSelection(args.kind,id),day:args.day,index:0,manualPosition:false});return null;}
     if(method==='takeWidgetAction'){const value=readState('pending-action.json',null);writeState('pending-action.json',null);return value;}
-    if(method==='beginSync'||method==='endSync'||method==='refreshWidgets')return null;
+    if(method==='beginSync'||method==='endSync')return null;
+    if(method==='refreshWidgets'){writeState('widget-refresh.json',{status:'dirty',at:Date.now()});return null;}
   }
   if(channel==='widget_render'&&method==='renderPreview') {
     const kind=args.surface==='large'?'overview':args.surface;
@@ -216,14 +217,14 @@ async function handlePlatform(call,app) {
     const result=await renderWidgetBitmap({kind,day:isoDay(new Date()),examMode:false,index:0,count:rows.length,items:rows.slice(0,kind==='small'?1:kind==='overview'?4:5),theme:args,hostWidth:args.widthDp,hostHeight:args.heightDp});
     return result.png;
   }
-  if(channel==='widget_theme'&&method==='applyTheme'){writeState('theme.json',args);return 1;}
+  if(channel==='widget_theme'&&method==='applyTheme'){writeState('theme.json',args);if(args.refreshWidgets!==false)await requestWidgetRefresh(false);return 1;}
   if(channel==='local_files') {
     if(method==='pickFile')return await pickManaged(args.kind);
     if(method==='fileExists')return bpaFM.fileExists(safeManagedPath(args));
     if(method==='readFile'){const path=safeManagedPath(args.path),data=bpaFM.read(path);if(dataSize(data)>args.maximumBytes)throw errorCode('file_too_large','Tệp vượt giới hạn.');return data.toBase64String();}
   }
   if(channel==='widget_pin'&&method==='requestPin') {
-    installWidgetScripts();
+    installWidgetScripts();await ensureWidgetShortcut();
     const a=new Alert();a.title='Widget BPA';a.message='Các script widget đã được chuẩn bị. Nhấn giữ màn hình chính → thêm widget Scriptable → chọn script BPA tương ứng.';a.addAction('Xong');await a.presentAlert();return false;
   }
   if(channel==='assistant_test'&&method==='trigger')return await assistantNotification(args);
@@ -239,7 +240,7 @@ async function handlePlatform(call,app) {
     if(method==='refreshWidgetToday') {
       const selections=readState('widgets.json');
       for(const key of Object.keys(selections))selections[key]={...selections[key],day:isoDay(new Date()),index:0,manualPosition:false};
-      writeState('widgets.json',selections);return null;
+      writeState('widgets.json',selections);await requestWidgetRefresh(false);return null;
     }
     if(method==='status')return readState('sync-status.json',{lastSuccessAtMillis:0});
     if(method==='examNotice')return readState('exam-notice.json',{message:null}).message;
@@ -301,6 +302,8 @@ async function handlePlatform(call,app) {
 }
 function installWidgetScripts(sourceOverride=null) {
   const source=sourceOverride||bpaFM.readString(module.filename);
+  const engine=source.replace(/\nif\(typeof Script!=='undefined'\)bpaMain\(\)/,"\nif(false)bpaMain()")+'\nmodule.exports={widgetCommand};\n';
+  bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA — WidgetEngine.js'),engine);
   for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']]) {
     const content=source.replace(/const DEFAULT_KIND='(?:small|overview|widget2)';/,`const DEFAULT_KIND='${kind}';`);
     bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),name+'.js'),content);
