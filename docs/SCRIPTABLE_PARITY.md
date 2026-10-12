@@ -76,3 +76,5 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 - Bộ cài `BPA.scriptable` dùng envelope từ export Scriptable thật (source công khai `supermamon/scriptable-scripts/Import-Script/Import-Script.scriptable`); tự chuẩn bị tài nguyên và script widget. Chưa xác minh import trên iPhone.
 
 - Run 38284501256: Chromium/WebKit không có console error; fixture riêng cho QA tải được ảnh Tiên Môn gốc và hiển thị card lịch học. Ảnh classic ở WebKit còn chụp splash; đang thay chờ cố định bằng chờ semantics `Lịch học`, không công nhận ảnh splash là timeline đã qua. Fixture không được đưa vào bộ cài/dữ liệu sản phẩm.
+
+- Run 38284875441: gói `BPA.scriptable` đã đóng gói/phát hành; kiểm tra web qua, chưa thử import iPhone. Run 38285469074 timeout truy vấn text semantics; đang sửa truy vấn aria-label và giữ danh sách semantics trong log. Không bỏ qua lỗi kiểm tra.
