@@ -86,3 +86,5 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 ### Sai khác đăng nhập chưa được phê duyệt
 
 Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng đóng WebView để lấy phiên. Bước đóng thêm này chưa tương đương tự hoàn tất của Android. Lưu tài khoản/tự đăng nhập và xóa cookie toàn bộ chưa port đầy đủ. Trạng thái: CHƯA TÌM RA GIẢI PHÁP cho luồng tương đương. Hướng tiếp theo: thử lifecycle/callback điều hướng và cầu Shortcuts trên thiết bị; không coi phiên Request cache là thay thế toàn bộ luồng Android.
+
+- Run 38287740024 tại commit 9c3631628b3833e15d0c6575235daa58d1f9054e đã qua: 88 kiểm tra Flutter, 23 kiểm tra Node, Chromium và WebKit. Gói import/tài nguyên đã phát hành. Không có kiểm thử iPhone hoặc tài khoản QLĐT thật; không đánh dấu chức năng DONE.
