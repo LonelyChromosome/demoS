@@ -51,11 +51,10 @@ Kiểm tra Node và Chromium không thay thế kiểm thử Scriptable trên iPh
 ## Một bộ cài BPA
 
 Người dùng chỉ nhận `BPA.scriptable`. Script tự chuẩn bị vùng dữ liệu/tài nguyên
-và widget. Workflow báo thức đã ký nằm ngay trong file BPA; không yêu cầu người
+và widget. Workflow báo thức và cầu quét thẻ đã ký nằm ngay trong file BPA; không yêu cầu người
 dùng tải một module khác. Lần đầu đặt báo thức, BPA mở luồng import của iOS khi
 cần, rồi xác minh companion đã sẵn sàng trước khi tạo báo thức.
 
 Dữ liệu ký và hash đều phải khớp; đóng màn import không được tính là đã cài.
-Bước import/chạy Clock vẫn chưa thử trên iPhone. Companion NFC mới đã compile,
-chưa được ký/nhúng vì automatic approval review yêu cầu xác nhận riêng cho
-source NFC gửi Shortcuty. Đây chưa phải bộ cài hoàn chỉnh để giao người dùng.
+Bước import/chạy Clock vẫn chưa thử trên iPhone. Companion NFC dùng đầu đọc NFC Helper miễn phí; UID/callback và chuyển app vẫn
+phải kiểm chứng trên thiết bị. Đây chưa phải bộ cài hoàn chỉnh để giao người dùng.
