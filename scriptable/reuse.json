@@ -1,0 +1,9 @@
+{
+  "android_reference": "16f7ee232ad2b74699cf960f33c87c8caaadecc3",
+  "scope": "sync core only; not full BPA",
+  "reused_scripts": {
+    "registration_sha256": "5143f5110d8e62e2bf06ffe3c4d41d00f7a78ccfe67cd5f7f6fc6d63aec082d4",
+    "schedule_sha256": "7e781e6291d31f9db28f9e15d8e061b877203721e09e372f1bbd045f177e2cc5"
+  },
+  "bundle_sha256": "950a2a42c5a910359ab47d30095683cac2e2eecee41ee8dbcff1ef2c1fb351e2"
+}

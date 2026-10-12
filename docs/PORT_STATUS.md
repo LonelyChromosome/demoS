@@ -1,5 +1,24 @@
 # Trạng thái port BPA 1.6
 
+## Đầu ra đã chốt lại: Scriptable, miễn phí hoàn toàn
+
+Người dùng yêu cầu Scriptable và không trả phí Apple Developer. Các phần
+iOS native bên dưới là kết quả đi sai hướng, không phải phương án phát hành
+đã được người dùng chấp thuận. Không chạy quy trình TestFlight hay yêu cầu
+người dùng mua chứng chỉ để thay thế yêu cầu này.
+
+Đã triển khai `scriptable/BPA-Scriptable-Sync.js`: bộ đồng bộ kiểm tra,
+tái sử dụng hai đoạn JavaScript QLĐT của Android, port parser/verification/
+subjectId/retention và lưu có rollback. 12 kiểm tra Node qua. Chưa chạy trên
+Scriptable thật; chưa phải app hoàn chỉnh. Xem `scriptable/README.md`.
+
+Giao diện BPA, cả 3 widgets, NFC UID, sync khi chuyển app, diff, thông báo,
+báo thức và updater vẫn chưa hoàn tất. Không coi NFC Automation là bản quét
+UID tương đương. Chưa tìm được giải pháp miễn phí tương đương toàn bộ các
+hành vi bị giới hạn trong API Scriptable. Không tự chấp thuận bỏ chức năng.
+
+## Kết quả native trước đó (không phải đầu ra Scriptable)
+
 Bản triển khai ban đầu; chưa hoàn tất và chưa xác nhận đạt 95%.
 
 | Phần | Trạng thái |
