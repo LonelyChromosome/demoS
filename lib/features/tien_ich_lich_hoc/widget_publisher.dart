@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 
 import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/qldt_models.dart';
 import 'package:better_phenikaa_schedule/features/dong_bo_hang_ngay/daily_sync.dart';
@@ -49,7 +50,11 @@ abstract final class WidgetPublisher {
               )
               .toList(growable: false),
     });
-    await HomeWidget.saveWidgetData<String>(_storageKey, snapshot);
+    if (IosRuntime.supported) {
+      await IosRuntime.publish(snapshot);
+    } else {
+      await HomeWidget.saveWidgetData<String>(_storageKey, snapshot);
+    }
     if (resetToToday) {
       await DailySync.refreshWidgetToday();
     } else {
@@ -59,15 +64,19 @@ abstract final class WidgetPublisher {
 
   static Future<void> clear() async {
     if (!_isSupported) return;
-    await HomeWidget.saveWidgetData<String>(_storageKey, null);
+    if (IosRuntime.supported) {
+      await IosRuntime.publish(null);
+    } else {
+      await HomeWidget.saveWidgetData<String>(_storageKey, null);
+    }
     await _refresh();
   }
 
-  static Future<void> _refresh() => HomeWidget.updateWidget(
+  static Future<void> _refresh() => IosRuntime.supported ? IosRuntime.refreshWidgets() : HomeWidget.updateWidget(
     name: _provider,
     qualifiedAndroidName: _qualifiedProvider,
   );
 
   static bool get _isSupported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+      !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 }

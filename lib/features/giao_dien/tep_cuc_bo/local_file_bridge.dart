@@ -26,7 +26,7 @@ abstract final class LocalFileBridge {
   );
 
   static Future<ManagedLocalFile?> pick(LocalFileKind kind) async {
-    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
       return null;
     }
     final value = await _channel.invokeMapMethod<String, Object?>(

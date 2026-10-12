@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -924,7 +925,7 @@ class AppThemeController extends ChangeNotifier {
     String themeKey,
     AppThemePalette target,
   ) async {
-    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return false;
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return false;
     try {
       await _widgetThemeChannel.invokeMethod<int>(
         'applyTheme',
@@ -956,7 +957,11 @@ class AppThemeController extends ChangeNotifier {
   }
 
   Future<void> _syncWidgetTheme() async {
-    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    if (IosRuntime.supported) {
+      await IosRuntime.refreshWidgets();
+      return;
+    }
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
     await HomeWidget.updateWidget(
       name: 'ScheduleWidgetProvider',
       qualifiedAndroidName:

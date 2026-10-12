@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -129,7 +130,7 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     unawaited(_update.restore());
     unawaited(_checkLatestOnLaunch());
     unawaited(_loadAppVersionName());
-    unawaited(_restore());
+    unawaited(_restore().then((_) => _handleIosWidgetAction()));
   }
 
   // Background-only signed check on launches after the first successful login.
@@ -189,6 +190,7 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
       // Resume only in-progress installer/permission state. Never fetch update
       // metadata here: the automatic signed check belongs to a fresh launch.
       unawaited(_update.onResumed());
+      unawaited(_handleIosWidgetAction());
     }
     if (state != AppLifecycleState.resumed || _data == null) return;
     unawaited(_expireStoredSemesters());
@@ -197,6 +199,23 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     unawaited(_refreshExamNotice());
     unawaited(_refreshDifference());
     unawaited(_refreshSyncStatus());
+  }
+
+  Future<void> _handleIosWidgetAction() async {
+    if (!IosRuntime.supported || _booting || !mounted) return;
+    final request = await IosRuntime.takeWidgetAction();
+    if (request == null || !mounted) return;
+    final kind = request['kind'];
+    if (kind == null) return;
+    if (request['action'] == 'sync') {
+      await DailySync.refreshWidgetToday();
+      await _loginOrSync();
+    } else if (request['action'] == 'calendar') {
+      await _showCalendarPicker(context, _selectedDate, (value) {
+        unawaited(IosRuntime.selectWidgetDay(kind, value));
+      }, studyDays: _data?.classes.map((item) => item.startAt.toIso8601String().substring(0, 10)).toSet() ?? <String>{},
+         examDays: _data?.exams.map((item) => item.startAt.toIso8601String().substring(0, 10)).toSet() ?? <String>{});
+    }
   }
 
   Future<void> _refreshSyncStatus() async {

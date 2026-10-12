@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -1525,7 +1526,70 @@ class _QldtWebLoginScreenState extends State<_QldtWebLoginScreen>
       const Duration(seconds: 10),
       epoch,
     );
-    await _dispatchRegistrationSync(controller, epoch);
+    if (IosRuntime.supported && _nativeSession?.isValid == true) {
+      await _syncIosNative(epoch, _nativeSession!);
+    } else {
+      await _dispatchRegistrationSync(controller, epoch);
+    }
+  }
+
+  Future<void> _syncIosNative(int epoch, QldtNativeSession session) async {
+    try {
+      IosRuntime.onSyncExpired = () {
+        if (mounted && _syncing && epoch == _syncEpoch) {
+          _stopSync(epoch, 'iOS đã dừng đồng bộ nền. Dữ liệu cũ được giữ nguyên.', code: 'IOS_BACKGROUND_EXPIRED');
+        }
+      };
+      await IosRuntime.beginSync();
+      const transport = QldtNativeTransport();
+      final registered = await transport.fetchRegistration(session);
+      if (!mounted || !_syncing || epoch != _syncEpoch) return;
+      final registration = const TracuuApi().parse(registered.raw);
+      final range = SemesterScheduleRange.fromRegistration(registration);
+      if (range == null) throw const FormatException('NO_SUBJECTS');
+      if (DateTime.now().isAfter(range.end.add(const Duration(days: 1)))) {
+        throw const FormatException('SEMESTER_EXPIRED');
+      }
+      _startPhase(QldtSyncPhase.schedule, const Duration(seconds: 12), epoch);
+      setState(() => _status = 'Đang lấy lịch cá nhân...');
+      final chunks = <({DateTime start, DateTime end})>[];
+      var cursor = DateTime(range.start.year, range.start.month, range.start.day);
+      final last = DateTime(range.end.year, range.end.month, range.end.day);
+      while (!cursor.isAfter(last)) {
+        final proposed = cursor.add(const Duration(days: 6));
+        final end = proposed.isAfter(last) ? last : proposed;
+        chunks.add((start: cursor, end: end));
+        cursor = end.add(const Duration(days: 1));
+      }
+      final replies = List<Map<String, dynamic>?>.filled(chunks.length, null);
+      var next = 0;
+      Future<void> worker() async {
+        while (next < chunks.length) {
+          if (!mounted || !_syncing || epoch != _syncEpoch) return;
+          final index = next++;
+          final chunk = chunks[index];
+          final raw = await transport.fetchScheduleEnvelope(session: session, start: chunk.start, end: chunk.end);
+          replies[index] = jsonDecode(raw) as Map<String, dynamic>;
+        }
+      }
+      await Future.wait<void>(List.generate(chunks.length.clamp(0, 8), (_) => worker()));
+      if (!mounted || !_syncing || epoch != _syncEpoch) return;
+      final merged = <dynamic>[];
+      for (final reply in replies) {
+        if (reply == null) throw const FormatException('INCOMPLETE_SCHEDULE');
+        merged.addAll((reply['response'] as Map<String, dynamic>)['Data'] as List<dynamic>);
+      }
+      final envelope = jsonEncode(<String, dynamic>{'name': session.displayName, 'response': <String, dynamic>{'Success': true, 'Data': merged}});
+      _pendingSchedule = const QldtParser().parseLiveEnvelope(envelope, strict: true);
+      await _completeRegistration(epoch, registered.raw);
+    } on Object {
+      if (mounted && _syncing && epoch == _syncEpoch) {
+        _stopSync(epoch, 'Không thể đồng bộ QLĐT. Dữ liệu cũ được giữ nguyên.', code: 'IOS_NATIVE_SYNC_FAILED');
+      }
+    } finally {
+      IosRuntime.onSyncExpired = null;
+      await IosRuntime.endSync();
+    }
   }
 
   Future<void> _dispatchRegistrationSync(
