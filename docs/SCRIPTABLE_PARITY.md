@@ -74,3 +74,5 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 
 - Run 38284260747: Chromium và WebKit đều qua loader/VFX; bước publish lỗi `nothing to commit` do tài nguyên không đổi. Đã sửa để không tạo commit khi tree không đổi.
 - Bộ cài `BPA.scriptable` dùng envelope từ export Scriptable thật (source công khai `supermamon/scriptable-scripts/Import-Script/Import-Script.scriptable`); tự chuẩn bị tài nguyên và script widget. Chưa xác minh import trên iPhone.
+
+- Run 38284501256: Chromium/WebKit không có console error; fixture riêng cho QA tải được ảnh Tiên Môn gốc và hiển thị card lịch học. Ảnh classic ở WebKit còn chụp splash; đang thay chờ cố định bằng chờ semantics `Lịch học`, không công nhận ảnh splash là timeline đã qua. Fixture không được đưa vào bộ cài/dữ liệu sản phẩm.

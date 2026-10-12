@@ -35,7 +35,7 @@ async function main(){
     // Flutter puts its CanvasKit canvas inside shadow DOM.
     await page.waitForSelector('canvas',{timeout:30000});
     await page.waitForTimeout(6000);
-    await page.screenshot({path:qaDir+'/local-loader-login.png'});
+    await page.screenshot({path:qaDir+'/final-state.png'});
     // Clearly labelled synthetic fixtures, confined to QA, exercise persisted
     // schedules and the original premium renderer. Never copied into BPA data.
     const local=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -45,7 +45,10 @@ async function main(){
       await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
       const preferences={'flutter.better_phenikaa_snapshot_v1':JSON.stringify(JSON.stringify(snapshot)),'flutter.better_phenikaa_theme_v3':JSON.stringify(theme)};
       await page.evaluate(preferences=>window.bpaHost.init(preferences),preferences);
-      await page.waitForSelector('canvas',{timeout:30000});await page.waitForTimeout(7000);
+      await page.waitForSelector('canvas',{timeout:30000});
+      await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
+      await page.getByText('Lịch học',{exact:true}).first().waitFor({state:'visible',timeout:30000});
+      await page.waitForTimeout(1500);
       await page.screenshot({path:qaDir+'/fixture-'+theme+'.png'});
     }
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
@@ -71,7 +74,7 @@ async function main(){
     vfxCallbacks=await page.evaluate(()=>window.__bpaVfxCallbacks);
     await page.locator('#bpa-vfx-qa').evaluate(element=>element.remove());
   } catch(error){failure=error.message;}
-  await page.screenshot({path:qaDir+'/local-loader-login.png'});
+  await page.screenshot({path:qaDir+'/final-state.png'});
   fs.writeFileSync(qaDir+'/local-loader.json',JSON.stringify({platform:engine+', 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,vfxCallbacks,canvases:await page.locator('canvas').count()},null,2));
   console.log(JSON.stringify({errors,messages,assetRequests,failure}));
   await browser.close();await new Promise(resolve=>server.close(resolve));
