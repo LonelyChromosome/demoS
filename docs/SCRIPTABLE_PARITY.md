@@ -98,3 +98,12 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Khi một request tuần thất bại, dừng cấp tuần mới và chờ các request đã gửi kết thúc trước khi cho thử lại; vẫn giữ tối đa 8 request song song.
 - 29 kiểm tra Node qua, trong đó 6 kiểm tra recovery mới. Bundle `BPA.js` và export `BPA.scriptable` đã được tạo lại từ source. Đây là kiểm tra logic host, chưa phải thử tài khoản thật/iPhone.
 - Không thay giao diện hoặc công nhận giải quyết NFC, Clock, sync nền, tương tác Home Screen hay updater. Không lặp lại HubSign probe 403, không dùng preview widget hoặc callback tự dựng làm bằng chứng parity.
+
+## Widget source port bổ sung — 2026-10-13
+
+- Port thuật toán ARGB/HSV, contrast, accent ramp, card fill/border/glow và timeline dot từ `WidgetVisualPalette.kt`; thay card overview trong bản canvas cũ.
+- Overview dùng geometry `WidgetGeometry.overview(340, hostHeight)`, bốn vị trí cố định, acronym/exam label từ `OverviewPager`, icon chevron gốc và track/dot ring từ `ScheduleWidgetProvider`.
+- Tiên Môn overview dùng ba ảnh `wid_sang.png`/`wid_chieu.png`/`w_toi.png` và khoảng giờ gốc. Ảnh custom vẫn contain; scenic preset dùng crop của renderer Android.
+- Small dùng thuật toán `WidgetTimeline` gốc: chèn ngày trống, chọn môn chưa kết thúc hôm nay, khi hết ngày giữ môn cuối. Nút chuyển môn là ngoại lệ được chấp thuận; timeline không loop. Exam lọc theo ngày >= hôm nay như Android, không tự bỏ ca sáng cùng ngày.
+- Canvas có frame riêng/panel neo dưới, tránh kéo giãn hình widget nhỏ từ 104 sang 158. Widget2 glass dùng gradient/alpha/border của Kotlin thay cho fill trắng phẳng.
+- Thêm QA renderer cho 18 trường hợp (3 widget × 3 theme × có lịch/trống) trên mỗi browser; kiểm tra alpha, hit bounds/overlap và tài nguyên, lưu ảnh. Chưa được coi là so ảnh pixel với iPhone hoặc tương tác Home Screen.

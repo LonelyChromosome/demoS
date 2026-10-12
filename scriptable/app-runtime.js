@@ -182,7 +182,7 @@ async function handlePlatform(call,app) {
   }
   if(channel==='ios_runtime') {
     if(method==='publishSnapshot'){writeState('snapshot.json',args?JSON.parse(args):{classes:[],exams:[]});return null;}
-    if(method==='selectWidgetDay'){const id=readState('last-widget.json',{id:'main'}).id;setWidgetSelection(args.kind,id,{...widgetSelection(args.kind,id),day:args.day,index:0});return null;}
+    if(method==='selectWidgetDay'){const id=readState('last-widget.json',{id:'main'}).id;setWidgetSelection(args.kind,id,{...widgetSelection(args.kind,id),day:args.day,index:0,manualPosition:false});return null;}
     if(method==='takeWidgetAction'){const value=readState('pending-action.json',null);writeState('pending-action.json',null);return value;}
     if(method==='beginSync'||method==='endSync'||method==='refreshWidgets')return null;
   }
@@ -208,7 +208,7 @@ async function handlePlatform(call,app) {
     }
     if(method==='refreshWidgetToday') {
       const selections=readState('widgets.json');
-      for(const key of Object.keys(selections))selections[key]={...selections[key],day:isoDay(new Date()),index:0};
+      for(const key of Object.keys(selections))selections[key]={...selections[key],day:isoDay(new Date()),index:0,manualPosition:false};
       writeState('widgets.json',selections);return null;
     }
     if(method==='status')return readState('sync-status.json',{lastSuccessAtMillis:0});

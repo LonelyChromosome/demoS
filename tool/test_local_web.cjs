@@ -51,6 +51,7 @@ async function main(){
       await page.waitForTimeout(1500);
       await page.screenshot({path:qaDir+'/fixture-'+theme+'.png'});
     }
+    await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
     // Exercise the exact source HTML. This is not an NFC hardware test.
     const cardHTML=fs.readFileSync(path.join(root,'assets/assets/card_vfx/link.html'),'utf8');
