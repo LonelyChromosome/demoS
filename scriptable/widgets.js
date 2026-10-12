@@ -65,6 +65,29 @@ async function renderBPAWidget(kind,id,preview=false) {
   const count=kind==='overview'?4:kind==='widget2'?5:1;
   const start=Math.max(0,Math.min(state.index||0,Math.max(0,all.length-count))),visible=all.slice(start,start+count);
   const payload={kind,day:state.day,examMode:state.mode==='exam',index:start,count:all.length,items:visible,theme,hostHeight:family==='large'?340:158};
+  const result=await renderWidgetBitmap(payload);
+  const image=Image.fromData(Data.fromBase64String(result.png));
+  const widget=new ListWidget();widget.backgroundImage=image;widget.setPadding(0,0,0,0);widget.spacing=0;
+  const h=family==='large'?340:158,w=340;
+  let currentY=0;
+  for(const band of result.hitBands) {
+    const gap=Math.max(0,band.y-currentY);if(gap)widget.addSpacer(gap*h/result.height);
+    const row=widget.addStack();row.layoutHorizontally();row.size=new Size(0,band.height*h/result.height);row.spacing=0;row.setPadding(0,0,0,0);
+    let currentX=0;
+    for(const hit of band.hits) {
+      if(hit.x>currentX)row.addSpacer((hit.x-currentX)*w/result.width);
+      const target=row.addStack();target.size=new Size(hit.width*w/result.width,band.height*h/result.height);target.url=actionURL(hit.action,kind,id);target.setPadding(0,0,0,0);target.addSpacer();currentX=hit.x+hit.width;
+    }
+    row.addSpacer();currentY=band.y+band.height;
+  }
+  widget.addSpacer();widget.url=actionURL('open',kind,id);
+  widget.refreshAfterDate=new Date(Date.now()+15*60000);
+  if(preview){if(family==='large')await widget.presentLarge();else await widget.presentMedium();}
+  return widget;
+}
+
+async function renderWidgetBitmap(payload) {
+  const kind=payload.kind,theme=payload.theme||{};
   const configData=theme.widgetConfig?JSON.parse(theme.widgetConfig):{};
   for(const key of ['largeImagePath','widget2ImagePath']) {
     if(configData[key]&&bpaFM.fileExists(safeManagedPath(configData[key]))) {
@@ -91,28 +114,11 @@ async function renderBPAWidget(kind,id,preview=false) {
     payload.fontData='data:font/ttf;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,name)).toBase64String();
   }
   payload.icons={};
-  for(const [name,file]of Object.entries({calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:state.mode==='exam'?'ic_widget_back':'ic_widget_bell',study:'ic_widget_study',previous:kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:kind==='overview'?'ic_overview_chevron_right':'ic_widget_down'}))payload.icons[name]='data:image/svg+xml;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,'widget-assets/icons/'+file+'.svg')).toBase64String();
+  for(const [name,file]of Object.entries({calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:payload.examMode?'ic_widget_back':'ic_widget_bell',study:'ic_widget_study',previous:kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:kind==='overview'?'ic_overview_chevron_right':'ic_widget_down'}))payload.icons[name]='data:image/svg+xml;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,'widget-assets/icons/'+file+'.svg')).toBase64String();
   const renderer=new WebView();
   const code=(bpaFM.readString(bpaFM.joinPath(bundle.path,'widget-palette.js'))+'\n'+bpaFM.readString(bpaFM.joinPath(bundle.path,'widget-renderer.js'))).replace(/<\/script/gi,'<\\/script');
   await renderer.loadHTML('<html><body><script>'+code+'</script></body></html>');
   const result=await renderer.evaluateJavaScript(`renderWidget(${JSON.stringify(payload)}).then(completion).catch(e=>completion({error:String(e)}));`,true);
   if(result.error)throw errorCode('widget_render',result.error);
-  const image=Image.fromData(Data.fromBase64String(result.png));
-  const widget=new ListWidget();widget.backgroundImage=image;widget.setPadding(0,0,0,0);widget.spacing=0;
-  const h=family==='large'?340:158,w=340;
-  let currentY=0;
-  for(const band of result.hitBands) {
-    const gap=Math.max(0,band.y-currentY);if(gap)widget.addSpacer(gap*h/result.height);
-    const row=widget.addStack();row.layoutHorizontally();row.size=new Size(0,band.height*h/result.height);row.spacing=0;row.setPadding(0,0,0,0);
-    let currentX=0;
-    for(const hit of band.hits) {
-      if(hit.x>currentX)row.addSpacer((hit.x-currentX)*w/result.width);
-      const target=row.addStack();target.size=new Size(hit.width*w/result.width,band.height*h/result.height);target.url=actionURL(hit.action,kind,id);target.setPadding(0,0,0,0);target.addSpacer();currentX=hit.x+hit.width;
-    }
-    row.addSpacer();currentY=band.y+band.height;
-  }
-  widget.addSpacer();widget.url=actionURL('open',kind,id);
-  widget.refreshAfterDate=new Date(Date.now()+15*60000);
-  if(preview){if(family==='large')await widget.presentLarge();else await widget.presentMedium();}
-  return widget;
+  return result;
 }

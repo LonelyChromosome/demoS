@@ -292,11 +292,13 @@ function validBundlePath(path) {
 }
 async function ensureLocalBundle() {
   const active=readState('bundle.json',null);
-  if(active&&bpaFM.fileExists(bpaFM.joinPath(active.path,'main.dart.js')))return active;
+  const required=['main.dart.js','widget-renderer.js','widget-palette.js'];
+  if(active&&Array.isArray(active.files)&&required.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
   const request=new Request(BPA_RESOURCE_ROOT+'bpa-package.json');request.timeoutInterval=30;
   const text=await request.loadString();if(request.response.statusCode!==200)throw errorCode('bundle_unavailable','Tài nguyên BPA chưa được phát hành.');
   const manifest=JSON.parse(text);
   if(manifest.schema!==1||!Array.isArray(manifest.files)||!manifest.files.length||manifest.files.length>1000||manifest.files.some(f=>!validBundlePath(f.path)||!Number.isInteger(f.size)||f.size<0||f.size>100000000||!/^[0-9a-f]{64}$/.test(f.sha256)))throw errorCode('invalid_bundle','Danh mục tài nguyên không hợp lệ.');
+  if(required.some(name=>!manifest.files.some(file=>file.path===name)))throw errorCode('bundle_compatibility','Gói giao diện chưa có đầy đủ bộ vẽ widget của phiên bản này.');
   if(manifest.files.reduce((n,f)=>n+f.size,0)>350000000)throw errorCode('invalid_bundle','Gói tài nguyên vượt giới hạn.');
   const digest=sha256Raw(unescape(encodeURIComponent(text))),directory=bpaPath('web-'+digest.slice(0,16));
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);
@@ -456,6 +458,29 @@ async function renderBPAWidget(kind,id,preview=false) {
   const count=kind==='overview'?4:kind==='widget2'?5:1;
   const start=Math.max(0,Math.min(state.index||0,Math.max(0,all.length-count))),visible=all.slice(start,start+count);
   const payload={kind,day:state.day,examMode:state.mode==='exam',index:start,count:all.length,items:visible,theme,hostHeight:family==='large'?340:158};
+  const result=await renderWidgetBitmap(payload);
+  const image=Image.fromData(Data.fromBase64String(result.png));
+  const widget=new ListWidget();widget.backgroundImage=image;widget.setPadding(0,0,0,0);widget.spacing=0;
+  const h=family==='large'?340:158,w=340;
+  let currentY=0;
+  for(const band of result.hitBands) {
+    const gap=Math.max(0,band.y-currentY);if(gap)widget.addSpacer(gap*h/result.height);
+    const row=widget.addStack();row.layoutHorizontally();row.size=new Size(0,band.height*h/result.height);row.spacing=0;row.setPadding(0,0,0,0);
+    let currentX=0;
+    for(const hit of band.hits) {
+      if(hit.x>currentX)row.addSpacer((hit.x-currentX)*w/result.width);
+      const target=row.addStack();target.size=new Size(hit.width*w/result.width,band.height*h/result.height);target.url=actionURL(hit.action,kind,id);target.setPadding(0,0,0,0);target.addSpacer();currentX=hit.x+hit.width;
+    }
+    row.addSpacer();currentY=band.y+band.height;
+  }
+  widget.addSpacer();widget.url=actionURL('open',kind,id);
+  widget.refreshAfterDate=new Date(Date.now()+15*60000);
+  if(preview){if(family==='large')await widget.presentLarge();else await widget.presentMedium();}
+  return widget;
+}
+
+async function renderWidgetBitmap(payload) {
+  const kind=payload.kind,theme=payload.theme||{};
   const configData=theme.widgetConfig?JSON.parse(theme.widgetConfig):{};
   for(const key of ['largeImagePath','widget2ImagePath']) {
     if(configData[key]&&bpaFM.fileExists(safeManagedPath(configData[key]))) {
@@ -482,30 +507,13 @@ async function renderBPAWidget(kind,id,preview=false) {
     payload.fontData='data:font/ttf;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,name)).toBase64String();
   }
   payload.icons={};
-  for(const [name,file]of Object.entries({calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:state.mode==='exam'?'ic_widget_back':'ic_widget_bell',study:'ic_widget_study',previous:kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:kind==='overview'?'ic_overview_chevron_right':'ic_widget_down'}))payload.icons[name]='data:image/svg+xml;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,'widget-assets/icons/'+file+'.svg')).toBase64String();
+  for(const [name,file]of Object.entries({calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:payload.examMode?'ic_widget_back':'ic_widget_bell',study:'ic_widget_study',previous:kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:kind==='overview'?'ic_overview_chevron_right':'ic_widget_down'}))payload.icons[name]='data:image/svg+xml;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,'widget-assets/icons/'+file+'.svg')).toBase64String();
   const renderer=new WebView();
   const code=(bpaFM.readString(bpaFM.joinPath(bundle.path,'widget-palette.js'))+'\n'+bpaFM.readString(bpaFM.joinPath(bundle.path,'widget-renderer.js'))).replace(/<\/script/gi,'<\\/script');
   await renderer.loadHTML('<html><body><script>'+code+'</script></body></html>');
   const result=await renderer.evaluateJavaScript(`renderWidget(${JSON.stringify(payload)}).then(completion).catch(e=>completion({error:String(e)}));`,true);
   if(result.error)throw errorCode('widget_render',result.error);
-  const image=Image.fromData(Data.fromBase64String(result.png));
-  const widget=new ListWidget();widget.backgroundImage=image;widget.setPadding(0,0,0,0);widget.spacing=0;
-  const h=family==='large'?340:158,w=340;
-  let currentY=0;
-  for(const band of result.hitBands) {
-    const gap=Math.max(0,band.y-currentY);if(gap)widget.addSpacer(gap*h/result.height);
-    const row=widget.addStack();row.layoutHorizontally();row.size=new Size(0,band.height*h/result.height);row.spacing=0;row.setPadding(0,0,0,0);
-    let currentX=0;
-    for(const hit of band.hits) {
-      if(hit.x>currentX)row.addSpacer((hit.x-currentX)*w/result.width);
-      const target=row.addStack();target.size=new Size(hit.width*w/result.width,band.height*h/result.height);target.url=actionURL(hit.action,kind,id);target.setPadding(0,0,0,0);target.addSpacer();currentX=hit.x+hit.width;
-    }
-    row.addSpacer();currentY=band.y+band.height;
-  }
-  widget.addSpacer();widget.url=actionURL('open',kind,id);
-  widget.refreshAfterDate=new Date(Date.now()+15*60000);
-  if(preview){if(family==='large')await widget.presentLarge();else await widget.presentMedium();}
-  return widget;
+  return result;
 }
 
 // Unified Scriptable host. All app UI is the original Flutter release.
@@ -695,6 +703,12 @@ async function handlePlatform(call,app) {
     if(method==='selectWidgetDay'){const id=readState('last-widget.json',{id:'main'}).id;setWidgetSelection(args.kind,id,{...widgetSelection(args.kind,id),day:args.day,index:0,manualPosition:false});return null;}
     if(method==='takeWidgetAction'){const value=readState('pending-action.json',null);writeState('pending-action.json',null);return value;}
     if(method==='beginSync'||method==='endSync'||method==='refreshWidgets')return null;
+  }
+  if(channel==='widget_render'&&method==='renderPreview') {
+    const kind=args.surface==='large'?'overview':args.surface;
+    const rows=widgetRows(snapshot(),{day:isoDay(new Date()),mode:'study'},kind);
+    const result=await renderWidgetBitmap({kind,day:isoDay(new Date()),examMode:false,index:0,count:rows.length,items:rows.slice(0,kind==='small'?1:kind==='overview'?4:5),theme:args,hostWidth:args.widthDp,hostHeight:args.heightDp});
+    return result.png;
   }
   if(channel==='widget_theme'&&method==='applyTheme'){writeState('theme.json',args);return 1;}
   if(channel==='local_files') {

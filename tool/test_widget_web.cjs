@@ -3,12 +3,14 @@ module.exports=async function testWidgets(browser,root,qaDir){
  const page=await browser.newPage({viewport:{width:340,height:158},deviceScaleFactor:2}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('requestfailed',r=>errors.push(r.url()+': '+r.failure()?.errorText));
  await page.route('https://bpa-widget.test/**',async route=>{
-  const name=new URL(route.request().url()).pathname.slice(1),file=path.join(root,name);
+  const name=new URL(route.request().url()).pathname.slice(1);
+  if(name==='qa.html')return route.fulfill({contentType:'text/html',body:'<style>body{margin:0;background:#111827}</style>'});
+  const file=path.join(root,name);
   if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.abort();
   const ext=path.extname(file),types={'.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ttf':'font/ttf'};
   return route.fulfill({body:fs.readFileSync(file),contentType:types[ext]||'application/octet-stream'});
  });
- await page.setContent('<base href="https://bpa-widget.test/"><style>body{margin:0;background:#111827}</style>');
+ await page.goto('https://bpa-widget.test/qa.html');
  await page.addScriptTag({content:fs.readFileSync('web/widget-palette.js','utf8')});
  await page.addScriptTag({content:fs.readFileSync('web/widget-renderer.js','utf8')});
  const rows=Array.from({length:5},(_,i)=>({id:'qa-'+i,subjectName:['Cơ sở dữ liệu','Lập trình hướng đối tượng','Toán rời rạc','Mạng máy tính','Phân tích và thiết kế'][i],room:'A'+(101+i),examForm:'Trắc nghiệm trên máy',startAt:'2026-10-13T'+String(8+i*2).padStart(2,'0')+':00:00',endAt:'2026-10-13T'+String(9+i*2).padStart(2,'0')+':30:00'})),results=[];

@@ -950,8 +950,8 @@
       "source": "lib/features/giao_dien/xem_truoc/native_widget_preview.dart",
       "android_sha256": "47d3d3b073955308a386a895bf389e0205ad4e46acc5d59e31286b3b5cf1c480",
       "present": true,
-      "sha256": "47d3d3b073955308a386a895bf389e0205ad4e46acc5d59e31286b3b5cf1c480",
-      "byte_identical": true,
+      "sha256": "e1ee9cd4885992a15cecd529ff3bde22636e13dbc498f37d9a8fe63dab5f5db5",
+      "byte_identical": false,
       "classes": [
         "NativeWidgetPreview"
       ],

@@ -186,6 +186,12 @@ async function handlePlatform(call,app) {
     if(method==='takeWidgetAction'){const value=readState('pending-action.json',null);writeState('pending-action.json',null);return value;}
     if(method==='beginSync'||method==='endSync'||method==='refreshWidgets')return null;
   }
+  if(channel==='widget_render'&&method==='renderPreview') {
+    const kind=args.surface==='large'?'overview':args.surface;
+    const rows=widgetRows(snapshot(),{day:isoDay(new Date()),mode:'study'},kind);
+    const result=await renderWidgetBitmap({kind,day:isoDay(new Date()),examMode:false,index:0,count:rows.length,items:rows.slice(0,kind==='small'?1:kind==='overview'?4:5),theme:args,hostWidth:args.widthDp,hostHeight:args.heightDp});
+    return result.png;
+  }
   if(channel==='widget_theme'&&method==='applyTheme'){writeState('theme.json',args);return 1;}
   if(channel==='local_files') {
     if(method==='pickFile')return await pickManaged(args.kind);

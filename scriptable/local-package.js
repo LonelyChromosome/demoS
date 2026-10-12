@@ -24,11 +24,13 @@ function validBundlePath(path) {
 }
 async function ensureLocalBundle() {
   const active=readState('bundle.json',null);
-  if(active&&bpaFM.fileExists(bpaFM.joinPath(active.path,'main.dart.js')))return active;
+  const required=['main.dart.js','widget-renderer.js','widget-palette.js'];
+  if(active&&Array.isArray(active.files)&&required.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
   const request=new Request(BPA_RESOURCE_ROOT+'bpa-package.json');request.timeoutInterval=30;
   const text=await request.loadString();if(request.response.statusCode!==200)throw errorCode('bundle_unavailable','Tài nguyên BPA chưa được phát hành.');
   const manifest=JSON.parse(text);
   if(manifest.schema!==1||!Array.isArray(manifest.files)||!manifest.files.length||manifest.files.length>1000||manifest.files.some(f=>!validBundlePath(f.path)||!Number.isInteger(f.size)||f.size<0||f.size>100000000||!/^[0-9a-f]{64}$/.test(f.sha256)))throw errorCode('invalid_bundle','Danh mục tài nguyên không hợp lệ.');
+  if(required.some(name=>!manifest.files.some(file=>file.path===name)))throw errorCode('bundle_compatibility','Gói giao diện chưa có đầy đủ bộ vẽ widget của phiên bản này.');
   if(manifest.files.reduce((n,f)=>n+f.size,0)>350000000)throw errorCode('invalid_bundle','Gói tài nguyên vượt giới hạn.');
   const digest=sha256Raw(unescape(encodeURIComponent(text))),directory=bpaPath('web-'+digest.slice(0,16));
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);

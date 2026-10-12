@@ -1,7 +1,7 @@
 // Geometry ported from schedule_widget/overview_widget and Widget2BitmapRenderer.
 // Browser output is a bitmap. Home Screen animation parity: CHƯA TÌM RA GIẢI PHÁP.
 async function renderWidget(p) {
-  const w=340,frameHeight=p.hostHeight||158,h=p.kind==='small'?104:p.kind==='overview'?Math.min(frameHeight,Math.max(104,Math.min(156,Math.floor(w*124/320)))):frameHeight,offset=frameHeight-h,c=document.createElement('canvas');c.width=w*2;c.height=frameHeight*2;
+  const w=p.hostWidth||340,frameHeight=p.hostHeight||158,h=p.kind==='small'?Math.min(frameHeight,64):p.kind==='overview'?Math.min(frameHeight,Math.max(104,Math.min(156,Math.floor(w*124/320)))):frameHeight,offset=frameHeight-h,c=document.createElement('canvas');c.width=w*2;c.height=frameHeight*2;
   const ctx=c.getContext('2d');ctx.scale(2,2);ctx.translate(0,offset);
   const t=p.theme||{},config=t.widgetConfig?JSON.parse(t.widgetConfig):{};
   const color=(n,fallback)=>typeof n==='number'?'#'+(n>>>0).toString(16).padStart(8,'0').slice(2):fallback;
@@ -29,7 +29,7 @@ async function renderWidget(p) {
   if(t.theme==='tien_mon_premium'){const now=new Date(),minutes=now.getHours()*60+now.getMinutes();images.tien_mon_premium=minutes>=990&&minutes<1110?'tinemon-trua.png':minutes>=1110||minutes<300?'tienmon-toi.png':'tienmon-sang.png';}
   if(p.kind==='overview'){if(t.theme!=='classic'&&t.theme!=='tien_mon_premium'){const bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,pc(palette.backgroundStart));bg.addColorStop(.55,pc(BPAWidgetPalette.mix(palette.backgroundStart,palette.backgroundEnd,.48)));bg.addColorStop(1,pc(palette.backgroundEnd));ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);}else if(t.theme==='classic'){const bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,start);bg.addColorStop(.52,pc(BPAWidgetPalette.mix(raw(t.widgetStart,0xff1747b5),0xff992c71,.48)));bg.addColorStop(1,'#992c71');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);}await photo(p.largeImagePath,0,0,w,h,p.premiumScenic===true);}
   if(p.kind==='widget2')await photo(p.widget2ImagePath||(images[t.theme||'classic']?'widget-assets/widget2_themes/'+images[t.theme||'classic']:null),w-108,0,108,h);
-  const icons={},iconNames={calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:'ic_widget_bell',previous:'ic_widget_up',next:'ic_widget_down',study:'ic_widget_study'};
+  const icons={},iconNames={calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:p.examMode?'ic_widget_back':'ic_widget_bell',previous:p.kind==='overview'?'ic_overview_chevron_left':'ic_widget_up',next:p.kind==='overview'?'ic_overview_chevron_right':'ic_widget_down',study:'ic_widget_study'};
   for(const [name,file]of Object.entries(iconNames)){const img=new Image();img.src=p.icons&&p.icons[name]||'widget-assets/icons/'+file+'.svg';await img.decode();icons[name]=img;}
   const icon=(name,x,y,size=18)=>{if(!icons[name])return;const layer=document.createElement('canvas');layer.width=layer.height=size*2;const brush=layer.getContext('2d');brush.drawImage(icons[name],0,0,size*2,size*2);brush.globalCompositeOperation='source-in';brush.fillStyle=color(t.widgetIcon,text);brush.fillRect(0,0,size*2,size*2);ctx.drawImage(layer,x,y,size,size);};
   const hits=[];
@@ -62,11 +62,17 @@ async function renderWidget(p) {
     ['calendar','sync','mode'].forEach((name,i)=>{icon(name,w-96+i*28,122,16);hit(name,w-96+i*28,116,28,34);});
   } else if(p.kind==='small') {
     const r=p.items[0];
-    if(r){line(r.subjectName,text,18,14,w-110,43,18,true,2);line(r.emptyDay?r.room:[r.room,r.startAt.slice(8,10)+'/'+r.startAt.slice(5,7)].filter(Boolean).join(' • '),sub,18,65,w-170,20,12);line(time(r),sub,174,65,106,20,12);}
-    else line(p.examMode?'Không có lịch thi':'Không có lịch học',text,18,36,w-100,36,14,true,2);
-    ['calendar','sync','mode'].forEach((name,i)=>{icon(name,w-31,i*h/3+8,18);hit(name,w-44,i*h/3,44,h/3);});
-    icon('previous',270,12,14);icon('next',270,78,14);hit('previous',264,0,32,35);hit('next',264,69,32,35);
-    hit('open',0,0,264,h);
+    const titleRight=Math.min(w*.86,w-76),left=w*.095;
+    function fitted(label,x,baseline,width,preferred,minimum=.64){let size=preferred;ctx.font=`700 ${size}px ${font}`;const measured=ctx.measureText(label).width;if(measured>width)size*=Math.max(minimum,width/measured);ctx.font=`700 ${size}px ${font}`;let value=label;while(ctx.measureText(value).width>width&&value.length)value=value.slice(0,-1);if(value!==label){while(ctx.measureText(value+'…').width>width&&value.length)value=value.slice(0,-1);value+='…';}ctx.fillStyle=text;ctx.textBaseline='alphabetic';ctx.fillText(value,x,baseline);}
+    if(r){fitted(r.subjectName,left,h*(p.examMode?.29:.39),titleRight-left,h*.205);if(p.examMode&&!r.emptyDay)fitted('Thi: '+(r.examForm||'Chưa rõ hình thức'),left,h*.56,titleRight-left,h*.145);
+      const metadata=r.emptyDay?r.room:[r.room,r.startAt.slice(8,10)+'/'+r.startAt.slice(5,7)].filter(Boolean).join(' • '),timeLabel=time(r),baseline=h*(p.examMode?.84:.77),detailRight=Math.min(w*.86,w-76);
+      ctx.font=`400 ${h*.14}px ${font}`;const tw=ctx.measureText(timeLabel).width;
+      line(metadata,sub,left,baseline-h*.14,Math.max(1,detailRight-left-tw-w*.03),h*.18,h*.14);
+      if(timeLabel)line(timeLabel,sub,detailRight-tw,baseline-h*.14,tw+1,h*.18,h*.14);
+    }else fitted(p.examMode?'Không có lịch thi':'Không có lịch học',left,h*.57,titleRight-left,h*.21);
+    ['calendar','sync','mode'].forEach((name,i)=>{icon(name,w-31,i*h/3+(h/3-18)/2,18);hit(name,w-44,i*h/3,44,h/3);});
+    icon('previous',w-70,4,12);icon('next',w-70,h-16,12);hit('previous',w-76,0,32,21);hit('next',w-76,h-21,32,21);
+    hit('open',0,0,w-76,h);
   } else {
     const compact=h<120,top=compact?2:6,header=compact?32:h>=140?42:36,footer=compact?16:h>=140?24:20,cardH=h-(compact?4:10)-header-footer-5,y=top+header,slot=(w-24)/4,cardW=slot-4;
     icon('study',12,top+2,28);line(p.examMode?'Lịch thi · Học kỳ hiện tại':title,text,46,top+2,w-24-34-93,20,compact?14:16,true);line(`${p.count} ${p.examMode?'môn thi sắp tới':'môn học'}`,sub,46,top+22,w-24-34-93,14,compact?10:11);

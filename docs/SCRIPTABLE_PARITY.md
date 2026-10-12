@@ -107,3 +107,7 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Small dùng thuật toán `WidgetTimeline` gốc: chèn ngày trống, chọn môn chưa kết thúc hôm nay, khi hết ngày giữ môn cuối. Nút chuyển môn là ngoại lệ được chấp thuận; timeline không loop. Exam lọc theo ngày >= hôm nay như Android, không tự bỏ ca sáng cùng ngày.
 - Canvas có frame riêng/panel neo dưới, tránh kéo giãn hình widget nhỏ từ 104 sang 158. Widget2 glass dùng gradient/alpha/border của Kotlin thay cho fill trắng phẳng.
 - Thêm QA renderer cho 18 trường hợp (3 widget × 3 theme × có lịch/trống) trên mỗi browser; kiểm tra alpha, hit bounds/overlap và tài nguyên, lưu ảnh. Chưa được coi là so ảnh pixel với iPhone hoặc tương tác Home Screen.
+
+- Đã nối `NativeWidgetPreview` trên Scriptable bằng cầu `widget_render/renderPreview`; editor và Home Screen dùng chung renderer, preview không thay theme đang áp dụng.
+- Đối chiếu thêm renderer slide Android: small dùng tỷ lệ 320×64 và baseline/font fractions gốc, có dòng hình thức thi. Cập nhật cache dependency để host mới không dùng gói cũ thiếu `widget-palette.js`.
+- Run 38298285495 dừng tại QA widget do trang kiểm tra origin `about:blank` tải ảnh HTTP, khiến canvas tainted; chưa publish tài nguyên. Đã đổi trang QA sang cùng origin, không bỏ kiểm tra hoặc coi run đỏ là thành công.

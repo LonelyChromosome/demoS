@@ -17,3 +17,9 @@ test('native palette preserves ARGB and readable accents across light/dark/custo
  }
  assert.notEqual(palette.make(0xff173a8e,0xff992c71,0xffffffff,0xffffffff,'tien_mon_premium').accent(0),palette.make(0xff173a8e,0xff992c71,0xffffffff,0xffffffff,'valorant').accent(0));
 });
+test('theme editor previews use the shared widget renderer without changing the applied theme',async()=>{
+ const c=host();c.snapshot=()=>({classes:[{id:'a',startAt:'2026-10-13T08:00:00',endAt:'2026-10-13T09:00:00',subjectName:'A'}]});c.isoDay=()=> '2026-10-13';let captured;
+ c.renderWidgetBitmap=async p=>{captured=p;return {png:'preview-bytes'};};
+ const out=await vm.runInContext('handlePlatform({channel:"better_phenikaa/widget_render",method:"renderPreview",arguments:{surface:"large",widthDp:320,heightDp:150,theme:"custom",widgetStart:0xffdddddd}},null)',c);
+ assert.equal(out,'preview-bytes');assert.equal(captured.kind,'overview');assert.equal(captured.hostWidth,320);assert.equal(captured.items[0].id,'a');
+});
