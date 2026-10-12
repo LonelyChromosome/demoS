@@ -18,7 +18,7 @@ test('QLDT XOR envelope preserves Vietnamese and form encoding',()=>{
 });
 test('Request transport uses original action path, bearer and A/B encoding',async()=>{
   const c=context();let captured;
-  c.Request=class {constructor(url){this.url=url;this.response={statusCode:200};captured=this;}async loadJSON(){return {Success:true,Data:{B:vm.runInContext('qldtEncode(JSON.stringify([{ID:"verified"}]),"mode")',c)}};}};
+  c.Request=class {constructor(url){this.url=url;this.response={statusCode:200};captured=this;}async loadString(){return JSON.stringify({Success:true,Data:{B:vm.runInContext('qldtEncode(JSON.stringify([{ID:"verified"}]),"mode")',c)}});}};
   const result=await vm.runInContext('qldtPost({tokenJWT:"test-token",userId:"student",iM:"mode",appId:"app",strChucNangId:"func-id",cookie:"test-cookie"},"SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv","pkg_congthongtin_hssv_thongtin.LayDSLichCaNhan",{strNgayBatDau:"01/09/2026",strNgayKetThuc:"07/09/2026"})',c);
   assert.equal(result.Data[0].ID,'verified');assert.equal(captured.method,'POST');assert.equal(captured.headers.Authorization,'Bearer test-token');assert.equal(captured.url,'https://qldtbeta.phenikaa-uni.edu.vn/sinhvienapi3/api/SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv');
   c.encoded=new URLSearchParams(captured.body).get('A');const body=JSON.parse(vm.runInContext('qldtDecode(encoded,"DSA4BRINKCIpAiAPKSAv")',c));

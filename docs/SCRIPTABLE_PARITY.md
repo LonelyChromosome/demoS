@@ -88,3 +88,13 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng đóng WebView để lấy phiên. Bước đóng thêm này chưa tương đương tự hoàn tất của Android. Lưu tài khoản/tự đăng nhập và xóa cookie toàn bộ chưa port đầy đủ. Trạng thái: CHƯA TÌM RA GIẢI PHÁP cho luồng tương đương. Hướng tiếp theo: thử lifecycle/callback điều hướng và cầu Shortcuts trên thiết bị; không coi phiên Request cache là thay thế toàn bộ luồng Android.
 
 - Run 38287740024 tại commit 9c3631628b3833e15d0c6575235daa58d1f9054e đã qua: 88 kiểm tra Flutter, 23 kiểm tra Node, Chromium và WebKit. Gói import/tài nguyên đã phát hành. Không có kiểm thử iPhone hoặc tài khoản QLĐT thật; không đánh dấu chức năng DONE.
+
+## Recovery 2026-10-13 — đồng bộ có giới hạn, không lặp đăng nhập
+
+- Tiếp quản từ `d046ce5` trong worktree riêng; checkout cũ và thay đổi chưa commit được giữ nguyên.
+- Đường Request và đường WebView cùng lưu bản học kỳ đã xác minh, giữ ngày bắt đầu đã lưu khi vẫn cùng kỳ; trước đây đường Request trả kết quả mà không lưu trạng thái host.
+- Hai lệnh đồng bộ đồng thời dùng chung một tác vụ. Đăng xuất tăng generation, ngăn tác vụ cũ ghi lại lịch/phiên. Lỗi không tự gọi đồng bộ lặp lại.
+- HTTP 401/403 mới chuyển sang đăng nhập một lần. HTTP 503, timeout, JSON lỗi hoặc lỗi xác minh trả lỗi và giữ dữ liệu/phiên; không mở một cửa sổ đăng nhập để che lỗi.
+- Khi một request tuần thất bại, dừng cấp tuần mới và chờ các request đã gửi kết thúc trước khi cho thử lại; vẫn giữ tối đa 8 request song song.
+- 29 kiểm tra Node qua, trong đó 6 kiểm tra recovery mới. Bundle `BPA.js` và export `BPA.scriptable` đã được tạo lại từ source. Đây là kiểm tra logic host, chưa phải thử tài khoản thật/iPhone.
+- Không thay giao diện hoặc công nhận giải quyết NFC, Clock, sync nền, tương tác Home Screen hay updater. Không lặp lại HubSign probe 403, không dùng preview widget hoặc callback tự dựng làm bằng chứng parity.

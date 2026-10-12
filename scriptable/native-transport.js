@@ -21,8 +21,12 @@ async function qldtPost(session,action,func,extra) {
   if(session.cookie)request.headers.Cookie=session.cookie;
   const key=action.slice(action.indexOf('/')+1);
   request.body='A='+encodeURIComponent(qldtEncode(JSON.stringify(data),key));
-  const result=await request.loadJSON();
-  if(request.response.statusCode!==200)throw errorCode('qldt_http','HTTP '+request.response.statusCode);
+  // Inspect status before parsing: login redirects and 503 pages may be HTML.
+  const text=await request.loadString(),status=request.response.statusCode;
+  if(status===401||status===403)throw errorCode('qldt_session_expired','Phiên QLĐT đã hết hạn.');
+  if(status!==200)throw errorCode('qldt_http','HTTP '+status);
+  let result;
+  try {result=JSON.parse(text);}catch(_){throw errorCode('qldt_response','QLĐT không trả JSON hợp lệ.');}
   if(result.Success!==true)throw errorCode('qldt_response','QLĐT Success != true');
   if(result.Data&&typeof result.Data.B==='string')result.Data=JSON.parse(qldtDecode(result.Data.B,session.iM));
   if(!Array.isArray(result.Data))throw errorCode('qldt_response','QLĐT Data không phải danh sách.');
@@ -37,10 +41,17 @@ async function fetchNativeQldt(session) {
   const ids=[...new Set(matched.map(r=>String(r.ID||'').trim()).filter(Boolean))],termIds=[...new Set(matched.map(r=>String(r.DAOTAO_THOIGIANDAOTAO_ID||'').trim()).filter(Boolean))];
   if(ids.length!==1||termIds.length!==1)throw errorCode('qldt_verification','PLAN_AMBIGUOUS');
   const registrations=await qldtPost(session,'DKH_Chung_MH/DSA4CiQ1EDQgBSAvJgo4DS4xCS4iESkgLwPP','pkg_dangkyhoc_chung.LayKetQuaDangKyLopHocPhan',{strDaoTao_ChuongTrinh_Id:'',strDangKy_KeHoachDangKy_Id:ids[0],strNguoiThucHien_Id:session.userId,strDaoTao_ThoiGianDaoTao_Id:latest.id});
-  const raw={semesters,plans,registrations,userId:session.userId},reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg),replies=new Array(chunks.length);let next=0;
+  const raw={semesters,plans,registrations,userId:session.userId},reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg),replies=new Array(chunks.length);let next=0,failure=null;
   await Promise.all(Array.from({length:Math.min(8,chunks.length)},async()=>{
-    while(next<chunks.length){const i=next++,chunk=chunks[i];replies[i]=await qldtPost(session,'SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv','pkg_congthongtin_hssv_thongtin.LayDSLichCaNhan',{strNgayBatDau:chunk.start,strNgayKetThuc:chunk.end});}
+    while(!failure&&next<chunks.length){
+      const i=next++,chunk=chunks[i];
+      try {replies[i]=await qldtPost(session,'SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv','pkg_congthongtin_hssv_thongtin.LayDSLichCaNhan',{strNgayBatDau:chunk.start,strNgayKetThuc:chunk.end});}
+      catch(error){if(!failure)failure=error;}
+    }
   }));
+  // Drain the issued requests before allowing retry; no orphan workers may
+  // continue dispatching another semester after the caller receives failure.
+  if(failure)throw failure;
   const semester=BPACore.buildSemester(reg,BPACore.parseSchedule({Success:true,Data:replies.flatMap(r=>r.Data)}));
   if(!semester.displayName)throw errorCode('qldt_verification','QLDT_CANONICAL_NAME_MISSING');
   if(!chunks.length)throw errorCode('qldt_verification','Không xác định được môn đầu học kỳ.');
