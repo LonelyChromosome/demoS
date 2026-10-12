@@ -5,6 +5,7 @@
 #define color blue
 #define glyph calendar
 action 'dk.simonbs.Scriptable.RefreshAllWidgetsIntent' refreshAllWidgets(): text { "ShowWhenRun": false }
+action 'dk.simonbs.Scriptable.RunScriptInlineIntent' runWidgetScript(text source: 'script', variable parameter: 'parameter'): text { "runInApp": false, "ShowWhenRun": false }
 const input = getDictionary(ShortcutInput)
 const requestIdValue = getValue(input, "requestId")
 @requestId = "{requestIdValue}"
@@ -14,6 +15,10 @@ if @mode == "probe" {
     @ready = {"status": "BPA_WIDGET_BRIDGE_READY", "requestId": "{@requestId}"}
     @readyText = "{@ready}"
     output(@readyText)
+}
+@widgetCode = "const fm=FileManager.local();\nconst path=fm.joinPath(fm.documentsDirectory(),\"BPA — WidgetEngine.js\");\nif(!fm.fileExists(path))throw new Error(\"Chưa chuẩn bị BPA.\");\nconst localModule=Object.create(null);localModule.exports=Object.create(null);localModule.filename=path;\nnew Function(\"module\",fm.readString(path))(localModule);\nconst result=await localModule.exports.widgetCommand(args.shortcutParameter);\nScript.setShortcutOutput(JSON.stringify(result));\nScript.complete();"
+if @mode == "home" {
+    runWidgetScript(@widgetCode, input)
 }
 refreshAllWidgets()
 if @mode == "home" {
