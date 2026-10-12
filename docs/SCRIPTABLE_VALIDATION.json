@@ -1,0 +1,56 @@
+{
+  "sourceCommit": "16f7ee232ad2b74699cf960f33c87c8caaadecc3",
+  "checkedBuildCommit": "68683ab6558e9094634021823659ffccd8471645",
+  "workflow": "https://github.com/LonelyChromosome/demoS/actions/runs/38286344392",
+  "tests": {
+    "flutterCore": 88,
+    "node": 22,
+    "browserEngines": [
+      "Chromium",
+      "WebKit"
+    ],
+    "realIPhone": false,
+    "realQLDTAccount": false
+  },
+  "browserChecks": [
+    "Original login UI rendered",
+    "QA-only timetable fixture reached timetable semantics",
+    "Original premium background loaded",
+    "Original card HTML link and unlink completion callbacks"
+  ],
+  "assets": {
+    "sourceCommit": "16f7ee232ad2b74699cf960f33c87c8caaadecc3",
+    "targetCommit": "68683ab6558e9094634021823659ffccd8471645",
+    "originalAssetsAndShaders": 18,
+    "identical": 18,
+    "differences": []
+  },
+  "widgetPhotos": {
+    "photos": 13,
+    "identical": 13,
+    "differences": []
+  },
+  "artifacts": [
+    {
+      "id": 11764255641,
+      "name": "BPA-local-loader-QA",
+      "bytes": 10942903,
+      "digest": "sha256:eb8734b8e6621dbb0c971a878c5b1aadae06b749de930ce7056c06cc16db3006"
+    },
+    {
+      "id": 11763661633,
+      "name": "BPA-Scriptable-app",
+      "bytes": 98207588,
+      "digest": "sha256:e77b48303788886bebe3cc98b4ec0fde5ec14ac8c653a2ae64f8af0c0d7d9a59"
+    }
+  ],
+  "overallStatus": "IMPLEMENTED / UNVERIFIED; full parity not achieved",
+  "unresolved": [
+    "Real iPhone import and runtime",
+    "Android-equivalent login and auto-login",
+    "Widget geometry, premium effects and Home Screen interactions",
+    "Installable NFC and Clock Shortcuts",
+    "Background execution equivalence",
+    "Signed updater and rollback"
+  ]
+}

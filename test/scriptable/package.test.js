@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),crypto=require('node:crypto');
-function context(){const c=vm.createContext({console,Buffer,module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/BPA.js','utf8'),c);return c;}
+function context(extra={}){const c=vm.createContext({console,Buffer,module:{exports:{}},...extra});vm.runInContext(fs.readFileSync('scriptable/BPA.js','utf8'),c);return c;}
 test('local package digest matches SHA256 for empty, UTF8 and multi-block binary files',()=>{
   const c=context();
   for(const bytes of [Buffer.alloc(0),Buffer.from('abc'),Buffer.from('BPA • Cơ sở dữ liệu'),Buffer.from(Array.from({length:257},(_,i)=>i&255)),Buffer.alloc(1000001,255)]) {
@@ -73,4 +73,16 @@ test('Android exam planner keeps local 09:00 tiers, groups subjects and catches 
  c.keys=Array.from(plan.due[0].milestoneKeys);plan=vm.runInContext('examReminderPlan(semester,new Date(2026,9,15,18).getTime(),new Set(["obsolete"]),new Set(keys))',c);
  assert.equal(plan.due.length,0);assert.deepEqual(Array.from(plan.cancel),['obsolete']);
  assert.equal(vm.runInContext('examAssistantText("normal",5,2,true)',c),'Còn 5 ngày nữa bạn có 2 môn thi. Kiểm tra lịch nhé.');
+});
+
+test('launching any companion preserves the distinct kinds of all three generated scripts',()=>{
+ const original=fs.readFileSync('scriptable/BPA.js','utf8');
+ for(const origin of ['small','overview','widget2']) {
+  const source=original.replace("const DEFAULT_KIND='small';","const DEFAULT_KIND='"+origin+"';"),writes=new Map();
+  const fm={readString:()=>source,documentsDirectory:()=>'/local',joinPath:(a,b)=>a+'/'+b,writeString:(path,value)=>writes.set(path,value)};
+  const c=context({FileManager:{local:()=>fm},module:{exports:{},filename:'/local/companion.js'}});
+  vm.runInContext('installWidgetScripts()',c);
+  for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']])
+   assert.match(writes.get('/local/'+name+'.js'),new RegExp("const DEFAULT_KIND='"+kind+"';"));
+ }
 });

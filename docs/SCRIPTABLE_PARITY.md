@@ -21,9 +21,9 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
 | Đồng bộ theo lịch | NOT STARTED | Không thêm auto 06:00 vì người dùng đã bác việc coi đó là chức năng mới | Chỉ triển khai nếu có hành vi tương ứng trong bản chuẩn đã chốt |
 | Updater web tương đương Android | NOT STARTED | Giữ UI/controller/verifier; không tải APK để giả cập nhật web | Kênh web có chữ ký, áp dụng bản, gate thẻ NFC và rollback |
-| Một file chuẩn bị scripts | IMPLEMENTED / UNVERIFIED | `BPA.js` tự chuẩn bị 3 scripts widget và vùng dữ liệu, không iCloud | Đã build Flutter web thành công; loader cục bộ và nhánh tài nguyên đang được kiểm tra, updater chưa xong |
+| Một file chuẩn bị scripts | IMPLEMENTED / UNVERIFIED | `BPA.js` tự chuẩn bị 3 scripts widget và vùng dữ liệu, không iCloud | Loader đã qua Chromium/WebKit, gói tài nguyên và file import đã phát hành; import iPhone và updater chưa xong |
 
-## Bằng chứng giới hạn
+## Bằng chứng thử nghiệm và hành vi API
 
 - API Scriptable: https://docs.scriptable.app/ (không có NFC, Clock hay API
   cấp background execution trong danh sách API công khai).
@@ -78,3 +78,11 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 - Run 38284501256: Chromium/WebKit không có console error; fixture riêng cho QA tải được ảnh Tiên Môn gốc và hiển thị card lịch học. Ảnh classic ở WebKit còn chụp splash; đang thay chờ cố định bằng chờ semantics `Lịch học`, không công nhận ảnh splash là timeline đã qua. Fixture không được đưa vào bộ cài/dữ liệu sản phẩm.
 
 - Run 38284875441: gói `BPA.scriptable` đã đóng gói/phát hành; kiểm tra web qua, chưa thử import iPhone. Run 38285469074 timeout truy vấn text semantics; đang sửa truy vấn aria-label và giữ danh sách semantics trong log. Không bỏ qua lỗi kiểm tra.
+
+- Run 38286344392 đã qua 88 kiểm tra Flutter, 22 kiểm tra Node, loader Chromium/WebKit, chờ đúng semantics Lịch học, Tiên Môn và hai callback VFX. Trạng thái CI xanh không được quy đổi thành DONE trên iPhone.
+- Git blob SHA xác nhận 18/18 tài nguyên app/shader và 13/13 ảnh Widget2 giống commit Android chuẩn. DemoF3/main vẫn ở commit 16f7ee232ad2b74699cf960f33c87c8caaadecc3.
+- Đã sửa lỗi chạy một companion có thể tạo ba script cùng loại; kiểm tra cả ba điểm khởi chạy. Đây là kiểm tra code với FileManager giả lập, không phải thao tác Home Screen thật.
+
+### Sai khác đăng nhập chưa được phê duyệt
+
+Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng đóng WebView để lấy phiên. Bước đóng thêm này chưa tương đương tự hoàn tất của Android. Lưu tài khoản/tự đăng nhập và xóa cookie toàn bộ chưa port đầy đủ. Trạng thái: CHƯA TÌM RA GIẢI PHÁP cho luồng tương đương. Hướng tiếp theo: thử lifecycle/callback điều hướng và cầu Shortcuts trên thiết bị; không coi phiên Request cache là thay thế toàn bộ luồng Android.
