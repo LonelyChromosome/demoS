@@ -26,5 +26,7 @@ host+='const REGISTRATION_SCRIPT='+json.dumps(registration,ensure_ascii=False)+'
 host+='const SCHEDULE_SCRIPT='+json.dumps(schedule,ensure_ascii=False)+';\n'
 host+='function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }\n'
 host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n'
+host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()),ensure_ascii=False)+';\n'
+host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'
 host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)

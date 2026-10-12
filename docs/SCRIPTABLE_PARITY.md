@@ -17,7 +17,7 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
 | NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; Actions có action đọc identifier miễn phí; NFC.cool automation trả phí nên loại | Chưa có Shortcut NFC cài được/kiểm chứng; Actions bản hiện tại cần iOS 26, tương thích phiên bản cũ chưa xác minh |
 | Báo thức | NOT STARTED | Có cầu callback tới Shortcut, chỉ nhận thành công khi callback xác nhận | Shortcut thật chưa được tạo/cài/test, hẹn đúng ngày chưa được chứng minh |
-| Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Notification API, key theo môn/lịch, hủy pending cũ, tránh delivered | Text trợ lý, timing, expiry và delivery phải so với Android |
+| Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Port planner Android: 09:00, gộp môn, due range 7/3/1, SHA-256 identity, catalog trợ lý gốc; Notification API | Delivery/reconcile khi app tắt, quyền và hủy/đổi lịch phải so trên iPhone |
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
 | Đồng bộ theo lịch | NOT STARTED | Không thêm auto 06:00 vì người dùng đã bác việc coi đó là chức năng mới | Chỉ triển khai nếu có hành vi tương ứng trong bản chuẩn đã chốt |
 | Updater web tương đương Android | NOT STARTED | Giữ UI/controller/verifier; không tải APK để giả cập nhật web | Kênh web có chữ ký, áp dụng bản, gate thẻ NFC và rollback |
@@ -57,6 +57,9 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 - Flutter web đã compile thật trên Linux (run 38276126387 và 38278660539). Không build hay bàn giao IPA.
 - Run 38276126387 tạo artifact web 98,170,061 byte; Pages setup thất bại với `Resource not accessible by integration`. Đã thay bằng hướng cache cục bộ.
 - Run 38278660539 tạo `flutter-view` trong Chromium nhưng kiểm tra canvas timeout. Đang sửa test shadow DOM và bổ sung ảnh/log, chưa kết luận loader đã chạy hoàn chỉnh.
-- 21 kiểm tra Node qua, gồm wire format Android, SHA-256 tài nguyên nhị phân theo API Data của Scriptable, điều kiện callback UID và state widget. Không quy đổi kết quả này thành thử nghiệm iPhone.
+- 22 kiểm tra Node qua, gồm wire format Android, SHA-256 tài nguyên nhị phân theo API Data của Scriptable, điều kiện callback UID và state widget. Không quy đổi kết quả này thành thử nghiệm iPhone.
 - Một POST probe tới HubSign với workflow chỉ trả chuỗi kiểm tra, không chứa dữ liệu sinh viên, nhận HTTP 403. Chưa có tệp Shortcut được ký/import thật. Hướng tiếp theo: đối chiếu dịch vụ ký được công bố hoặc cách xuất hợp lệ trên thiết bị, không yêu cầu Mac hay tài khoản trả phí.
 - Màn hình sắp xếp tên lần đầu được tách nguyên các lớp UI từ `qldt_login_mobile.dart` để tái sử dụng trên web; tên lựa chọn được giữ riêng và chỉ đánh dấu setup hoàn tất sau transaction lưu học kỳ gốc.
+
+- Run 38282458541 compile và chạy canvas, nhưng ảnh/log cho thấy splash trống và Flutter SecurityError khi replaceState tới origin tài nguyên. Không công nhận thành công từ trạng thái CI xanh. Đã sửa cầu history cho loadHTML và cho console error làm kiểm tra thất bại; đang chạy lại.
+- Planner nhắc thi đã port các nhánh 7/3/1, 09:00, gộp môn, due range và SHA-256 identity từ Kotlin; catalog trợ lý được tái sử dụng nguyên JSON. Delivery/reconcile nền chưa được kiểm chứng.

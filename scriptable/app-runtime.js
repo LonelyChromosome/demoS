@@ -103,25 +103,29 @@ async function pickManaged(kind) {
 async function scheduleExamReminders() {
   const current=preference('better_phenikaa_current_semester_v1');
   if(!current)return null;
-  const pending=await Notification.allPending(),delivered=await Notification.allDelivered();
-  const deliveredKeys=new Set(delivered.map(n=>n.identifier));
-  const wanted=new Set(),now=new Date(),jobs=[];
-  for(const subject of current.subjects)for(const exam of subject.examSchedules)for(const days of [7,3,1]) {
-    const at=new Date(new Date(exam.startAt).getTime()-days*86400000);
-    const identity=`${subject.subjectId}|${exam.startAt}|${exam.endAt}|${exam.room.trim().toLowerCase()}|${BPACore.normalizeClass(exam.className)}|${BPACore.normalizeClass(exam.examForm)}|${days}`;
-    const id='bpa.exam.'+BPACore.base64url(identity);
-    if(at<=now||deliveredKeys.has(id))continue;
-    wanted.add(id);
-    if(pending.some(n=>n.identifier===id))continue;
-    jobs.push({id,at,subject:subject.name,days,exam});
+  const ledger=readState('exam-reminders.json',{delivered:[],records:{}});
+  const pending=await Notification.allPending(),actualDelivered=await Notification.allDelivered();
+  const delivered=new Set(ledger.delivered);
+  for(const n of actualDelivered)for(const key of (ledger.records[n.identifier]||{}).milestoneKeys||[])delivered.add(key);
+  const prefix='bpa.exam.',scheduled=new Set(pending.filter(n=>n.identifier.startsWith(prefix)).map(n=>n.identifier.slice(prefix.length)));
+  let plan=examReminderPlan(current,Date.now(),scheduled,delivered);
+  const pack=preference('better_phenikaa_assistant_pack_v1')||'normal';
+  async function publish(id,subjects,days,at,keys) {
+    const n=new Notification();n.identifier=id;n.threadIdentifier='bpa.exam';n.title='Nhắc lịch thi';
+    n.body=examAssistantText(pack,Math.min(...days),subjects.length,days.size>1);
+    n.openURL=actionURL('open','overview','main');if(at)n.setTriggerDate(new Date(at));
+    ledger.records[id]={milestoneKeys:keys};writeState('exam-reminders.json',{...ledger,delivered:[...delivered]});
+    await n.schedule();
   }
-  await Notification.removePending(pending.filter(n=>n.identifier.startsWith('bpa.exam.')&&!wanted.has(n.identifier)).map(n=>n.identifier));
-  for(const job of jobs) {
-    const n=new Notification();n.identifier=job.id;n.threadIdentifier='bpa.exam';
-    n.title=`${job.subject} • còn ${job.days} ngày thi`;
-    n.body=`${job.exam.startAt.slice(11,16)} • ${job.exam.room}${job.exam.examForm?' • '+job.exam.examForm:''}`;
-    n.openURL=actionURL('open','overview','main');n.setTriggerDate(job.at);await n.schedule();
+  if(plan.due.length) {
+    const subjects=[...new Set(plan.due.flatMap(r=>r.subjects))],days=new Set(plan.due.map(r=>r.daysBefore)),keys=[...new Set(plan.due.flatMap(r=>r.milestoneKeys))];
+    await publish(prefix+'due',subjects,days,null,keys);
+    for(const key of keys)delivered.add(key);
+    plan=examReminderPlan(current,Date.now(),scheduled,delivered);
   }
+  await Notification.removePending(plan.cancel.map(k=>prefix+k));
+  for(const reminder of plan.schedule)await publish(prefix+reminder.key,reminder.subjects,new Set([reminder.daysBefore]),reminder.atMillis,reminder.milestoneKeys);
+  writeState('exam-reminders.json',{...ledger,delivered:[...delivered]});
   return null;
 }
 async function handlePlatform(call,app) {

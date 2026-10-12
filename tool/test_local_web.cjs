@@ -12,7 +12,7 @@ async function main(){
   const {chromium}=require(path.join(process.env.BPA_QA_NODE_MODULES,'playwright'));
   const browser=await chromium.launch({headless:true,executablePath:process.env.BPA_QA_CHROME||'/usr/bin/google-chrome',args:['--no-sandbox']});
   const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2});
-  const errors=[],assetRequests=[],messages=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>messages.push(m.type()+': '+m.text()));
+  const errors=[],assetRequests=[],messages=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{messages.push(m.type()+': '+m.text());if(m.type()==='error')errors.push(m.text());});
   fs.mkdirSync('build/qa',{recursive:true});
   await page.exposeFunction('readAsset',async request=>{
     if(!files.includes(request.path))return {id:request.id,error:'Unknown local asset '+request.path};
@@ -33,7 +33,7 @@ async function main(){
     await page.waitForSelector('flutter-view',{timeout:30000});
     // Flutter puts its CanvasKit canvas inside shadow DOM.
     await page.waitForSelector('canvas',{timeout:30000});
-    await page.waitForTimeout(2500);
+    await page.waitForTimeout(6000);
   } catch(error){failure=error.message;}
   await page.screenshot({path:'build/qa/local-loader-login.png'});
   fs.writeFileSync('build/qa/local-loader.json',JSON.stringify({platform:'Chromium, 390x844 viewport; not iPhone',errors,messages,assetRequests,failure,canvases:await page.locator('canvas').count()},null,2));

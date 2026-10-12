@@ -64,3 +64,13 @@ test('Scriptable Data semantics preserve binary file hashes and UTF8 QLDT envelo
   c.text=JSON.stringify({name:'Nguyễn Đạo',subject:'Cơ sở dữ liệu'});c.key='mode';
   assert.equal(vm.runInContext('qldtDecode(qldtEncode(text,key),key)',c),c.text);
 });
+test('Android exam planner keeps local 09:00 tiers, groups subjects and catches due ranges',()=>{
+ const c=context();c.semester={subjects:[{subjectId:'S1',name:'Môn A',examSchedules:[{id:'E1',startAt:'2026-10-20T14:00:00',endAt:'2026-10-20T15:00:00',room:'R',className:'C',examForm:'Viết'}]},{subjectId:'S2',name:'Môn B',examSchedules:[{id:'E2',startAt:'2026-10-20T08:00:00',endAt:'2026-10-20T09:00:00',room:'R2',className:'C2',examForm:'Viết'}]}]};
+ let plan=vm.runInContext('examReminderPlan(semester,new Date(2026,9,10,18).getTime())',c);
+ assert.equal(plan.schedule.length,3);assert.equal(plan.due.length,0);assert.deepEqual(Array.from(plan.schedule[0].subjects),['Môn A','Môn B']);assert.equal(new Date(plan.schedule[0].atMillis).getHours(),9);assert.equal(new Date(plan.schedule[0].atMillis).getDate(),13);
+ plan=vm.runInContext('examReminderPlan(semester,new Date(2026,9,15,18).getTime())',c);
+ assert.equal(plan.due[0].daysBefore,5);assert.equal(plan.due[0].milestoneKeys.length,2);assert.equal(plan.schedule.length,2);
+ c.keys=Array.from(plan.due[0].milestoneKeys);plan=vm.runInContext('examReminderPlan(semester,new Date(2026,9,15,18).getTime(),new Set(["obsolete"]),new Set(keys))',c);
+ assert.equal(plan.due.length,0);assert.deepEqual(Array.from(plan.cancel),['obsolete']);
+ assert.equal(vm.runInContext('examAssistantText("normal",5,2,true)',c),'Còn 5 ngày nữa bạn có 2 môn thi. Kiểm tra lịch nhé.');
+});

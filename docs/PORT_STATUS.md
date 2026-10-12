@@ -7,15 +7,15 @@ iOS native bên dưới là kết quả đi sai hướng, không phải phương
 đã được người dùng chấp thuận. Không chạy quy trình TestFlight hay yêu cầu
 người dùng mua chứng chỉ để thay thế yêu cầu này.
 
-Đã triển khai `scriptable/BPA-Scriptable-Sync.js`: bộ đồng bộ kiểm tra,
-tái sử dụng hai đoạn JavaScript QLĐT của Android, port parser/verification/
-subjectId/retention và lưu có rollback. 12 kiểm tra Node qua. Chưa chạy trên
-Scriptable thật; chưa phải app hoàn chỉnh. Xem `scriptable/README.md`.
+Đang triển khai host thống nhất `scriptable/BPA.js`, build giao diện Flutter gốc
+thành web và tải/cache tài nguyên cục bộ. Cầu QLĐT dùng wire format gốc,
+Keychain, parser xác minh và transaction lưu/diff Flutter. 21 kiểm tra Node
+qua; hai build web trước đã compile, kiểm tra loader đang tiếp tục.
 
-Giao diện BPA, cả 3 widgets, NFC UID, sync khi chuyển app, diff, thông báo,
-báo thức và updater vẫn chưa hoàn tất. Không coi NFC Automation là bản quét
-UID tương đương. Chưa tìm được giải pháp miễn phí tương đương toàn bộ các
-hành vi bị giới hạn trong API Scriptable. Không tự chấp thuận bỏ chức năng.
+Không có iPhone thật để kiểm chứng. Giao diện, theme và cầu nền tảng có code
+nhưng không được công nhận DONE. Widget chưa pixel-match; Shortcut NFC/Clock
+và updater chưa hoàn tất. Xem `SCRIPTABLE_PARITY.md` để biết bằng chứng,
+những hướng đã thử và hướng tiếp theo. Chưa đủ điều kiện bàn giao full app.
 
 ## Kết quả native trước đó (không phải đầu ra Scriptable)
 
@@ -51,4 +51,4 @@ Xem `BUILD_VALIDATION.json` và workflow run 38268436131.
 
 IPA hiện **chưa ký và không có provisioning profile**, không phải bản cài được trên iPhone.
 Build xanh không xác nhận NFC/sync nền/widget trên thiết bị hoặc mức tương đồng 95%.
-Workflow ký TestFlight đã có trên main, nhưng lượt này chưa chạy hay công bố bản ký.
+Workflow TestFlight cũ đã được loại khỏi nhánh Scriptable; không chạy hay phát hành IPA trong phương án này.
