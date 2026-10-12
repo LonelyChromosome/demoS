@@ -3,11 +3,16 @@
 #define color blue
 #define glyph alarmClock
 const input = getDictionary(ShortcutInput)
-@hour = input['hour']
-@minute = input['minute']
-@label = input['label']
-@target = input['target']
-@requestId = input['requestId']
+const hourValue = getValue(input, "hour")
+@hour = "{hourValue}"
+const minuteValue = getValue(input, "minute")
+@minute = "{minuteValue}"
+const labelValue = getValue(input, "label")
+@label = "{labelValue}"
+const targetValue = getValue(input, "target")
+@target = "{targetValue}"
+const requestIdValue = getValue(input, "requestId")
+@requestId = "{requestIdValue}"
 @time = "{@hour}:{@minute}"
 const created = createAlarm(@label, @time, true, [])
 @createdAlarm = "{created}"

@@ -44,6 +44,15 @@ jobs:
           cp scriptable/shortcuts/BPA-Alarm.cherri build/shortcuts/
           "$RUNNER_TEMP/bpa-cherri" build/shortcuts/BPA-Alarm.cherri --skip-sign --derive-uuids
           python3 tool/sign_shortcut.py "build/shortcuts/BPA — Đặt báo thức_unsigned.shortcut" build/web/shortcuts/BPA-Alarm.shortcut
+      - name: Keep Shortcut compiler and source diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BPA-Shortcut-compiler-QA
+          path: |
+            ${{ runner.temp }}/bpa-cherri
+            build/shortcuts
+          retention-days: 1
       - name: Include Scriptable host and original widget assets
         run: |
           mkdir -p build/web/scriptable
