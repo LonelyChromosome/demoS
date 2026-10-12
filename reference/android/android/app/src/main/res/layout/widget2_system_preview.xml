@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget2_system_preview_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:text="Hôm nay · 09/10"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:background="@drawable/widget2_system_preview_card"
+            android:gravity="center_vertical"
+            android:paddingStart="9dp"
+            android:text="07:00  Lập trình cho thiết bị di động"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:singleLine="true" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/widget2_system_preview_card" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/widget2_system_preview_card" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="92dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:background="@drawable/widget2_system_preview_card">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/widget2_system_preview_card"
+            android:clipToOutline="true"
+            android:src="@drawable/widget2_system_preview_photo"
+            android:scaleType="centerCrop" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView android:layout_width="0dp" android:layout_height="24dp"
+                android:layout_weight="1" android:src="@drawable/ic_widget_calendar" />
+            <ImageView android:layout_width="0dp" android:layout_height="24dp"
+                android:layout_weight="1" android:src="@drawable/ic_widget_reload" />
+            <ImageView android:layout_width="0dp" android:layout_height="24dp"
+                android:layout_weight="1" android:src="@drawable/ic_widget_bell" />
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>
