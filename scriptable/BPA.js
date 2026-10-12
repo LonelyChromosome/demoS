@@ -352,8 +352,12 @@ async function qldtPost(session,action,func,extra) {
   if(session.cookie)request.headers.Cookie=session.cookie;
   const key=action.slice(action.indexOf('/')+1);
   request.body='A='+encodeURIComponent(qldtEncode(JSON.stringify(data),key));
-  const result=await request.loadJSON();
-  if(request.response.statusCode!==200)throw errorCode('qldt_http','HTTP '+request.response.statusCode);
+  // Inspect status before parsing: login redirects and 503 pages may be HTML.
+  const text=await request.loadString(),status=request.response.statusCode;
+  if(status===401||status===403)throw errorCode('qldt_session_expired','Phiên QLĐT đã hết hạn.');
+  if(status!==200)throw errorCode('qldt_http','HTTP '+status);
+  let result;
+  try {result=JSON.parse(text);}catch(_){throw errorCode('qldt_response','QLĐT không trả JSON hợp lệ.');}
   if(result.Success!==true)throw errorCode('qldt_response','QLĐT Success != true');
   if(result.Data&&typeof result.Data.B==='string')result.Data=JSON.parse(qldtDecode(result.Data.B,session.iM));
   if(!Array.isArray(result.Data))throw errorCode('qldt_response','QLĐT Data không phải danh sách.');
@@ -368,10 +372,17 @@ async function fetchNativeQldt(session) {
   const ids=[...new Set(matched.map(r=>String(r.ID||'').trim()).filter(Boolean))],termIds=[...new Set(matched.map(r=>String(r.DAOTAO_THOIGIANDAOTAO_ID||'').trim()).filter(Boolean))];
   if(ids.length!==1||termIds.length!==1)throw errorCode('qldt_verification','PLAN_AMBIGUOUS');
   const registrations=await qldtPost(session,'DKH_Chung_MH/DSA4CiQ1EDQgBSAvJgo4DS4xCS4iESkgLwPP','pkg_dangkyhoc_chung.LayKetQuaDangKyLopHocPhan',{strDaoTao_ChuongTrinh_Id:'',strDangKy_KeHoachDangKy_Id:ids[0],strNguoiThucHien_Id:session.userId,strDaoTao_ThoiGianDaoTao_Id:latest.id});
-  const raw={semesters,plans,registrations,userId:session.userId},reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg),replies=new Array(chunks.length);let next=0;
+  const raw={semesters,plans,registrations,userId:session.userId},reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg),replies=new Array(chunks.length);let next=0,failure=null;
   await Promise.all(Array.from({length:Math.min(8,chunks.length)},async()=>{
-    while(next<chunks.length){const i=next++,chunk=chunks[i];replies[i]=await qldtPost(session,'SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv','pkg_congthongtin_hssv_thongtin.LayDSLichCaNhan',{strNgayBatDau:chunk.start,strNgayKetThuc:chunk.end});}
+    while(!failure&&next<chunks.length){
+      const i=next++,chunk=chunks[i];
+      try {replies[i]=await qldtPost(session,'SV_ThongTin_MH/DSA4BRINKCIpAiAPKSAv','pkg_congthongtin_hssv_thongtin.LayDSLichCaNhan',{strNgayBatDau:chunk.start,strNgayKetThuc:chunk.end});}
+      catch(error){if(!failure)failure=error;}
+    }
   }));
+  // Drain the issued requests before allowing retry; no orphan workers may
+  // continue dispatching another semester after the caller receives failure.
+  if(failure)throw failure;
   const semester=BPACore.buildSemester(reg,BPACore.parseSchedule({Success:true,Data:replies.flatMap(r=>r.Data)}));
   if(!semester.displayName)throw errorCode('qldt_verification','QLDT_CANONICAL_NAME_MISSING');
   if(!chunks.length)throw errorCode('qldt_verification','Không xác định được môn đầu học kỳ.');
@@ -524,11 +535,42 @@ async function requestCardUID() {
 async function sendNativeEvent(app,channel,type,extra={}) {
   await app.evaluateJavaScript(`bpaHost.event(${JSON.stringify('better_phenikaa/'+channel)},'event',${JSON.stringify({type,...extra})});null`,false);
 }
-async function syncPortal() {
+let syncGeneration=0,syncInFlight=null;
+function checkSyncGeneration(generation) {
+  if(generation!==syncGeneration)throw errorCode('cancelled','Phiên đồng bộ đã bị hủy.');
+}
+function commitPortalResult(result,generation) {
+  checkSyncGeneration(generation);
+  const old=readState('semester-v1.json',null),state=BPACore.retain(old,result.semester);
+  // Preserve the original term start when a later registration changes range.
+  if(!(old&&old.current&&old.current.semesterId===result.semester.semesterId&&old.startedAt))state.startedAt=result.termStartedAt;
+  writeState('semester-v1.json',state);
+  return {semester:result.semester,termStartedAt:state.startedAt};
+}
+function syncPortal() {
+  if(syncInFlight)return syncInFlight;
+  const generation=syncGeneration;
+  const job=performPortalSync(generation);
+  syncInFlight=job;
+  const clear=()=>{if(syncInFlight===job)syncInFlight=null;};
+  job.then(clear,clear);
+  return job;
+}
+async function performPortalSync(generation) {
   if(Keychain.contains('BPA.qldt-session')) {
-    try {return await fetchNativeQldt(JSON.parse(Keychain.get('BPA.qldt-session')));}
-    catch(error){if(error.code==='qldt_verification')throw error;}
+    let session;
+    try {session=JSON.parse(Keychain.get('BPA.qldt-session'));}
+    catch(_){throw errorCode('qldt_session_invalid','Không đọc được phiên QLĐT đã lưu.');}
+    try {return commitPortalResult(await fetchNativeQldt(session),generation);}
+    catch(error){
+      // A timeout, a 503 or invalid data is not evidence of expired login.
+      // Only authentication failures may move to the login flow; never loop.
+      if(error.code!=='qldt_session_expired')throw error;
+      checkSyncGeneration(generation);
+      Keychain.remove('BPA.qldt-session');
+    }
   }
+  checkSyncGeneration(generation);
   const portal=new WebView();
   await portal.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');
   let ready=await portal.evaluateJavaScript("!!(window.edu&&edu.system&&edu.system.userId&&edu.system.iM!=null&&typeof edu.system.makeRequest==='function')",false);
@@ -539,20 +581,18 @@ async function syncPortal() {
   }
   const raw=await callPortal(portal,REGISTRATION_SCRIPT,'betterPhenikaaRegistrationResult','betterPhenikaaRegistrationError',20000);
   const session=await portal.evaluateJavaScript(SESSION_SCRIPT,false);
-  if(session) {
-    const parsed=JSON.parse(session);
-    if(parsed.tokenJWT&&parsed.userId&&parsed.iM!=null&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
-  }
   const reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg);
   const schedule=chunks.length?await callPortal(portal,scheduleScript(chunks),'betterPhenikaaSyncResult','betterPhenikaaSyncError',20000):{response:{Success:true,Data:[]}};
   const semester=BPACore.buildSemester(reg,BPACore.parseSchedule(schedule.response));
   if(!semester.displayName)throw errorCode('canonical_name_missing','QLDT_CANONICAL_NAME_MISSING');
   if(!chunks.length)throw errorCode('term_start_missing','Không xác định được môn đầu học kỳ.');
-  const old=readState('semester-v1.json',null),state=BPACore.retain(old,semester);
-  state.startedAt=localISO(BPACore.vnDate(chunks[0].start));
   // Flutter then applies its original diff, retention and transaction algorithm.
-  writeState('semester-v1.json',state);
-  return {semester,termStartedAt:state.startedAt};
+  const result=commitPortalResult({semester,termStartedAt:localISO(BPACore.vnDate(chunks[0].start))},generation);
+  if(session) {
+    const parsed=JSON.parse(session);
+    if(parsed.tokenJWT&&parsed.userId&&parsed.iM!=null&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
+  }
+  return result;
 }
 function safeManagedPath(path) {
   const root=bpaFM.joinPath(bpaDirectory(),'files')+'/';
@@ -618,7 +658,7 @@ async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
   if(channel==='qldt_scriptable') {
     if(method==='sync')return await syncPortal();
-    if(method==='clear'){for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
+    if(method==='clear'){syncGeneration++;syncInFlight=null;for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
   }
   if(channel==='ios_runtime') {
     if(method==='publishSnapshot'){writeState('snapshot.json',args?JSON.parse(args):{classes:[],exams:[]});return null;}
