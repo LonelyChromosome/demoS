@@ -1,13 +1,14 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract final class DailySync {
-  static const MethodChannel _channel = MethodChannel(
+  static const MethodChannel _channel = BpaChannel(
     'better_phenikaa/daily_sync',
   );
 
   static Future<void> enable() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) {
       return;
     }
     try {
@@ -18,7 +19,7 @@ abstract final class DailySync {
   }
 
   static Future<void> disable() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) {
       return;
     }
     try {
@@ -29,7 +30,7 @@ abstract final class DailySync {
   }
 
   static Future<void> refreshWidgetToday() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) {
       return;
     }
     try {
@@ -40,34 +41,34 @@ abstract final class DailySync {
   }
 
   static Future<void> syncReminders() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return;
     await _channel.invokeMethod<void>('syncReminders');
   }
 
   static Future<void> recordAppSyncSuccess() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return;
     await _channel.invokeMethod<void>('recordAppSyncSuccess');
   }
 
   static Future<DateTime?> lastSuccessfulSync() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return null;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return null;
     final status = await _channel.invokeMapMethod<String, dynamic>('status');
     final millis = status?['lastSuccessAtMillis'] as int? ?? 0;
     return millis > 0 ? DateTime.fromMillisecondsSinceEpoch(millis) : null;
   }
 
   static Future<String?> examNotice() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return null;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return null;
     return await _channel.invokeMethod<String>('examNotice');
   }
 
   static Future<void> ackExamNotice() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return;
     await _channel.invokeMethod<void>('ackExamNotice');
   }
 
   static Future<void> clearReminders() async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return;
     await _channel.invokeMethod<void>('clearReminders');
   }
 }

@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -86,10 +87,10 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
   static const _storageKey = 'better_phenikaa_snapshot_v1';
   // Production uses the pinned, Ed25519-signed public updater feed.
   final UpdateController _update = UpdateController();
-  static const _updateInfoChannel = MethodChannel('better_phenikaa/update');
+  static const _updateInfoChannel = BpaChannel('better_phenikaa/update');
   String _appVersionName = '';
   static const _routeKey = 'better_phenikaa_qldt_registration_route_v1';
-  static const _widgetSessionChannel = MethodChannel(
+  static const _widgetSessionChannel = BpaChannel(
     'better_phenikaa/widget_session',
   );
 
@@ -2314,8 +2315,8 @@ class _AccountScreen extends StatelessWidget {
   final String appVersionName;
   final AssistantPack assistantPack;
   final ValueChanged<AssistantPack> onAssistantPackChanged;
-  static const _widgetPinChannel = MethodChannel('better_phenikaa/widget_pin');
-  static const _assistantTestChannel = MethodChannel(
+  static const _widgetPinChannel = BpaChannel('better_phenikaa/widget_pin');
+  static const _assistantTestChannel = BpaChannel(
     'better_phenikaa/assistant_test',
   );
 

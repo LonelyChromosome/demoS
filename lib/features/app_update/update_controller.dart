@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -67,7 +68,7 @@ final class UpdateController extends ChangeNotifier {
   }
 
   static const _noticeKey = 'app_update_notice_v1';
-  static const _channel = MethodChannel('better_phenikaa/update');
+  static const _channel = BpaChannel('better_phenikaa/update');
   final UpdateRepository _repository;
   UpdatePhase phase = UpdatePhase.idle;
   UpdateNotice? notice;

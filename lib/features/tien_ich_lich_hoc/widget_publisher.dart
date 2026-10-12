@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'dart:convert';
 import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 
@@ -78,5 +79,5 @@ abstract final class WidgetPublisher {
   );
 
   static bool get _isSupported =>
-      !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
+      scriptableAvailable || !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 }

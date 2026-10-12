@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -21,12 +22,12 @@ final class ManagedLocalFile {
 /// Cầu Android Storage Access Framework. Tệp được sao chép vào vùng private của
 /// app's private storage by native code and never uploaded.
 abstract final class LocalFileBridge {
-  static const MethodChannel _channel = MethodChannel(
+  static const MethodChannel _channel = BpaChannel(
     'better_phenikaa/local_files',
   );
 
   static Future<ManagedLocalFile?> pick(LocalFileKind kind) async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) {
       return null;
     }
     final value = await _channel.invokeMapMethod<String, Object?>(

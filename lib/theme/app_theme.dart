@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'package:better_phenikaa_schedule/platform/ios_runtime.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -492,7 +493,7 @@ class AppThemeController extends ChangeNotifier {
     kind: AppFontKind.builtIn,
     family: 'FzCoTrang',
   );
-  static const MethodChannel _widgetThemeChannel = MethodChannel(
+  static const MethodChannel _widgetThemeChannel = BpaChannel(
     'better_phenikaa/widget_theme',
   );
 
@@ -925,7 +926,7 @@ class AppThemeController extends ChangeNotifier {
     String themeKey,
     AppThemePalette target,
   ) async {
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return false;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return false;
     try {
       await _widgetThemeChannel.invokeMethod<int>(
         'applyTheme',
@@ -961,7 +962,7 @@ class AppThemeController extends ChangeNotifier {
       await IosRuntime.refreshWidgets();
       return;
     }
-    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) return;
+    if (!scriptableAvailable && (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS))) return;
     await HomeWidget.updateWidget(
       name: 'ScheduleWidgetProvider',
       qualifiedAndroidName:
@@ -1010,6 +1011,7 @@ ThemeData buildBetterTheme(AppThemePalette palette) {
   final brightness = palette.dark ? Brightness.dark : Brightness.light;
   final fontScale = themeFontSizeFactor(palette.fontFamily);
   final base = ThemeData(
+    platform: scriptableAvailable ? TargetPlatform.android : null,
     useMaterial3: true,
     brightness: brightness,
     fontFamily: palette.fontFamily ?? 'Roboto',

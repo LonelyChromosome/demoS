@@ -1,0 +1,1452 @@
+{
+  "reference_commit": "16f7ee232ad2b74699cf960f33c87c8caaadecc3",
+  "reference_repository": "LonelyChromosome/DemoF3",
+  "source_inventory": [
+    {
+      "source": "analysis_options.yaml",
+      "android_sha256": "c04ed3cd83197f1d0726477a9a3cd48339dcbf194202dcb96db2dbc816fa1f48",
+      "present": true,
+      "sha256": "c04ed3cd83197f1d0726477a9a3cd48339dcbf194202dcb96db2dbc816fa1f48",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/card_vfx/link.html",
+      "android_sha256": "d539afe7dfca74a080b337ba36e97e11e11027267b92dbf9ba806211e2e2d390",
+      "present": true,
+      "sha256": "d539afe7dfca74a080b337ba36e97e11e11027267b92dbf9ba806211e2e2d390",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/card_vfx/unlink.html",
+      "android_sha256": "5b4cf882702b5858204f5dd9e93fe80827cf2e9556f81a2d3b67e57d481f0c4d",
+      "present": true,
+      "sha256": "5b4cf882702b5858204f5dd9e93fe80827cf2e9556f81a2d3b67e57d481f0c4d",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/fonts/minecraft.ttf",
+      "android_sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d",
+      "present": true,
+      "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/README.md",
+      "android_sha256": "491e4305fd127a1d2dd9eda4b574181202542ad9c2c5db09395a89abb11e3b7f",
+      "present": true,
+      "sha256": "491e4305fd127a1d2dd9eda4b574181202542ad9c2c5db09395a89abb11e3b7f",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_1_1440x2560.png",
+      "android_sha256": "3cf6aea2aa50bfeb6e2579f73675d7c0b2b8796eac0288c39386972ef840cbc3",
+      "present": true,
+      "sha256": "3cf6aea2aa50bfeb6e2579f73675d7c0b2b8796eac0288c39386972ef840cbc3",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_2_1440x2560.png",
+      "android_sha256": "001e9ee15101ec7fe88b5f1f6d7b78c38637506c2bcf89c0139ff91398f1511f",
+      "present": true,
+      "sha256": "001e9ee15101ec7fe88b5f1f6d7b78c38637506c2bcf89c0139ff91398f1511f",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_3_1440x2560.png",
+      "android_sha256": "330bb9539d5a093bc1e86230a122c266bf8a6e378fdd34c898ff52ce26dc8b52",
+      "present": true,
+      "sha256": "330bb9539d5a093bc1e86230a122c266bf8a6e378fdd34c898ff52ce26dc8b52",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_4_1440x2560.png",
+      "android_sha256": "e36ee371ebfbc4637f1f0e3a654306eefcb3b2500032686230ae1842b8f0d659",
+      "present": true,
+      "sha256": "e36ee371ebfbc4637f1f0e3a654306eefcb3b2500032686230ae1842b8f0d659",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_5_1440x2560.png",
+      "android_sha256": "b5f40b34567ea7db08d45fca86fd15619c100c003e0b5db3586c1d7f30b99bfe",
+      "present": true,
+      "sha256": "b5f40b34567ea7db08d45fca86fd15619c100c003e0b5db3586c1d7f30b99bfe",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_6_1440x2560.png",
+      "android_sha256": "1a953c5cd9febbd5dafbbab95fcc2e2b26dfe52f1fe02817339bf946de1e8f76",
+      "present": true,
+      "sha256": "1a953c5cd9febbd5dafbbab95fcc2e2b26dfe52f1fe02817339bf946de1e8f76",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_7_1440x2560.png",
+      "android_sha256": "b815b90165177c98c9ca3c872d52f519715deae58dcfb773ef8d8092dae6675d",
+      "present": true,
+      "sha256": "b815b90165177c98c9ca3c872d52f519715deae58dcfb773ef8d8092dae6675d",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/app_backgrounds/tienmon_8_1440x2560.png",
+      "android_sha256": "5edef3e6c2180ea36105208326227922f523b26abc7c346afd63a76b3cafd786",
+      "present": true,
+      "sha256": "5edef3e6c2180ea36105208326227922f523b26abc7c346afd63a76b3cafd786",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/fonts/FzCoTrang.ttf",
+      "android_sha256": "1a7b3066c5bb45bf7d3073280a8f27d77dc5b050a4dd564390468dd9071aaeea",
+      "present": true,
+      "sha256": "1a7b3066c5bb45bf7d3073280a8f27d77dc5b050a4dd564390468dd9071aaeea",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/scene_manifest.json",
+      "android_sha256": "1e9edcca5ebd3c6628f8983adf4b6c1f7f5c3a3231896e3f76a2047e15f8bdf7",
+      "present": true,
+      "sha256": "1e9edcca5ebd3c6628f8983adf4b6c1f7f5c3a3231896e3f76a2047e15f8bdf7",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/widget_overview/w_toi.png",
+      "android_sha256": "5a4b62a7a81b6ac62798bd41ea9f2f88ec55da707421b341fdfcd77b9bac510a",
+      "present": true,
+      "sha256": "5a4b62a7a81b6ac62798bd41ea9f2f88ec55da707421b341fdfcd77b9bac510a",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/widget_overview/wid_chieu.png",
+      "android_sha256": "c0612706eecf76ee32cbd02401ad1d094f322de9da1432b56ccee6c0fe404fa0",
+      "present": true,
+      "sha256": "c0612706eecf76ee32cbd02401ad1d094f322de9da1432b56ccee6c0fe404fa0",
+      "byte_identical": true
+    },
+    {
+      "source": "assets/tien_mon_premium/widget_overview/wid_sang.png",
+      "android_sha256": "77ab81b16374d894f036dcddf40deaefe1c1f50f95dd3adbe2bf723d55c042e4",
+      "present": true,
+      "sha256": "77ab81b16374d894f036dcddf40deaefe1c1f50f95dd3adbe2bf723d55c042e4",
+      "byte_identical": true
+    },
+    {
+      "source": "lib/app/app.dart",
+      "android_sha256": "533bd9228563182a31fa66dcb6369cb459b11f412acb9bb538353effbd4aa5ee",
+      "present": true,
+      "sha256": "9e9fb80a6c52249bc9ee76f1a4312ff24fd0004bb58010d1d89bae0318f5e326",
+      "byte_identical": false,
+      "classes": [
+        "BetterPhenikaaScheduleApp",
+        "_BetterPhenikaaScheduleAppState",
+        "_AppRoot",
+        "_AppRootState",
+        "hours",
+        "_SplashScreen",
+        "_LoginScreen",
+        "_MainShell",
+        "_MainShellState",
+        "_TimetableScreen",
+        "_TimetableScreenState",
+        "_ExamScreen",
+        "_NotificationCenterScreen",
+        "_NotificationUpdateLogCard",
+        "_NotificationExamCard",
+        "_NotificationChangeCard",
+        "_AccountScreen",
+        "_TopTitle",
+        "_TimetableModeSelector",
+        "_TimetableModeSelectorPainter",
+        "_DateNavigator",
+        "_ScheduleCalendarPicker",
+        "_ScheduleCalendarPickerState",
+        "_ScheduleCard",
+        "_ExamCard",
+        "_ExamCountdownTag",
+        "_ExamAlertDot",
+        "_SegmentTabs",
+        "_TabButton",
+        "_InfoPanel",
+        "_AccountInfoRow",
+        "_WidgetPreview",
+        "_OverviewWidgetPreview",
+        "_Widget2LauncherPreview",
+        "_WidgetValorantClipper",
+        "_WidgetLolClipper",
+        "_ControlPanel",
+        "_ArcPanelAction",
+        "_PanelAction",
+        "_MetaLine",
+        "_EmptyState",
+        "_ErrorBanner",
+        "_PhoneSurface",
+        "_AppMark",
+        "_MicrosoftMark",
+        "_MsTile"
+      ],
+      "channels": [
+        "better_phenikaa/update",
+        "better_phenikaa/widget_session",
+        "better_phenikaa/widget_pin",
+        "better_phenikaa/assistant_test"
+      ]
+    },
+    {
+      "source": "lib/app/bpa_pen_trace_splash.dart",
+      "android_sha256": "9592395d13069956939158a7f56b5bc873bca905bda2439c0ad2b5337ff29310",
+      "present": true,
+      "sha256": "9592395d13069956939158a7f56b5bc873bca905bda2439c0ad2b5337ff29310",
+      "byte_identical": true,
+      "classes": [
+        "BpaPenTraceSplash",
+        "_BpaPenTraceSplashState",
+        "BpaPenTracePainter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/core/contracts/models.dart",
+      "android_sha256": "46ed46283a68f3caa264aebce6ae21c236c0347db3aff55b39d1cfeb9636aca6",
+      "present": true,
+      "sha256": "46ed46283a68f3caa264aebce6ae21c236c0347db3aff55b39d1cfeb9636aca6",
+      "byte_identical": true,
+      "classes": [
+        "UserDto",
+        "SemesterDto",
+        "ClassDto",
+        "ExamDto",
+        "QldtImportPayload",
+        "WidgetSnapshot"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/core/contracts/repositories.dart",
+      "android_sha256": "0e5ce09b138cf5f3ec24564e4e8d955d422d5cc9b6b44172acc9f390eae1bf39",
+      "present": true,
+      "sha256": "0e5ce09b138cf5f3ec24564e4e8d955d422d5cc9b6b44172acc9f390eae1bf39",
+      "byte_identical": true,
+      "classes": [
+        "QldtIntakeRepository",
+        "ScheduleRepository",
+        "ExamRepository",
+        "WidgetSnapshotRepository"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/README.md",
+      "android_sha256": "f22bd00d6ff0b4b1c2ed55cbc94ffa6b1415fa083bb64e5b2a6c78b57c652ccc",
+      "present": true,
+      "sha256": "f22bd00d6ff0b4b1c2ed55cbc94ffa6b1415fa083bb64e5b2a6c78b57c652ccc",
+      "byte_identical": true
+    },
+    {
+      "source": "lib/features/app_update/card_link_vfx.dart",
+      "android_sha256": "ca233037504b225488c52066100a9356ab9633d29171cd056b354b7a973e43b2",
+      "present": true,
+      "sha256": "ca233037504b225488c52066100a9356ab9633d29171cd056b354b7a973e43b2",
+      "byte_identical": true,
+      "classes": [
+        "CardLinkVfx",
+        "_CardLinkVfxState"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/henshin_vfx.dart",
+      "android_sha256": "e39cfd1ba91e65129de3dc31df77d5df1bb401e17ba3ea90ee96d957cedc9bf0",
+      "present": true,
+      "sha256": "e39cfd1ba91e65129de3dc31df77d5df1bb401e17ba3ea90ee96d957cedc9bf0",
+      "byte_identical": true,
+      "classes": [
+        "HenshinVfx",
+        "_HenshinVfxState",
+        "_HenshinPainter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/update_controller.dart",
+      "android_sha256": "a8e2ed742f91b345b2894ca284b4040cfe70168bf49eab64c3c212e9610acf50",
+      "present": true,
+      "sha256": "42b51baec21f0a6e185af5a2919125fb7b51ed82e10a0667b19b6f19bf96ad55",
+      "byte_identical": false,
+      "classes": [
+        "UpdateNotice",
+        "UpdateController"
+      ],
+      "channels": [
+        "better_phenikaa/update"
+      ]
+    },
+    {
+      "source": "lib/features/app_update/update_http_io.dart",
+      "android_sha256": "5a65637ce8ff6424ba3cae0343f6d559410b7713d137e70cb330a6a5e16fdec8",
+      "present": true,
+      "sha256": "5a65637ce8ff6424ba3cae0343f6d559410b7713d137e70cb330a6a5e16fdec8",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/update_http_stub.dart",
+      "android_sha256": "767b3cb19705e6ee8826f289387e39a9cc4254997d0a08d9066118dbeba313b6",
+      "present": true,
+      "sha256": "9288bf1ff25b597e19b3ea7739f19a74741355186bf7005e8cf2d06af6b8e1a9",
+      "byte_identical": false,
+      "classes": [],
+      "channels": [
+        "better_phenikaa/update_http"
+      ]
+    },
+    {
+      "source": "lib/features/app_update/update_manifest.dart",
+      "android_sha256": "acbd9538ea65add04190e6af78cc5ce75ec5b796b492692066811c0703668d34",
+      "present": true,
+      "sha256": "acbd9538ea65add04190e6af78cc5ce75ec5b796b492692066811c0703668d34",
+      "byte_identical": true,
+      "classes": [
+        "UpdateManifest",
+        "UpdateManifestVerifier"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/update_name_match.dart",
+      "android_sha256": "2352f4a051f34489b1bd874c08ab4d02d678ee05dcde4c7e2636b995e06ed797",
+      "present": true,
+      "sha256": "2352f4a051f34489b1bd874c08ab4d02d678ee05dcde4c7e2636b995e06ed797",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/update_repository.dart",
+      "android_sha256": "917fa1568553e3932dde517b8b13eb582fdc7ec3dcfe5d65f3a84e1fc36f9793",
+      "present": true,
+      "sha256": "917fa1568553e3932dde517b8b13eb582fdc7ec3dcfe5d65f3a84e1fc36f9793",
+      "byte_identical": true,
+      "classes": [
+        "UpdateRepository"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/app_update/update_ui.dart",
+      "android_sha256": "d091cb93fa0bf4e0a4bfdf6938942a1f8fd52bbe5964581858901c3b20906ea9",
+      "present": true,
+      "sha256": "d091cb93fa0bf4e0a4bfdf6938942a1f8fd52bbe5964581858901c3b20906ea9",
+      "byte_identical": true,
+      "classes": [
+        "UpdateFlowSheet",
+        "_UpdateFlowSheetState",
+        "CardBindingSheet",
+        "_CardBindingSheetState"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/diagnostics/README.md",
+      "android_sha256": "ac69d8377d65b45b324a694bbe0afb036e3190f40f25f60ccdac9baf9447a6c8",
+      "present": true,
+      "sha256": "ac69d8377d65b45b324a694bbe0afb036e3190f40f25f60ccdac9baf9447a6c8",
+      "byte_identical": true
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/diagnostics/qldt_sync_diagnostics.dart",
+      "android_sha256": "70d6947357723e46cffdc7ec24fa1b4c6454d8ff340123238dc7b15f3923b4a4",
+      "present": true,
+      "sha256": "70d6947357723e46cffdc7ec24fa1b4c6454d8ff340123238dc7b15f3923b4a4",
+      "byte_identical": true,
+      "classes": [
+        "QldtSyncDiagnostics"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/diagnostics/verification_diagnostics.dart",
+      "android_sha256": "11540b9318ee8291bc4540993b1aa633a65a66b81d7b85f836884a96f7b8de31",
+      "present": true,
+      "sha256": "11540b9318ee8291bc4540993b1aa633a65a66b81d7b85f836884a96f7b8de31",
+      "byte_identical": true,
+      "classes": [
+        "VerificationDiagnostics"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/exam_period.dart",
+      "android_sha256": "b698d2336d4d3edb45b82ff782dbb971fdbdac69824dde6ad8cb7162f785ba81",
+      "present": true,
+      "sha256": "b698d2336d4d3edb45b82ff782dbb971fdbdac69824dde6ad8cb7162f785ba81",
+      "byte_identical": true,
+      "classes": [
+        "ExamCountdown",
+        "ExamPeriod"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/exam_reminder_plan.dart",
+      "android_sha256": "e15290bfb248d6dce5e0b6b718a7573edb4dabbbff6f8be2249950a64d0ad5db",
+      "present": true,
+      "sha256": "e15290bfb248d6dce5e0b6b718a7573edb4dabbbff6f8be2249950a64d0ad5db",
+      "byte_identical": true,
+      "classes": [
+        "ExamReminder",
+        "ExamReminderPlan",
+        "ExamReminderPlanner"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_login.dart",
+      "android_sha256": "4130618028eabc5e0d1429e977c8153b984bb32b97f946af41d636fbb2f94ef4",
+      "present": true,
+      "sha256": "4130618028eabc5e0d1429e977c8153b984bb32b97f946af41d636fbb2f94ef4",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_login_mobile.dart",
+      "android_sha256": "7a594fc30e90b76b1b147bbb0a220781622561c4c37081b2edd54373ba66d01f",
+      "present": true,
+      "sha256": "ffdfe9cacd7039a4f00c32f06742a837dd4c5592d479c09be853249848c94af8",
+      "byte_identical": false,
+      "classes": [
+        "_QldtWebLoginScreen",
+        "_QldtWebLoginScreenState",
+        "_QldtNameToken",
+        "_QldtNameArrangeScreen",
+        "_QldtNameArrangeScreenState",
+        "_AnimatedNameChip"
+      ],
+      "channels": [
+        "better_phenikaa/qldt_credentials"
+      ]
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_login_result.dart",
+      "android_sha256": "c876e0d62e032dd004755c4d383997f1f9739a11721195c1acb69d323aab1034",
+      "present": true,
+      "sha256": "c876e0d62e032dd004755c4d383997f1f9739a11721195c1acb69d323aab1034",
+      "byte_identical": true,
+      "classes": [
+        "QldtLoginResult"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_login_web.dart",
+      "android_sha256": "08f2ba3eb07b8242b9f0832c6a7e677ac57cd68808a473ffe62533548f974085",
+      "present": true,
+      "sha256": "0cd4bc77dd15e4b422b02a56f154e408a1e77310906c4002ec3ef01fe51057d6",
+      "byte_identical": false,
+      "classes": [
+        "_WebQldtBridgeDialog",
+        "_WebQldtBridgeDialogState"
+      ],
+      "channels": [
+        "better_phenikaa/qldt_scriptable",
+        "better_phenikaa/qldt_scriptable"
+      ]
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_models.dart",
+      "android_sha256": "35cbba010b81129cecb457b9506c5f34dfefe59242498513886d4347f6c6e60e",
+      "present": true,
+      "sha256": "35cbba010b81129cecb457b9506c5f34dfefe59242498513886d4347f6c6e60e",
+      "byte_identical": true,
+      "classes": [
+        "ScheduleRecord",
+        "ImportedScheduleData",
+        "QldtParser"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_native_transport.dart",
+      "android_sha256": "ca928f10c49465cd1d8f003f2969725e88335ee830a33d715453eba9a5d4a88a",
+      "present": true,
+      "sha256": "ca928f10c49465cd1d8f003f2969725e88335ee830a33d715453eba9a5d4a88a",
+      "byte_identical": true,
+      "classes": [
+        "QldtNativeSession",
+        "QldtNativeRegistration",
+        "QldtNativeTransport"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/registration_parser.dart",
+      "android_sha256": "1e6789c3fd31a24186270d5e124b3cba6fe5e5d454effbf63b83761450b39c2f",
+      "present": true,
+      "sha256": "1e6789c3fd31a24186270d5e124b3cba6fe5e5d454effbf63b83761450b39c2f",
+      "byte_identical": true,
+      "classes": [
+        "QldtRegistrationParser",
+        "_SemesterOption"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/schedule_difference_sheet.dart",
+      "android_sha256": "cbce4ff0092ee26d4d7b6cf4ceb08b8173741f39435244801705fed288ffd165",
+      "present": true,
+      "sha256": "cbce4ff0092ee26d4d7b6cf4ceb08b8173741f39435244801705fed288ffd165",
+      "byte_identical": true,
+      "classes": [
+        "ScheduleDifferenceSheet"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_changes.dart",
+      "android_sha256": "773fa480e316a433eeb07f60d6edd6ad31c1c67dc6cbbf2922ccdad7e0e0262f",
+      "present": true,
+      "sha256": "773fa480e316a433eeb07f60d6edd6ad31c1c67dc6cbbf2922ccdad7e0e0262f",
+      "byte_identical": true,
+      "classes": [
+        "ScheduleDifference",
+        "ScheduleChange",
+        "SemesterDifference",
+        "SemesterDifferenceStore",
+        "SemesterChangeDetector"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_data.dart",
+      "android_sha256": "295f524d6fbcda784782b3cc8925f43036458133721561bbf65dad88933057c9",
+      "present": true,
+      "sha256": "295f524d6fbcda784782b3cc8925f43036458133721561bbf65dad88933057c9",
+      "byte_identical": true,
+      "classes": [
+        "RegisteredSemester",
+        "RegisteredClassSection",
+        "SemesterSubject",
+        "CurrentSemester",
+        "SemesterDataBuilder",
+        "CurrentSemesterStore"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_retention.dart",
+      "android_sha256": "7815d02f1d06679b2b2f399c986aaf1bdbe4644d1d03ebc4972f1ea1c0992cd2",
+      "present": true,
+      "sha256": "7815d02f1d06679b2b2f399c986aaf1bdbe4644d1d03ebc4972f1ea1c0992cd2",
+      "byte_identical": true,
+      "classes": [
+        "RetainedSemester",
+        "SemesterRetention"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_schedule_range.dart",
+      "android_sha256": "489dc71bc77dba9a35f474b2b2033a61bffa4fdb3ddae5be332e93ee4e28faf8",
+      "present": true,
+      "sha256": "489dc71bc77dba9a35f474b2b2033a61bffa4fdb3ddae5be332e93ee4e28faf8",
+      "byte_identical": true,
+      "classes": [
+        "SemesterScheduleRange"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_schedule_verifier.dart",
+      "android_sha256": "8fdb14982d3b4d51d4a789fd88ec9c010d7d549db078c27002407f1cfa19f3ad",
+      "present": true,
+      "sha256": "8fdb14982d3b4d51d4a789fd88ec9c010d7d549db078c27002407f1cfa19f3ad",
+      "byte_identical": true,
+      "classes": [
+        "VerifiedSemesterSchedules",
+        "SemesterScheduleVerifier",
+        "name",
+        "code",
+        "date"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_sync.dart",
+      "android_sha256": "b05dde3a3632731b4a2690b60c30fbc561654df5c7d7a42d54adf18d40138ffc",
+      "present": true,
+      "sha256": "b05dde3a3632731b4a2690b60c30fbc561654df5c7d7a42d54adf18d40138ffc",
+      "byte_identical": true,
+      "classes": [
+        "SemesterSyncCoordinator"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/semester_sync_message.dart",
+      "android_sha256": "793fc4f4f0cf5e22e485003898032a8605880a1dbf0694a46e7b214b51f736f5",
+      "present": true,
+      "sha256": "793fc4f4f0cf5e22e485003898032a8605880a1dbf0694a46e7b214b51f736f5",
+      "byte_identical": true,
+      "classes": [
+        "SemesterSyncMessage"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/sync_reminder_policy.dart",
+      "android_sha256": "514cac5066206f6d5e518fffcbbae693b8b662078ae2a0d61db78102605763e6",
+      "present": true,
+      "sha256": "514cac5066206f6d5e518fffcbbae693b8b662078ae2a0d61db78102605763e6",
+      "byte_identical": true,
+      "classes": [
+        "SyncReminderPolicy"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/tracuu_api.dart",
+      "android_sha256": "2bde32f7d13e8e9b1a37a38afa09021cc88b9f45c8e2257a2e3c14e70a28a57d",
+      "present": true,
+      "sha256": "2bde32f7d13e8e9b1a37a38afa09021cc88b9f45c8e2257a2e3c14e70a28a57d",
+      "byte_identical": true,
+      "classes": [
+        "TracuuApi"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dang_nhap_qldt/tracuu_webview_probe.dart",
+      "android_sha256": "e1e89d598912765c07726be19858a09a352d343d133d6879d74bac27396c55ed",
+      "present": true,
+      "sha256": "e1e89d598912765c07726be19858a09a352d343d133d6879d74bac27396c55ed",
+      "byte_identical": true,
+      "classes": [
+        "TracuuWebViewProbe"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/dong_bo_hang_ngay/daily_sync.dart",
+      "android_sha256": "3fa71b09e610362260ef458c1b76b6f6a9dc5d1c078ab2750f78b69213b5f3b7",
+      "present": true,
+      "sha256": "84dac3c472a3a0bfbbfa370c22d8b7376e11e4c5e8285e459ce1f38e9bac77ed",
+      "byte_identical": false,
+      "classes": [
+        "DailySync"
+      ],
+      "channels": [
+        "better_phenikaa/daily_sync"
+      ]
+    },
+    {
+      "source": "lib/features/giao_dien/bang_mau_anh/palette_extractor.dart",
+      "android_sha256": "7797ec24b9eeb4b98fe6bf2ef41e3a548eab549a3d48e0f5ba0b485199a60697",
+      "present": true,
+      "sha256": "7797ec24b9eeb4b98fe6bf2ef41e3a548eab549a3d48e0f5ba0b485199a60697",
+      "byte_identical": true,
+      "classes": [
+        "ExtractedSwatch",
+        "PaletteExtractor",
+        "_ColorBucket"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/bo_may/theme_generator.dart",
+      "android_sha256": "40c3159067cece2ab2f4dde18690b52236361ca5367499384a13b5b1e4b8b065",
+      "present": true,
+      "sha256": "40c3159067cece2ab2f4dde18690b52236361ca5367499384a13b5b1e4b8b065",
+      "byte_identical": true,
+      "classes": [
+        "ThemeGenerationSettings",
+        "ThemeGenerator"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/bo_may/theme_source.dart",
+      "android_sha256": "d768c30937f80dcb8f702dec85c93d6f6d4873ddd6b35f1d7d58e1a7f9541ca1",
+      "present": true,
+      "sha256": "d768c30937f80dcb8f702dec85c93d6f6d4873ddd6b35f1d7d58e1a7f9541ca1",
+      "byte_identical": true,
+      "classes": [
+        "ThemeSourceData"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/bo_may/theme_tokens.dart",
+      "android_sha256": "dbf1fa76974c7fd700af6c2c4bd683a75756815e5fc5477181aca4b18c175313",
+      "present": true,
+      "sha256": "dbf1fa76974c7fd700af6c2c4bd683a75756815e5fc5477181aca4b18c175313",
+      "byte_identical": true,
+      "classes": [
+        "ThemeTokens"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/du_lieu/custom_theme.dart",
+      "android_sha256": "5df12b4ef8385a74466e1d2b406af17ec89172eeba00811330fb2e4911bd57d9",
+      "present": true,
+      "sha256": "5df12b4ef8385a74466e1d2b406af17ec89172eeba00811330fb2e4911bd57d9",
+      "byte_identical": true,
+      "classes": [
+        "CustomThemeDefinition"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/du_lieu/custom_theme_repository.dart",
+      "android_sha256": "3892e90783cbcb966a1ee9c79efa9652e212dd33098b068411db373b33be3b2c",
+      "present": true,
+      "sha256": "3892e90783cbcb966a1ee9c79efa9652e212dd33098b068411db373b33be3b2c",
+      "byte_identical": true,
+      "classes": [
+        "CustomThemeRepository"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/du_lieu/widget_theme_configuration.dart",
+      "android_sha256": "1d4ce1395092261a3ae869d5d0dd918d82aa2e9cab6110bfc310951c93157031",
+      "present": true,
+      "sha256": "1d4ce1395092261a3ae869d5d0dd918d82aa2e9cab6110bfc310951c93157031",
+      "byte_identical": true,
+      "classes": [
+        "WidgetImageCrop",
+        "WidgetBorderDefinition",
+        "WidgetThemeConfiguration"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/phoi_mau/color_mixer.dart",
+      "android_sha256": "9f365f902a2165fa046164851274341b0c1b00ac432b9deb78bace85cb07c5e1",
+      "present": true,
+      "sha256": "9f365f902a2165fa046164851274341b0c1b00ac432b9deb78bace85cb07c5e1",
+      "byte_identical": true,
+      "classes": [
+        "ColorMixer"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/phong_chu/font_choice.dart",
+      "android_sha256": "07b5712d54454889ff9634882169ea68a1fc170c8f4ac7cdcdf1a349bc1b0cbc",
+      "present": true,
+      "sha256": "07b5712d54454889ff9634882169ea68a1fc170c8f4ac7cdcdf1a349bc1b0cbc",
+      "byte_identical": true,
+      "classes": [
+        "AppFontChoice"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/phong_chu/font_manager.dart",
+      "android_sha256": "36f5bd105a5c692ed9dfed53e6dc6cbdd3e182788bc4808f6b159069b4809a3c",
+      "present": true,
+      "sha256": "36f5bd105a5c692ed9dfed53e6dc6cbdd3e182788bc4808f6b159069b4809a3c",
+      "byte_identical": true,
+      "classes": [
+        "ThemeFontManager"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tep_cuc_bo/file_bytes.dart",
+      "android_sha256": "8d78d753b58ac18da794059c5591313bbf95a4a5819319bb2e613e799d9e0586",
+      "present": true,
+      "sha256": "4a933106cc061bb7a407ca0ac9b4bcc7608bc1d4df77bc917df80175b5bd1a0d",
+      "byte_identical": false,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tep_cuc_bo/file_bytes_io.dart",
+      "android_sha256": "81626442d6e5e047a93223304f3b2ec1c490f1c0b991281231443f6cff585fb9",
+      "present": true,
+      "sha256": "81626442d6e5e047a93223304f3b2ec1c490f1c0b991281231443f6cff585fb9",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tep_cuc_bo/file_bytes_stub.dart",
+      "android_sha256": "d8e90ecf2d0ad3a538f4434c3d2ef3aa1dacdb7f3156d7ec4e4732ad34aa8527",
+      "present": true,
+      "sha256": "d8e90ecf2d0ad3a538f4434c3d2ef3aa1dacdb7f3156d7ec4e4732ad34aa8527",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tep_cuc_bo/local_file_bridge.dart",
+      "android_sha256": "a221c4ab9ff151d7805d8c95c2b11f991b2d85f6da7f6e562bcd4c16d4dbfc07",
+      "present": true,
+      "sha256": "aed7bea1852e03459452fe36c5f0e2e4f3732de16d4fad1877c7538ec8c30414",
+      "byte_identical": false,
+      "classes": [
+        "ManagedLocalFile",
+        "LocalFileBridge"
+      ],
+      "channels": [
+        "better_phenikaa/local_files"
+      ]
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/README.md",
+      "android_sha256": "a12fd08fbfc552e898d9128a1e554ae85c575f75e051a301927e47d06c279730",
+      "present": true,
+      "sha256": "a12fd08fbfc552e898d9128a1e554ae85c575f75e051a301927e47d06c279730",
+      "byte_identical": true
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/background/tien_mon_background.dart",
+      "android_sha256": "e222a3bee76b6f4159ec7778ef7b7aa8b41567b0c3aecc81aac1fd628a12c0ff",
+      "present": true,
+      "sha256": "e222a3bee76b6f4159ec7778ef7b7aa8b41567b0c3aecc81aac1fd628a12c0ff",
+      "byte_identical": true,
+      "classes": [
+        "_AmbientProfile",
+        "TienMonSceneController",
+        "TienMonPersistentBackground",
+        "_TienMonPersistentBackgroundState",
+        "TienMonPersistentAmbient",
+        "_TienMonPersistentAmbientState",
+        "_FullBleedSceneArtwork",
+        "_EdgeBlendMist",
+        "_SceneEdgeExtension",
+        "_AmbientMotion",
+        "_AmbientMotionState",
+        "_AmbientPainter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/glass/tien_mon_glass.dart",
+      "android_sha256": "9b8b93f810f152678eb5d17821992f2b8ae63221d5fd8ae2d9010e8811301837",
+      "present": true,
+      "sha256": "9b8b93f810f152678eb5d17821992f2b8ae63221d5fd8ae2d9010e8811301837",
+      "byte_identical": true,
+      "classes": [
+        "TienMonGlassTokens",
+        "TienMonGlass",
+        "TienMonPressable",
+        "_TienMonPressableState"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/schedule/tien_mon_schedule_views.dart",
+      "android_sha256": "1157862333f8a7a0c381dda52ef778c3e177faf41ddb8a63bc27737c2a9086fa",
+      "present": true,
+      "sha256": "1157862333f8a7a0c381dda52ef778c3e177faf41ddb8a63bc27737c2a9086fa",
+      "byte_identical": true,
+      "classes": [
+        "TienMonEdgeSurface",
+        "_TienMonEdgeSurfaceState",
+        "TienMonScheduleCard",
+        "_TienMonScheduleCardState",
+        "TienMonDayView",
+        "TienMonWeekView",
+        "_ProductionEmptyDay"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_contract.dart",
+      "android_sha256": "9a0ff9344a6a6b9ad20adddd56f65c00516f6d662d5cec94846baf56cd4a107e",
+      "present": true,
+      "sha256": "9a0ff9344a6a6b9ad20adddd56f65c00516f6d662d5cec94846baf56cd4a107e",
+      "byte_identical": true,
+      "classes": [
+        "TienMonPremiumContract"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_engine.dart",
+      "android_sha256": "a18c4304fe6b61006416a11b03a5f2e58fbe93e7e1fab2fd5fb2ba021f59f13b",
+      "present": true,
+      "sha256": "a18c4304fe6b61006416a11b03a5f2e58fbe93e7e1fab2fd5fb2ba021f59f13b",
+      "byte_identical": true,
+      "classes": [
+        "TienMonPremiumEngine"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/tien_mon_premium_models.dart",
+      "android_sha256": "2e5b1ae51105ca00c7a42ddce0c1f49719ab92f8d2c6ce91784fd07e9cab03a3",
+      "present": true,
+      "sha256": "2e5b1ae51105ca00c7a42ddce0c1f49719ab92f8d2c6ce91784fd07e9cab03a3",
+      "byte_identical": true,
+      "classes": [
+        "TienMonScheduleItem",
+        "TienMonDaySchedule",
+        "TienMonScheduleAdapter",
+        "TienMonDemoScheduleAdapter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/tien_mon_safe_text.dart",
+      "android_sha256": "1c4dff48794e9933dd36c5e53dfebcf40370242223f997965dc297eef1e62791",
+      "present": true,
+      "sha256": "1c4dff48794e9933dd36c5e53dfebcf40370242223f997965dc297eef1e62791",
+      "byte_identical": true,
+      "classes": [
+        "TienMonSafeText",
+        "TienMonText"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/tien_mon_premium/widgets/tien_mon_widget_previews.dart",
+      "android_sha256": "a71f7a73ec858410f3aae6118b83506e2609b6bf16cb00ff947def535adc8b30",
+      "present": true,
+      "sha256": "a71f7a73ec858410f3aae6118b83506e2609b6bf16cb00ff947def535adc8b30",
+      "byte_identical": true,
+      "classes": [
+        "_OverviewPreviewItem",
+        "TienMonOverviewWidgetPreview",
+        "_TienMonOverviewWidgetPreviewState",
+        "_OverviewBody",
+        "_OverviewCards",
+        "_F3SkinnedCard",
+        "_PreviewIconButton",
+        "_PreviewRefreshButton",
+        "_F3TimelinePainter",
+        "TienMonSmallWidgetPreview",
+        "_TienMonSmallWidgetPreviewState",
+        "_SmallF3Content",
+        "_SmallRefreshButton",
+        "_BambooPainter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/xem_truoc/custom_theme_editor.dart",
+      "android_sha256": "1f55807677171453575675adf97939c24fe3b964544683a522818e8ccd6848fe",
+      "present": true,
+      "sha256": "1f55807677171453575675adf97939c24fe3b964544683a522818e8ccd6848fe",
+      "byte_identical": true,
+      "classes": [
+        "CustomThemeEditor",
+        "_CustomThemeEditorState",
+        "_SectionTitle",
+        "_SwatchRow",
+        "_ThemePreview",
+        "_RgbColorPicker",
+        "_RgbColorPickerState",
+        "_RgbSpectrumPainter",
+        "_RgbSelectionPainter",
+        "_HueBar",
+        "_RgbSlider"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/xem_truoc/native_widget_preview.dart",
+      "android_sha256": "47d3d3b073955308a386a895bf389e0205ad4e46acc5d59e31286b3b5cf1c480",
+      "present": true,
+      "sha256": "47d3d3b073955308a386a895bf389e0205ad4e46acc5d59e31286b3b5cf1c480",
+      "byte_identical": true,
+      "classes": [
+        "NativeWidgetPreview"
+      ],
+      "channels": [
+        "better_phenikaa/widget_render"
+      ]
+    },
+    {
+      "source": "lib/features/giao_dien/xem_truoc/theme_dust_transition.dart",
+      "android_sha256": "ebe4a44c452883c7d054d7b54000f2c24632ff3921f3d5931356ab8f677786a5",
+      "present": true,
+      "sha256": "ebe4a44c452883c7d054d7b54000f2c24632ff3921f3d5931356ab8f677786a5",
+      "byte_identical": true,
+      "classes": [
+        "ThemeDustSurface",
+        "_ThemeDustSurfaceState",
+        "_DustPainter"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/xem_truoc/theme_picker.dart",
+      "android_sha256": "2a38cbfe321d0f2e2925c42642a96f409ce5940eb76ea883e6c9dd23eeb89e68",
+      "present": true,
+      "sha256": "2a38cbfe321d0f2e2925c42642a96f409ce5940eb76ea883e6c9dd23eeb89e68",
+      "byte_identical": true,
+      "classes": [
+        "_ThemePickerSheet",
+        "_RgbColorPicker",
+        "_RgbColorPickerState",
+        "_RgbSpectrumPainter",
+        "_RgbSelectionPainter",
+        "_HueBar",
+        "_RgbSlider",
+        "_FontColorChip",
+        "_DefaultThemeLoading",
+        "_DefaultThemeLoadingState",
+        "_TienMonThemeLoading",
+        "_TienMonThemeLoadingState",
+        "_PresetCard",
+        "_CustomThemeCard",
+        "AppThemeSettingButton"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/giao_dien/xem_truoc/widget_image_crop_editor.dart",
+      "android_sha256": "6107d6a4aab5cf8c0cb7ba0179e7dd3c47970d6a88b48dbe8527b63dd4578e9a",
+      "present": true,
+      "sha256": "6107d6a4aab5cf8c0cb7ba0179e7dd3c47970d6a88b48dbe8527b63dd4578e9a",
+      "byte_identical": true,
+      "classes": [
+        "WidgetImageCropEditor",
+        "_WidgetImageCropEditorState"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/lich_hoc/alarm_test_fixture.dart",
+      "android_sha256": "668929894422dcbcff49149646b647bf8ab5f82ba598453dd1073665fa1bbff4",
+      "present": true,
+      "sha256": "668929894422dcbcff49149646b647bf8ab5f82ba598453dd1073665fa1bbff4",
+      "byte_identical": true,
+      "classes": [
+        "starts",
+        "time"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/lich_hoc/study_alarm_card.dart",
+      "android_sha256": "fcc19eaf081b384c90b7839e96c95ce4155667282fa7bbe235f943b25654a257",
+      "present": true,
+      "sha256": "7103eae5d9cd00936120f27931e79ee966296218f2b769e2ea5705e83cf93045",
+      "byte_identical": false,
+      "classes": [
+        "time",
+        "less",
+        "date",
+        "date",
+        "StudyAlarmCard",
+        "_StudyAlarmCardState",
+        "_WheelColumn"
+      ],
+      "channels": [
+        "better_phenikaa/study_alarm"
+      ]
+    },
+    {
+      "source": "lib/features/lich_hoc/week_timetable.dart",
+      "android_sha256": "0c55c03bca511fa463a9d7a10abc129dce99bc6139fed71eb345cff4f67c9a27",
+      "present": true,
+      "sha256": "0c55c03bca511fa463a9d7a10abc129dce99bc6139fed71eb345cff4f67c9a27",
+      "byte_identical": true,
+      "classes": [
+        "WeekTimetable"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/tien_ich_lich_hoc/widget_publisher.dart",
+      "android_sha256": "5e0ed350023e4fa8a2b710f0f4f9b26bff6273f83d80de19333b8c9ea601205c",
+      "present": true,
+      "sha256": "26ca2072bfec0fa9ddb5b1f3511f6c76e9e8191a7303d8cf8067ee0af7a88248",
+      "byte_identical": false,
+      "classes": [
+        "WidgetPublisher"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/features/tro_li/assistant_catalog.dart",
+      "android_sha256": "853717651b12fe5fbf808b2540bf9926732ff01f516a0e035b30cb9fb7a92e03",
+      "present": true,
+      "sha256": "853717651b12fe5fbf808b2540bf9926732ff01f516a0e035b30cb9fb7a92e03",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "lib/features/tro_li/assistant_text.dart",
+      "android_sha256": "b0d9f97e0df5b182e7277c7cba23e534a67114c2f316d97741885b82b63855b6",
+      "present": true,
+      "sha256": "b0d9f97e0df5b182e7277c7cba23e534a67114c2f316d97741885b82b63855b6",
+      "byte_identical": true,
+      "classes": [
+        "AssistantSelection",
+        "AssistantText"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/main.dart",
+      "android_sha256": "5a61d450d3fd3d608c7183d622d5a5acf2ec62e251286e5d376b466f422b3fd8",
+      "present": true,
+      "sha256": "5a61d450d3fd3d608c7183d622d5a5acf2ec62e251286e5d376b466f422b3fd8",
+      "byte_identical": true,
+      "classes": [
+        "_LoginCreditOverlay",
+        "_LoginCreditOverlayState"
+      ],
+      "channels": []
+    },
+    {
+      "source": "lib/theme/app_theme.dart",
+      "android_sha256": "f6cd06043406129818155df74ed787aad8e02e3392d0419c4255ba7077bb9c20",
+      "present": true,
+      "sha256": "95ebf7c455ab3edbd4b2848b3f4c94051e14cd0f0e577c27282d531246dec799",
+      "byte_identical": false,
+      "classes": [
+        "AppThemePalette",
+        "AppThemeController",
+        "AppThemeBackdrop",
+        "_AppThemeBackdropState",
+        "_ThemeBackdropPainter",
+        "AppThemePanel",
+        "_ValorantClipper",
+        "_LolClipper"
+      ],
+      "channels": [
+        "better_phenikaa/widget_theme"
+      ]
+    },
+    {
+      "source": "lib/tien_mon_premium_demo.dart",
+      "android_sha256": "fa10e9f926446e81117c027921cd01dc5273197ea8b77f4d368a1c1e79a45022",
+      "present": true,
+      "sha256": "fa10e9f926446e81117c027921cd01dc5273197ea8b77f4d368a1c1e79a45022",
+      "byte_identical": true,
+      "classes": [
+        "TienMonPremiumDemoApp",
+        "TienMonPremiumHarness",
+        "_TienMonPremiumHarnessState",
+        "_Header",
+        "_DateNavigator",
+        "_Segmented",
+        "_OptionHeading",
+        "_NotificationTile"
+      ],
+      "channels": []
+    },
+    {
+      "source": "pubspec.lock",
+      "android_sha256": "99755c5c549acd36576595665b92918e9f8ebdb5d2b988cfd00421ae9a043ab7",
+      "present": true,
+      "sha256": "99755c5c549acd36576595665b92918e9f8ebdb5d2b988cfd00421ae9a043ab7",
+      "byte_identical": true
+    },
+    {
+      "source": "pubspec.yaml",
+      "android_sha256": "351564418a0a743d7fa7dd2459df3125018fbc62f4c8f0bb8e4b3ac7f6cc1e68",
+      "present": true,
+      "sha256": "351564418a0a743d7fa7dd2459df3125018fbc62f4c8f0bb8e4b3ac7f6cc1e68",
+      "byte_identical": true
+    },
+    {
+      "source": "shaders/theme_dust.frag",
+      "android_sha256": "b512023ef3a5a277c7305e8df250dea1525b0358a25319e5b7026e9d2e06b170",
+      "present": true,
+      "sha256": "b512023ef3a5a277c7305e8df250dea1525b0358a25319e5b7026e9d2e06b170",
+      "byte_identical": true
+    },
+    {
+      "source": "test/alarm_test_fixture_test.dart",
+      "android_sha256": "4bda89b30337958aca64f1595ddcbb0563251aaf585cff708ab6d816b05c7bc6",
+      "present": true,
+      "sha256": "4bda89b30337958aca64f1595ddcbb0563251aaf585cff708ab6d816b05c7bc6",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/app_smoke_test.dart",
+      "android_sha256": "86c68efb233576f31fb4dbca341f90097ab017d7a74f2b34c58a378fc6e6247b",
+      "present": true,
+      "sha256": "86c68efb233576f31fb4dbca341f90097ab017d7a74f2b34c58a378fc6e6247b",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/app_update_controller_test.dart",
+      "android_sha256": "e678bc2e345d48b112dca13e9b7f936ca36c5d4fca30ec1f0d902c420d0ee2f5",
+      "present": true,
+      "sha256": "e678bc2e345d48b112dca13e9b7f936ca36c5d4fca30ec1f0d902c420d0ee2f5",
+      "byte_identical": true,
+      "classes": [],
+      "channels": [
+        "better_phenikaa/update"
+      ]
+    },
+    {
+      "source": "test/app_update_manifest_test.dart",
+      "android_sha256": "4b613d12aae52938e6994f6ed794407b3dd9215d67ef2a923348e3519e713c0f",
+      "present": true,
+      "sha256": "4b613d12aae52938e6994f6ed794407b3dd9215d67ef2a923348e3519e713c0f",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/app_update_ui_test.dart",
+      "android_sha256": "65b1aa91239568ccffbdf7b2bd97994dcdf17ac36a8541bf671bbbf7db16f31e",
+      "present": true,
+      "sha256": "65b1aa91239568ccffbdf7b2bd97994dcdf17ac36a8541bf671bbbf7db16f31e",
+      "byte_identical": true,
+      "classes": [],
+      "channels": [
+        "better_phenikaa/update"
+      ]
+    },
+    {
+      "source": "test/assistant_text_test.dart",
+      "android_sha256": "83e7cc08d8684827563e8a04e8de01bc5f9b8a589a01d9ba78de0e524f00c60c",
+      "present": true,
+      "sha256": "83e7cc08d8684827563e8a04e8de01bc5f9b8a589a01d9ba78de0e524f00c60c",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/exam_period_test.dart",
+      "android_sha256": "541196278bacd72c67994db712b128880f77a6888e1802d01655c78da7fb2744",
+      "present": true,
+      "sha256": "541196278bacd72c67994db712b128880f77a6888e1802d01655c78da7fb2744",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/exam_period_ui_test.dart",
+      "android_sha256": "88aa39d5d4ac809dd2443ba9389ccbc0d3fcebfb0ed13aa4416c7f67e8e80fe0",
+      "present": true,
+      "sha256": "88aa39d5d4ac809dd2443ba9389ccbc0d3fcebfb0ed13aa4416c7f67e8e80fe0",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/exam_reminder_plan_test.dart",
+      "android_sha256": "b26c561affb8231dd34a871cff6bc358cba1c2b6afb0dba04f31cbf368988d0c",
+      "present": true,
+      "sha256": "b26c561affb8231dd34a871cff6bc358cba1c2b6afb0dba04f31cbf368988d0c",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/fixtures/schedule_latest.json",
+      "android_sha256": "87286619dcc2a6f2095a82ac2073fe2a97a809fc5b53ada773f49e8869f458f1",
+      "present": true,
+      "sha256": "87286619dcc2a6f2095a82ac2073fe2a97a809fc5b53ada773f49e8869f458f1",
+      "byte_identical": true
+    },
+    {
+      "source": "test/fixtures/tracuu_latest.html",
+      "android_sha256": "58981d1aac8908d5207166173a6de4187011029e7fd231f26de3f62eddc6fbd8",
+      "present": true,
+      "sha256": "58981d1aac8908d5207166173a6de4187011029e7fd231f26de3f62eddc6fbd8",
+      "byte_identical": true
+    },
+    {
+      "source": "test/qldt_parser_test.dart",
+      "android_sha256": "d22e2c447c69d15667c22f1f2c7b479b476823239b97a616699a35becedad94b",
+      "present": true,
+      "sha256": "d22e2c447c69d15667c22f1f2c7b479b476823239b97a616699a35becedad94b",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/qldt_sync_diagnostics_test.dart",
+      "android_sha256": "18ace0508eefe188e12891428a659a6e5b9c091889ef8e61a746ef8a5020a3f4",
+      "present": true,
+      "sha256": "18ace0508eefe188e12891428a659a6e5b9c091889ef8e61a746ef8a5020a3f4",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/registration_parser_test.dart",
+      "android_sha256": "623a5c6642e91f102b0222205af14a182fbceec6b8b0174c9e8f056f084a828b",
+      "present": true,
+      "sha256": "623a5c6642e91f102b0222205af14a182fbceec6b8b0174c9e8f056f084a828b",
+      "byte_identical": true,
+      "classes": [
+        "components",
+        "date"
+      ],
+      "channels": []
+    },
+    {
+      "source": "test/semester_changes_test.dart",
+      "android_sha256": "b7b95b3f65c2cedaadeb1f399c93115426b1d14378e83ed4e76114313037eb63",
+      "present": true,
+      "sha256": "b7b95b3f65c2cedaadeb1f399c93115426b1d14378e83ed4e76114313037eb63",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/semester_data_test.dart",
+      "android_sha256": "d670fe8406257e145ddb4b6eaceee0357a7ea69b36130bae5ba4c5b5271097ab",
+      "present": true,
+      "sha256": "d670fe8406257e145ddb4b6eaceee0357a7ea69b36130bae5ba4c5b5271097ab",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/semester_retention_test.dart",
+      "android_sha256": "3f10537fc6b519b301ee25516c6a5e4128a785b1bb3040dd7baf948ffaf6b569",
+      "present": true,
+      "sha256": "3f10537fc6b519b301ee25516c6a5e4128a785b1bb3040dd7baf948ffaf6b569",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/semester_schedule_range_test.dart",
+      "android_sha256": "95495a9eae47ac99181b571e46204f7830a2db9e2663cad4f12179769d59713f",
+      "present": true,
+      "sha256": "95495a9eae47ac99181b571e46204f7830a2db9e2663cad4f12179769d59713f",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/semester_schedule_verifier_test.dart",
+      "android_sha256": "fc9804e6941cba9790ee61efadf888cc75938df4f292ba03d1676cbc1538df0b",
+      "present": true,
+      "sha256": "fc9804e6941cba9790ee61efadf888cc75938df4f292ba03d1676cbc1538df0b",
+      "byte_identical": true,
+      "classes": [
+        "codes",
+        "name"
+      ],
+      "channels": []
+    },
+    {
+      "source": "test/semester_sync_test.dart",
+      "android_sha256": "229dc246233ed475023864b3ef59ad62c812509557cd41dc2c482b8101037ef3",
+      "present": true,
+      "sha256": "229dc246233ed475023864b3ef59ad62c812509557cd41dc2c482b8101037ef3",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/study_alarm_card_test.dart",
+      "android_sha256": "5cda5fc6a7c4739adb47752dc3fbc6866eb086b84cf5d88a499af67ae76d15ba",
+      "present": true,
+      "sha256": "5cda5fc6a7c4739adb47752dc3fbc6866eb086b84cf5d88a499af67ae76d15ba",
+      "byte_identical": true,
+      "classes": [
+        "later",
+        "time",
+        "also"
+      ],
+      "channels": []
+    },
+    {
+      "source": "test/sync_reminder_policy_test.dart",
+      "android_sha256": "678e2c4cc4cb5560caa071217b2c57edbdf6e05b29d99f4e6c88efbee807f08f",
+      "present": true,
+      "sha256": "678e2c4cc4cb5560caa071217b2c57edbdf6e05b29d99f4e6c88efbee807f08f",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/theme_engine_test.dart",
+      "android_sha256": "211d9d2efe9dcd46b8589a00655ddb97fb550439059909b33056a232823457b9",
+      "present": true,
+      "sha256": "211d9d2efe9dcd46b8589a00655ddb97fb550439059909b33056a232823457b9",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/theme_font_layout_test.dart",
+      "android_sha256": "5d6d9db8e4617b51146d8cb346e2f4b97e1a479c9f8f03d5b1b73749d788cd5d",
+      "present": true,
+      "sha256": "5d6d9db8e4617b51146d8cb346e2f4b97e1a479c9f8f03d5b1b73749d788cd5d",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/tien_mon_premium_contract_test.dart",
+      "android_sha256": "a331f75eb0fb2e9fe9e8809d52a85021521f5ad95112db04247b7b53ced0f783",
+      "present": true,
+      "sha256": "a331f75eb0fb2e9fe9e8809d52a85021521f5ad95112db04247b7b53ced0f783",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/tien_mon_premium_state_test.dart",
+      "android_sha256": "5efc27a67b9665beab22e6627873308a1c4138626fb552ebae5935252992bf08",
+      "present": true,
+      "sha256": "5efc27a67b9665beab22e6627873308a1c4138626fb552ebae5935252992bf08",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/tracuu_api_test.dart",
+      "android_sha256": "8a5b451a99dc97bdf969130be994d672a2a1d788286772c562f26b82a6d4f98c",
+      "present": true,
+      "sha256": "8a5b451a99dc97bdf969130be994d672a2a1d788286772c562f26b82a6d4f98c",
+      "byte_identical": true,
+      "classes": [
+        "belonging"
+      ],
+      "channels": []
+    },
+    {
+      "source": "test/tracuu_webview_probe_test.dart",
+      "android_sha256": "726656efed8dc259e36fd8f019b31416a44c43c09bfbeebd18d19219d53823d2",
+      "present": true,
+      "sha256": "726656efed8dc259e36fd8f019b31416a44c43c09bfbeebd18d19219d53823d2",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/verification_diagnostics_test.dart",
+      "android_sha256": "52914a391751df5102b9ab3379092fab6f42f11cfeb07f3117c0fca1b50c924e",
+      "present": true,
+      "sha256": "52914a391751df5102b9ab3379092fab6f42f11cfeb07f3117c0fca1b50c924e",
+      "byte_identical": true,
+      "classes": [
+        "without"
+      ],
+      "channels": []
+    },
+    {
+      "source": "test/week_timetable_test.dart",
+      "android_sha256": "55df2058b145ab0673460a6333b71844f9d90a3571672709fbd11a603907fd4d",
+      "present": true,
+      "sha256": "55df2058b145ab0673460a6333b71844f9d90a3571672709fbd11a603907fd4d",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    },
+    {
+      "source": "test/widget_theme_v14_test.dart",
+      "android_sha256": "c4231b46be2ffa8889026cd9dc6d7a7563002f780d159331ae1137d2445f9e09",
+      "present": true,
+      "sha256": "c4231b46be2ffa8889026cd9dc6d7a7563002f780d159331ae1137d2445f9e09",
+      "byte_identical": true,
+      "classes": [],
+      "channels": []
+    }
+  ],
+  "note": "Inventory and hash evidence only; not an exhaustive behavioral audit or iPhone functional test."
+}

@@ -18,3 +18,11 @@ output.write_text(bundle)
 manifest={'android_reference':'16f7ee232ad2b74699cf960f33c87c8caaadecc3','scope':'sync core only; not full BPA','reused_scripts':{'registration_sha256':hashlib.sha256(registration.encode()).hexdigest(),'schedule_sha256':hashlib.sha256(schedule.encode()).hexdigest()},'bundle_sha256':hashlib.sha256(bundle.encode()).hexdigest()}
 (root/'scriptable/reuse.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
 print(output)
+shared_runtime=(root/'scriptable/runtime.js').read_text().split("if (typeof Script !== 'undefined')")[0]
+host_header='// Variables used by Scriptable.\n// icon-color: deep-blue; icon-glyph: calendar-alt;\n// BPA 1.6 — original Flutter UI + Scriptable bridge.\n'
+host=host_header+(root/'scriptable/core.js').read_text()+'\n'
+host+='const REGISTRATION_SCRIPT='+json.dumps(registration,ensure_ascii=False)+';\n'
+host+='const SCHEDULE_SCRIPT='+json.dumps(schedule,ensure_ascii=False)+';\n'
+host+='function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }\n'
+host+=shared_runtime+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
+(root/'scriptable/BPA.js').write_text(host)

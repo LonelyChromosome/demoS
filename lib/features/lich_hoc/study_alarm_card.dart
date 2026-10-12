@@ -1,3 +1,4 @@
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -94,7 +95,7 @@ class StudyAlarmCard extends StatefulWidget {
 }
 
 class _StudyAlarmCardState extends State<StudyAlarmCard> {
-  static const _channel = MethodChannel('better_phenikaa/study_alarm');
+  static const _channel = BpaChannel('better_phenikaa/study_alarm');
   static const _duration = Duration(milliseconds: 250);
 
   late FixedExtentScrollController _hours;

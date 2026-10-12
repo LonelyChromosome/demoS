@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'bpa_channel.dart';
 
 abstract final class IosRuntime {
   static const appGroup = 'group.vn.edu.phenikaa.bpa';
-  static const _channel = MethodChannel('better_phenikaa/ios_runtime');
+  static const _channel = BpaChannel('better_phenikaa/ios_runtime');
   static VoidCallback? onSyncExpired;
-  static bool get supported => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get supported => scriptableAvailable || (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS);
   static Future<void> beginSync() async {
     if (!supported) return;
     _channel.setMethodCallHandler((call) async {

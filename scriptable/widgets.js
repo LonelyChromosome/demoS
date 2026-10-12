@@ -1,0 +1,75 @@
+// Widget state and real deep-link actions; iOS owns timeline refresh timing.
+function actionURL(action,kind,id,extra={}) {
+  const params={scriptName:'BPA',action,kind,instance:id,...extra};
+  return 'scriptable:///run?'+Object.entries(params).map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(String(v))).join('&');
+}
+function widgetRows(data,selection,kind,now=new Date()) {
+  const rows=selection.mode==='exam'?data.exams||[]:data.classes||[];
+  return rows.filter(r=>selection.mode==='exam'?new Date(r.endAt)>now:r.startAt.slice(0,10)===selection.day).sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
+}
+function navigateWidget(selection,rows,kind,direction) {
+  const count=kind==='overview'?4:kind==='widget2'?5:1;
+  const last=Math.max(0,rows.length-count), index=Math.max(0,Math.min(selection.index||0,last));
+  if(kind==='small'&&rows.length)return {...selection,index:Math.max(0,Math.min(index+direction,last))};
+  if(kind==='overview'&&direction>0&&index<last)return {...selection,index:last};
+  if(kind==='overview'&&direction<0&&index>0)return {...selection,index:0};
+  if(selection.mode==='exam')return {...selection,index:Math.max(0,Math.min(index+direction*count,last))};
+  const day=new Date(selection.day+'T00:00:00');day.setDate(day.getDate()+direction);
+  const dates=(snapshot().classes||[]).map(r=>r.startAt.slice(0,10)).sort();
+  const chosen=isoDay(day);
+  if(dates.length&&(chosen<dates[0]||chosen>dates[dates.length-1]))return selection;
+  return {...selection,day:chosen,index:0};
+}
+async function widgetAction(action,kind,id,params) {
+  const selection=widgetSelection(kind,id),rows=widgetRows(snapshot(),selection,kind);
+  writeState('last-widget.json',{kind,id});
+  if(action==='previous'||action==='next')setWidgetSelection(kind,id,navigateWidget(selection,rows,kind,action==='previous'?-1:1));
+  else if(action==='mode')setWidgetSelection(kind,id,{...selection,mode:selection.mode==='exam'?'study':'exam',index:0});
+  else if(action==='calendar') {
+    const picker=new DatePicker();picker.initialDate=new Date(selection.day+'T12:00:00');
+    const dates=(snapshot().classes||[]).map(r=>new Date(r.startAt)).sort((a,b)=>a-b);
+    if(dates.length){picker.minimumDate=dates[0];picker.maximumDate=dates[dates.length-1];}
+    const value=await picker.pickDate();if(value)setWidgetSelection(kind,id,{...selection,day:isoDay(value),index:0});
+  } else if(action==='sync') {
+    writeState('pending-action.json',{kind,action:'sync'});await openOriginalApp();return;
+  } else {writeState('pending-action.json',{kind,action:'open'});await openOriginalApp();return;}
+  await renderBPAWidget(kind,id,true);
+}
+async function renderBPAWidget(kind,id,preview=false) {
+  if(!['small','overview','widget2'].includes(kind))throw errorCode('widget_kind','Loại widget không hợp lệ.');
+  const family=config.widgetFamily||'medium';
+  if(family==='small')throw errorCode('widget_tap_limit','Widget iOS cỡ small chỉ có một vùng bấm. Chưa tái hiện được toàn bộ icon BPA trong kích thước này.');
+  const state=widgetSelection(kind,id),data=snapshot(),theme=readState('theme.json',{}),all=widgetRows(data,state,kind);
+  const count=kind==='overview'?4:kind==='widget2'?5:1;
+  const start=Math.max(0,Math.min(state.index||0,Math.max(0,all.length-count))),visible=all.slice(start,start+count);
+  const payload={kind,day:state.day,examMode:state.mode==='exam',index:start,count:all.length,items:visible,theme};
+  const configData=theme.widgetConfig?JSON.parse(theme.widgetConfig):{};
+  for(const key of ['largeImagePath','widget2ImagePath']) {
+    if(configData[key]&&bpaFM.fileExists(safeManagedPath(configData[key]))) {
+      const data=bpaFM.read(safeManagedPath(configData[key]));
+      payload[key]='data:image/'+configData[key].split('.').pop().toLowerCase()+';base64,'+data.toBase64String();
+    }
+  }
+  if(theme.fontPath&&bpaFM.fileExists(safeManagedPath(theme.fontPath)))payload.fontData='data:font/ttf;base64,'+bpaFM.read(safeManagedPath(theme.fontPath)).toBase64String();
+  const renderer=new WebView();await renderer.loadURL(BPA_WEB+'widget-renderer.html');
+  const result=await renderer.evaluateJavaScript(`renderWidget(${JSON.stringify(payload)}).then(completion).catch(e=>completion({error:String(e)}));`,true);
+  if(result.error)throw errorCode('widget_render',result.error);
+  const image=Image.fromData(Data.fromBase64String(result.png));
+  const widget=new ListWidget();widget.backgroundImage=image;widget.setPadding(0,0,0,0);widget.spacing=0;
+  const h=family==='large'?340:158,w=340;
+  let currentY=0;
+  for(const band of result.hitBands) {
+    const gap=Math.max(0,band.y-currentY);if(gap)widget.addSpacer(gap*h/result.height);
+    const row=widget.addStack();row.layoutHorizontally();row.size=new Size(0,band.height*h/result.height);row.spacing=0;row.setPadding(0,0,0,0);
+    let currentX=0;
+    for(const hit of band.hits) {
+      if(hit.x>currentX)row.addSpacer((hit.x-currentX)*w/result.width);
+      const target=row.addStack();target.size=new Size(hit.width*w/result.width,band.height*h/result.height);target.url=actionURL(hit.action,kind,id);target.setPadding(0,0,0,0);target.addSpacer();currentX=hit.x+hit.width;
+    }
+    row.addSpacer();currentY=band.y+band.height;
+  }
+  widget.addSpacer();widget.url=actionURL('open',kind,id);
+  widget.refreshAfterDate=new Date(Date.now()+15*60000);
+  if(preview){if(family==='large')await widget.presentLarge();else await widget.presentMedium();}
+  return widget;
+}

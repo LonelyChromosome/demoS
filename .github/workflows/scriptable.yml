@@ -1,0 +1,58 @@
+name: BPA Scriptable app and original Flutter UI
+on:
+  push:
+    branches: [main, feature/scriptable-android-parity]
+    paths: [lib/**, assets/**, shaders/**, pubspec.*, web/**, scriptable/**, .github/workflows/scriptable.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: scriptable-app
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Verify original data contracts and Scriptable transport
+        run: |
+          bash tool/test_core.sh
+          python3 scriptable/build.py
+          TZ=Asia/Ho_Chi_Minh node --test test/scriptable/core.test.js
+      - name: Build original app UI for Scriptable WebView
+        run: flutter build web --release --no-web-resources-cdn --base-href=/demoS/
+      - name: Include Scriptable host and original widget assets
+        run: |
+          mkdir -p build/web/scriptable
+          cp scriptable/BPA.js scriptable/BPA-Scriptable-Sync.js scriptable/README.md build/web/scriptable/
+          cp -R ios/WidgetAssets build/web/widget-assets
+          python3 tool/build_widget_assets.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BPA-Scriptable-app
+          path: build/web
+          retention-days: 14
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/web
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

@@ -8,20 +8,37 @@ import 'dart:html' as html;
 import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/qldt_login_result.dart';
 import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/qldt_models.dart';
 import 'package:flutter/material.dart';
+import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
+import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/semester_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const bool supportsLiveQldtLogin = true;
 
-Future<void> clearQldtSession() async {}
+Future<void> clearQldtSession() async {
+  if (scriptableAvailable) await const BpaChannel('better_phenikaa/qldt_scriptable').invokeMethod<void>('clear');
+}
 
-Future<String> readCachedQldtDisplayName() async => '';
+Future<String> readCachedQldtDisplayName() async =>
+  (await SharedPreferences.getInstance()).getString('better_phenikaa_scriptable_name') ?? '';
 
-Future<String> readQldtAccountDisplayName() async => '';
+Future<String> readQldtAccountDisplayName() => readCachedQldtDisplayName();
 
-Future<bool> isQldtFirstLoginSetupComplete() async => true;
+Future<bool> isQldtFirstLoginSetupComplete() async =>
+  (await SharedPreferences.getInstance()).getBool('better_phenikaa_scriptable_first_login') ?? false;
 
-Future<void> markQldtFirstLoginSetupComplete() async {}
+Future<void> markQldtFirstLoginSetupComplete() async {
+  await (await SharedPreferences.getInstance()).setBool('better_phenikaa_scriptable_first_login',true);
+}
 
-Future<QldtLoginResult?> openQldtLogin(BuildContext context) {
+Future<QldtLoginResult?> openQldtLogin(BuildContext context) async {
+  if (scriptableAvailable) {
+    final value = await const BpaChannel('better_phenikaa/qldt_scriptable').invokeMapMethod<String,dynamic>('sync');
+    if (value == null) return null;
+    final semester=CurrentSemester.fromJson(Map<String,dynamic>.from(value['semester'] as Map));
+    await (await SharedPreferences.getInstance()).setString('better_phenikaa_scriptable_name',semester.displayName);
+    return QldtLoginResult(schedule:semester.toImportedScheduleData(),semester:semester,
+      termStartedAt:DateTime.parse(value['termStartedAt'] as String));
+  }
   return showDialog<QldtLoginResult>(
     context: context,
     barrierDismissible: false,
