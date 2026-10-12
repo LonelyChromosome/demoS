@@ -1,0 +1,9 @@
+{
+  "source_sha256": "131657582d78c9a69a91a2d9341a681e3de176bc8ecc0a481a3abbdce2b9dc5f",
+  "workflow_source_sha256": "727f62bb889a9136efc026a4f70968d14988714a08611a572f79288809d21bf2",
+  "signed_sha256": "3e890c2840179546e428425a28659bd9a93cdd8993f6f978fc5e29492c4126f9",
+  "format": "AEA1",
+  "size": 24817,
+  "clock_create_actions": 1,
+  "device_verified": false
+}

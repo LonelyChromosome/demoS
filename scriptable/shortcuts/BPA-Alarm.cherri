@@ -1,0 +1,27 @@
+// Real Clock AppIntent; receipt is produced only after it returns an Alarm.
+#define name BPA — Đặt báo thức
+#define color blue
+#define glyph alarmClock
+const input = getDictionary(ShortcutInput)
+const hourValue = getValue(input, "hour")
+@hour = "{hourValue}"
+const minuteValue = getValue(input, "minute")
+@minute = "{minuteValue}"
+const labelValue = getValue(input, "label")
+@label = "{labelValue}"
+const targetValue = getValue(input, "target")
+@target = "{targetValue}"
+const requestIdValue = getValue(input, "requestId")
+@requestId = "{requestIdValue}"
+const timeValue = getValue(input, "timeText")
+@time = "{timeValue}"
+const created = createAlarm(@label, @time, true, [])
+@createdAlarm = "{created}"
+if @createdAlarm == "" {
+    @failure = {"status": "BPA_ALARM_FAILED"}
+    @failureText = "{@failure}"
+    output(@failureText)
+}
+@receipt = {"status": "BPA_ALARM_CREATED", "hour": "{@hour}", "minute": "{@minute}", "label": "{@label}", "target": "{@target}", "requestId": "{@requestId}", "createdAlarm": "{@createdAlarm}"}
+@receiptText = "{@receipt}"
+output(@receiptText)
