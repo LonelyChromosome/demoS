@@ -48,12 +48,14 @@ TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js
 
 Kiểm tra Node và Chromium không thay thế kiểm thử Scriptable trên iPhone.
 
-## Cài Shortcut báo thức
+## Một bộ cài BPA
 
-1. Tải `shortcuts/BPA-Alarm.shortcut`, mở file bằng ứng dụng Phím tắt và thêm **BPA — Đặt báo thức**.
-2. Giữ đúng tên này để nút báo thức trên card BPA gọi được Shortcut.
-3. Khi sử dụng lần đầu, cho phép Shortcut tạo báo thức trong Đồng hồ. Kiểm tra báo thức đã xuất hiện trong Đồng hồ và thử chuông trên thiết bị.
+Người dùng chỉ nhận `BPA.scriptable`. Script tự chuẩn bị vùng dữ liệu/tài nguyên
+và widget. Workflow báo thức đã ký nằm ngay trong file BPA; không yêu cầu người
+dùng tải một module khác. Lần đầu đặt báo thức, BPA mở luồng import của iOS khi
+cần, rồi xác minh companion đã sẵn sàng trước khi tạo báo thức.
 
-File đã ký AEA1; action tạo báo thức thuộc Clock thật, không thay bằng notification.
-BPA chỉ xác nhận thành công khi callback trả về Alarm và nonce đúng lần gọi.
-Chưa có kết quả thử iPhone, nên việc ký file không được tính là Clock đã đạt parity.
+Dữ liệu ký và hash đều phải khớp; đóng màn import không được tính là đã cài.
+Bước import/chạy Clock vẫn chưa thử trên iPhone. Companion NFC mới đã compile,
+chưa được ký/nhúng vì automatic approval review yêu cầu xác nhận riêng cho
+source NFC gửi Shortcuty. Đây chưa phải bộ cài hoàn chỉnh để giao người dùng.
