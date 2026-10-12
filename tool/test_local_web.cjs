@@ -3,14 +3,12 @@ const fs=require('fs'),path=require('path'),vm=require('vm'),http=require('http'
 async function capturePaintedNameScreen(page,file) {
   for(let attempt=0;attempt<30;attempt++) {
     const bytes=await page.screenshot();
-    const ink=await page.evaluate(async base64=>{
-      const image=new Image();image.src='data:image/png;base64,'+base64;await image.decode();
-      const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
-      const context=canvas.getContext('2d');context.drawImage(image,0,0);
-      const pixels=context.getImageData(0,0,image.width,Math.floor(image.height*.75)).data;
-      let count=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]<160&&pixels[i+1]<160&&pixels[i+2]<160&&pixels[i+3]>200)count++;
-      return count;
-    },bytes.toString('base64'));
+    // Decode outside WebKit: creating another canvas in the app while its
+    // route animates changes the graphics workload being measured.
+    const {PNG}=require(path.join(process.env.BPA_QA_NODE_MODULES,'pngjs'));
+    const image=PNG.sync.read(bytes);let ink=0;
+    const end=Math.floor(image.height*.75)*image.width*4;
+    for(let i=0;i<end;i+=4)if(image.data[i]<160&&image.data[i+1]<160&&image.data[i+2]<160&&image.data[i+3]>200)ink++;
     fs.writeFileSync(file,bytes);
     if(ink>1000)return;
     await page.waitForTimeout(100);

@@ -193,3 +193,5 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Cache restoration/theme load không gọi Shortcut mở ngoài; sync thành công và đổi theme bởi người dùng yêu cầu refresh nếu bridge đã sẵn sàng. Chưa chuẩn bị thì ghi setup_required, không công nhận đã refresh.
 - 60 Node test qua; verify compiled/signed/source cả ba companion khớp. Chữ ký/intent request không chứng minh frame, thời gian refresh hay animation ngoài Home Screen. Còn kiểm chứng iPhone; sync nền chưa khép kín.
 - Code 56 cho gói tích hợp, CI chỉ giữ build mới nhất để không chạy lại checkpoint đã bị thay thế. Không phát hành app chưa đủ dưới tên hoàn chỉnh.
+
+- Run 38321464687: core/60 Node/compile/signed companions/Chromium qua, WebKit dừng kiểm tra screenshot màn tên. Ảnh cho thấy route transition đang vẽ nhạt chồng hai màn, không phải hoàn toàn không có nội dung. Đã chuyển decode pixel ra Node PNGJS thay vì tạo canvas mới trong trang Flutter để loại workload phụ của test; chưa công nhận run lỗi là thành công hoặc giảm điều kiện ảnh.

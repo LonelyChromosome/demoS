@@ -72,7 +72,7 @@ jobs:
         env:
           BPA_QA_NODE_MODULES: ${{ runner.temp }}/bpa-web-qa/node_modules
         run: |
-          npm install --prefix "$RUNNER_TEMP/bpa-web-qa" playwright
+          npm install --prefix "$RUNNER_TEMP/bpa-web-qa" playwright pngjs
           node tool/test_local_web.cjs
       - name: Exercise local loader and original card HTML in WebKit
         env:
