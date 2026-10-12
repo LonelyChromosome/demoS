@@ -1,0 +1,10 @@
+{
+  "source_sha256": "c137f1afc31c8fba1564577918cb6956752ee2c9a1f2a2fb62891d4a893d6407",
+  "workflow_source_sha256": "749c525cad111ba5a9c2479979f57f6cbd521dd9899e84e2c99e84384d9dc24b",
+  "signed_sha256": "3e97f9ed0424c2cad4119790a6a0637f5c6efb525a41e91be40bb7813e9bc8e2",
+  "format": "AEA1",
+  "size": 23771,
+  "clock_create_actions": 0,
+  "reader_callback_actions": 1,
+  "device_verified": false
+}

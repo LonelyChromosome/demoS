@@ -29,7 +29,7 @@ host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n
 host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()),ensure_ascii=False)+';\n'
 host+='const BPA_UPDATE_CHANNEL='+json.dumps(json.loads((root/'scriptable/update-channel.json').read_text()))+';\n'
 shortcuts={}
-for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức')]:
+for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc','BPA-NFC','BPA — Quét thẻ')]:
     directory=root/'scriptable/shortcuts'
     metadata=json.loads((directory/(stem+'.json')).read_text())
     binary=(directory/(stem+'.shortcut')).read_bytes()

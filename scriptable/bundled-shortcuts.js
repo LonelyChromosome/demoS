@@ -36,3 +36,15 @@ function parseReaderCallback(raw,requestId) {
   if(!value||typeof value!=='object'||value.custom!==requestId||typeof value.tagid!=='string')throw errorCode('nfc_unverified','Kết quả thẻ không thuộc lần quét BPA hiện tại.');
   return normalizeCardUID(value.tagid);
 }
+
+async function ensureNFCShortcut() {
+  const asset=bundledShortcut('nfc'),setup=readState('shortcut-import-shown.json',{});
+  if(setup.nfc===asset.sha256)return;
+  await QuickLook.present(asset.path,true);
+  // This records only which import UI was shown, never a verified installation.
+  writeState('shortcut-import-shown.json',{...setup,nfc:asset.sha256});
+}
+function retryNFCImport() {
+  const setup=readState('shortcut-import-shown.json',{});delete setup.nfc;
+  writeState('shortcut-import-shown.json',setup);
+}

@@ -43,3 +43,17 @@ test('NFC custom callback accepts only a nonce-matched serial field, never NDEF 
   c.callback=callback;assert.throws(()=>vm.runInContext('parseReaderCallback(callback,"setup-nonce")',c));
  }
 });
+test('the single installer embeds the signed NFC bridge and records only that its native import was shown',async()=>{
+ const {c,files,states}=fixture();let imports=0;
+ c.QuickLook={async present(path){assert.match(path,/BPA — Quét thẻ\.shortcut$/);imports++;}};
+ await vm.runInContext('ensureNFCShortcut()',c);await vm.runInContext('ensureNFCShortcut()',c);
+ const asset=vm.runInContext('bundledShortcut("nfc")',c);
+ assert.deepEqual(Buffer.from(files.get(asset.path).toBase64String(),'base64'),fs.readFileSync('scriptable/shortcuts/BPA-NFC.shortcut'));
+ assert.equal(imports,1);assert.ok(states.get('shortcut-import-shown.json').nfc);assert.equal(states.has('cardBound'),false);
+});
+test('cancel during native NFC import prevents launching the reader afterwards',async()=>{
+ const {c}=fixture();let started=0;
+ c.QuickLook={async present(){vm.runInContext('cardGeneration++',c);}};
+ c.CallbackURL=class {addParameter(){}async open(){started++;}};
+ await assert.rejects(vm.runInContext('requestCardUIDFromShortcut()',c),e=>e.code==='cancelled');assert.equal(started,0);
+});

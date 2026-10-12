@@ -47,7 +47,8 @@ jobs:
           python3 tool/verify_shortcut.py "build/shortcuts/BPA — Đặt báo thức_unsigned.shortcut"
           cp scriptable/shortcuts/BPA-NFC.cherri build/shortcuts/
           "$RUNNER_TEMP/bpa-cherri" build/shortcuts/BPA-NFC.cherri --skip-sign --derive-uuids
-          # NFC signing is separately blocked by approval review; never upload it from CI.
+          python3 tool/verify_shortcut.py "build/shortcuts/BPA — Quét thẻ_unsigned.shortcut" nfc
+          # Signing uses a verified public source outside CI; CI never submits code to the vendor.
       - name: Keep Shortcut compiler and source diagnostics
         if: always()
         uses: actions/upload-artifact@v4

@@ -40,12 +40,13 @@ function normalizeCardUID(value) {
   if(!/^(?:[0-9A-F]{2}){4,10}$/.test(uid))throw errorCode('nfc_invalid_uid','Shortcut không trả UID thẻ hợp lệ.');
   return uid;
 }
-async function requestCardUIDFromShortcut() {
+async function requestCardUIDFromShortcut(expectedGeneration=cardGeneration) {
+  await ensureNFCShortcut();
+  if(expectedGeneration!==cardGeneration)throw errorCode('cancelled','Đã hủy yêu cầu thẻ.');
   const requestId=UUID.string(),started=Date.now();
-  const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
-  callback.addParameter('name','BPA — Quét thẻ');callback.addParameter('input','text');
-  callback.addParameter('text',JSON.stringify({requestId}));
-  const response=await callback.open();
+  let response;
+  try {response=await invokeBundledShortcut('nfc',{requestId});}
+  catch(error){retryNFCImport();throw error;}
   const value=JSON.parse(response.result||'null');
   if(!value||value.requestId!==requestId)throw errorCode('nfc_unverified','Chưa xác minh được kết quả quét thuộc yêu cầu BPA.');
   const at=Date.parse(value.scannedAt);
@@ -75,10 +76,10 @@ async function requestCardUIDViaHelper() {
   }
   return normalizeCardUID(response.tagid);
 }
-async function requestCardUID() {
+async function requestCardUID(expectedGeneration=cardGeneration) {
   // Optional provider; the existing Shortcut consumer remains the default until
   // getURL()/reader callback shape is exercised on an actual iPhone.
-  return preference('better_phenikaa_nfc_provider')==='helper'?await requestCardUIDViaHelper():await requestCardUIDFromShortcut();
+  return preference('better_phenikaa_nfc_provider')==='helper'?await requestCardUIDViaHelper():await requestCardUIDFromShortcut(expectedGeneration);
 }
 async function sendNativeEvent(app,channel,type,extra={}) {
   await app.evaluateJavaScript(`bpaHost.event(${JSON.stringify('better_phenikaa/'+channel)},'event',${JSON.stringify({type,...extra})});null`,false);
@@ -282,7 +283,7 @@ async function handlePlatform(call,app) {
     if(method==='startBindCard'||method==='startCard') {
       const generation=++cardGeneration;
       if(method==='startBindCard'&&Keychain.contains('BPA.bound-card-uid'))throw errorCode('already_bound','Thẻ đã được liên kết.');
-      const uid=await requestCardUID();
+      const uid=await requestCardUID(generation);
       if(generation!==cardGeneration)throw errorCode('cancelled','Đã hủy yêu cầu thẻ.');
       if(method==='startBindCard'){Keychain.set('BPA.bound-card-uid',uid);await sendNativeEvent(app,'update','cardBound');}
       else {

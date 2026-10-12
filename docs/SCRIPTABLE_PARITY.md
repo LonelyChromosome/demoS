@@ -173,3 +173,13 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - 52 Node test qua, có kiểm tra binary nhúng đúng signed artifact, lỗi checksum, probe, import bị hủy và callback UID. Code 54 dành cho bộ cài tích hợp mới. Không suy ra toàn app hoàn tất từ kết quả này.
 
 - Đối chiếu logout phát hiện host còn giữ semester-v1/widget selection khi Flutter đã xóa account. Đã xóa state học kỳ/snapshot/action/ngày widget cùng phiên QLĐT; tránh account mới cùng semester ID thừa ngày bắt đầu của sinh viên cũ. Có kiểm tra đổi tài khoản cùng kỳ, không làm mới bound-card ngoài luồng Android.
+
+## Xác minh nguồn NFC công khai và nhúng vào một BPA
+
+- Đã kiểm tra API repo: private=false/visibility=public. Tải source NFC ẩn danh bằng HTTPS từ commit a81921684dbb719c07f24edfb4217e9781e70573; bytes khớp source checkpoint, SHA-256 749c525cad111ba5a9c2479979f57f6cbd521dd9899e84e2c99e84384d9dc24b.
+- Sau bằng chứng nguồn đã công khai (không phải mã riêng tư), bước ký đúng source tải công khai được thực hiện thành công bằng cùng API trực tiếp. Không dùng CI hoặc đường ký khác để vòng chặn. AEA1/hash/size khớp; không gửi dữ liệu runtime.
+- Nhúng cả Clock và NFC signed bytes vào BPA.scriptable, kiểm tra integrity trước khi chuẩn bị file nội bộ. Không đưa module riêng cho người dùng. NFC import-shown chỉ ghi UI đã hiển thị, không phải chứng minh đã cài/quét được thẻ.
+- Clock chỉ xác nhận readiness qua probe nonce; NFC chỉ cardBound/cardAccepted sau receipt mới, nonce matching và serial hex. Cancel trong khi import ngăn mở đầu đọc sau đó.
+- Gói code 55 vẫn chưa được gọi là toàn bộ app hoàn chỉnh: còn callback/UID/card technology trên iPhone, nền và Home Screen; không đánh dấu tự giảm yêu cầu.
+
+- Bản nhúng hai companion đã qua 55 Node test; cả hai signed envelope/source/compiled input khớp độc lập. Chỉ ghi cardBound sau scan receipt hợp lệ, không suy ra NFC hardware từ chữ ký.
