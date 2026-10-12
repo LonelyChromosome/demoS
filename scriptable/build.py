@@ -1,6 +1,6 @@
 """Bundle the exact Android portal scripts, core and Scriptable adapter."""
 from pathlib import Path
-import re, json, hashlib
+import re, json, hashlib, base64
 root=Path(__file__).resolve().parents[1]
 source=root/'lib/features/dang_nhap_qldt'
 registration=re.search(r"String get _script => r'''(.*?)''';",(source/'tracuu_api.dart').read_text(),re.S).group(1).replace('__ATTEMPT__','1')
@@ -28,8 +28,18 @@ host+='function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_C
 host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n'
 host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()),ensure_ascii=False)+';\n'
 host+='const BPA_UPDATE_CHANNEL='+json.dumps(json.loads((root/'scriptable/update-channel.json').read_text()))+';\n'
+shortcuts={}
+for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức')]:
+    directory=root/'scriptable/shortcuts'
+    metadata=json.loads((directory/(stem+'.json')).read_text())
+    binary=(directory/(stem+'.shortcut')).read_bytes()
+    if not binary.startswith(b'AEA1') or len(binary)!=metadata['size'] or hashlib.sha256(binary).hexdigest()!=metadata['signed_sha256'] or hashlib.sha256((directory/(stem+'.cherri')).read_bytes()).hexdigest()!=metadata['workflow_source_sha256']:
+        raise RuntimeError('Bundled Shortcut source/artifact mismatch: '+stem)
+    shortcuts[kind]={'name':name,'size':len(binary),'sha256':metadata['signed_sha256'],'base64':base64.b64encode(binary).decode()}
+host+='const BPA_BUNDLED_SHORTCUTS='+json.dumps(shortcuts,ensure_ascii=False)+';\n'
+
 host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'
-host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
+host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)
 
 # Export envelope matches a real Scriptable-exported file; device import unverified.

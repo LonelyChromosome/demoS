@@ -162,3 +162,12 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Đóng view/hủy phiên ngăn ghi lịch và token cũ. HTTP/lỗi xác minh trả về UI cũ, không tự lặp đăng nhập. 46 kiểm tra Node qua, có 5 ca login lifecycle mới.
 - Thêm browser QA cho resume → màn hình sắp xếp tên thật → save gốc → lịch thật bằng dữ liệu synthetic riêng QA. Đang build kiểm tra, không gọi mock session là đăng nhập QLĐT thật hoặc parity trên iPhone.
 - Code tài nguyên mới 53 để host/UI không phối hợp với bundle 52 thiếu resume protocol. Phạm vi vẫn toàn bộ app, không bàn giao từng module để người dùng test.
+
+## Một file BPA và kiểm tra tích hợp — 2026-10-13
+
+- Điều kiện bàn giao được người dùng nhắc lại: chỉ một file BPA.scriptable; phải đầy đủ chức năng/trải nghiệm DemoF3 hiện tại. Không giao module hoặc bản thiếu dưới tên hoàn chỉnh. DemoF3/main vẫn 16f7ee232ad2b74699cf960f33c87c8caaadecc3.
+- Run 38310394530 qua 88 core, Ed25519/schema, 46 Node, Chromium/WebKit. QA resume có một claim/một sync, qua màn sắp xếp tên gốc rồi save và lịch. Ảnh WebKit của màn tên được chụp quá sớm (trắng); đã thêm kiểm tra pixel screenshot thay vì công nhận semantics là ảnh render.
+- Bản Clock có mode probe không tạo alarm; đã compile/ký lại sau xác nhận trước của người dùng. Nhúng đúng binary đã ký/hash vào BPA.scriptable, chuẩn bị file nội bộ và luồng import iOS khi cần. Probe phải trả nonce/status đúng; không tính đóng import là cài xong, không tự lặp khi hủy/lỗi.
+- NFC candidate dùng action Shortcuts openxcallbackurl thật, custom success key callback, gọi nfchelper://read?params=true&custom=nonce. Compile 18 action; không ghi thẻ/POST. Host chỉ nhận serial tagid và custom đúng nonce từ URL/JSON, không chấp nhận NDEF giả UID.
+- Automatic approval review chặn ký source NFC mới vì xác nhận trước chỉ áp dụng Clock. Không gửi lại hoặc dùng CI vòng qua. Còn chờ xác nhận riêng trước khi nhúng artifact NFC đã ký; callback/UID thực trên thiết bị chưa xác minh.
+- 52 Node test qua, có kiểm tra binary nhúng đúng signed artifact, lỗi checksum, probe, import bị hủy và callback UID. Code 54 dành cho bộ cài tích hợp mới. Không suy ra toàn app hoàn tất từ kết quả này.

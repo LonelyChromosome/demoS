@@ -1,5 +1,22 @@
 // Browser QA of the local loader, not a Scriptable/iPhone functional test.
 const fs=require('fs'),path=require('path'),vm=require('vm'),http=require('http');
+async function capturePaintedNameScreen(page,file) {
+  for(let attempt=0;attempt<30;attempt++) {
+    const bytes=await page.screenshot();
+    const ink=await page.evaluate(async base64=>{
+      const image=new Image();image.src='data:image/png;base64,'+base64;await image.decode();
+      const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
+      const context=canvas.getContext('2d');context.drawImage(image,0,0);
+      const pixels=context.getImageData(0,0,image.width,Math.floor(image.height*.75)).data;
+      let count=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]<160&&pixels[i+1]<160&&pixels[i+2]<160&&pixels[i+3]>200)count++;
+      return count;
+    },bytes.toString('base64'));
+    fs.writeFileSync(file,bytes);
+    if(ink>1000)return;
+    await page.waitForTimeout(100);
+  }
+  throw Error('Name screen semantics exist but its screenshot is still blank');
+}
 async function main(){
   const root=path.resolve('build/web'),files=[];
   function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);entry.isDirectory()?walk(file):files.push(path.relative(root,file).replaceAll('\\','/'));}}walk(root);
@@ -80,7 +97,7 @@ async function main(){
     await page.waitForSelector('canvas',{timeout:30000});
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.getByText('Nhấp để sắp xếp tên của bạn',{exact:true}).waitFor({state:'visible',timeout:30000});
-    await page.screenshot({path:qaDir+'/login-resume-name.png'});
+    await capturePaintedNameScreen(page,qaDir+'/login-resume-name.png');
     await page.getByText('QALogin',{exact:true}).click();
     await page.waitForTimeout(250);
     await page.getByRole('button').last().click();

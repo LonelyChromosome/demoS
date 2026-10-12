@@ -24,7 +24,7 @@ test('theme editor previews use the shared widget renderer without changing the 
  assert.equal(out,'preview-bytes');assert.equal(captured.kind,'overview');assert.equal(captured.hostWidth,320);assert.equal(captured.items[0].id,'a');
 });
 test('Clock receipts must contain a returned alarm and this request nonce',async()=>{
- const c=host(),target=new Date(Date.now()+3600000);target.setSeconds(0,0);
+ const c=host(),target=new Date(Date.now()+3600000);target.setSeconds(0,0);c.ensureClockShortcut=async()=>{};
  c.input={hour:target.getHours(),minute:target.getMinutes(),target:+target,classStart:+target+3600000,label:'QA fixture'};c.UUID={string:()=> 'alarm-request'};
  let captured;
  c.CallbackURL=class {addParameter(k,v){if(k==='text')captured=JSON.parse(v);}async open(){return {result:JSON.stringify({...captured,status:'BPA_ALARM_CREATED',createdAlarm:'Mock Clock output; not device evidence'})};}};

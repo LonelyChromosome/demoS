@@ -50,6 +50,7 @@ async function requestCardUIDFromShortcut() {
   if(!value||value.requestId!==requestId)throw errorCode('nfc_unverified','Chưa xác minh được kết quả quét thuộc yêu cầu BPA.');
   const at=Date.parse(value.scannedAt);
   if(!Number.isFinite(at)||at<started-2000||at>Date.now()+2000)throw errorCode('nfc_stale','Kết quả thẻ không thuộc lần quét hiện tại.');
+  if(value.callback!==undefined)return parseReaderCallback(value.callback,requestId);
   return normalizeCardUID(value.uid);
 }
 function urlQueryValue(url,name) {
@@ -247,10 +248,10 @@ async function handlePlatform(call,app) {
     const now=new Date(),next=new Date(now.getFullYear(),now.getMonth(),now.getDate(),args.hour,args.minute);
     if(next.getTime()<=now.getTime()+30000)next.setDate(next.getDate()+1);
     if(!Number.isInteger(args.hour)||!Number.isInteger(args.minute)||args.hour<0||args.hour>23||args.minute<0||args.minute>59||next.getTime()!==args.target||args.target>=args.classStart||args.target<=now.getTime()+30000||args.classStart-now.getTime()>=86400000)throw errorCode('alarm_occurrence','Thời điểm báo thức không khớp buổi học trong 24 giờ.');
-    const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
+    const started=Date.now();await ensureClockShortcut();
+    if(Date.now()-started>90000||args.target<=Date.now()+30000)throw errorCode('alarm_setup_timeout','Thời điểm báo thức đã quá gần. Hãy chọn lại giờ.');
     const requestId=UUID.string();
-    callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify({...args,requestId,timeText:String(args.hour).padStart(2,'0')+':'+String(args.minute).padStart(2,'0')}));
-    const response=await callback.open();
+    const response=await invokeBundledShortcut('alarm',{...args,mode:'create',requestId,timeText:String(args.hour).padStart(2,'0')+':'+String(args.minute).padStart(2,'0')});
     const receipt=JSON.parse(response.result||'null');
     if(!receipt||receipt.status!=='BPA_ALARM_CREATED'||Number(receipt.hour)!==args.hour||Number(receipt.minute)!==args.minute||receipt.label!==args.label||Number(receipt.target)!==args.target||receipt.requestId!==requestId||typeof receipt.createdAlarm!=='string'||!receipt.createdAlarm.trim())throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');
     return true;

@@ -1,0 +1,19 @@
+// Read-only NFC Helper bridge using the standard Shortcuts callback action.
+// Callback field shape and card compatibility still require device validation.
+#include 'actions/web'
+#include 'actions/calendar'
+#define name BPA — Quét thẻ
+#define color blue
+#define glyph creditCard
+const input = getDictionary(ShortcutInput)
+const requestIdValue = getValue(input, "requestId")
+@requestId = "{requestIdValue}"
+const encoded = urlEncode(@requestId)
+@readerURL = "nfchelper://read?params=true&custom={encoded}"
+const readResult = openCustomXCallbackURL(@readerURL, "callback", "", "")
+@callback = "{readResult}"
+const scanned = formatDate(CurrentDate, "ISO 8601")
+@scannedAt = "{scanned}"
+@receipt = {"requestId": "{@requestId}", "scannedAt": "{@scannedAt}", "callback": "{@callback}"}
+@receiptText = "{@receipt}"
+output(@receiptText)
