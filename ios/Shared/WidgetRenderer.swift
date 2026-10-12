@@ -31,7 +31,7 @@ enum BPAWidgetRenderer {
         return acronym.isEmpty ? subject : acronym
     }
     static func image(_ kind: String, selection: BPASelection, snapshot: BPASnapshot?) -> UIImage {
-        let size = size(kind)
+        let size = Self.size(kind)
         let theme = BPAContract.defaults.dictionary(forKey: "widget.theme") ?? [:]
         let config = configuration()
         let small = kind == "ScheduleWidgetProvider", overview = kind == "OverviewWidgetProvider"

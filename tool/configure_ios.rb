@@ -19,7 +19,7 @@ widget_group.set_source_tree('<group>'); widget_group.set_path('BPAWidgets')
 ref = widget_group.files.find { |file| file.path == 'BPAWidgets.swift' } || widget_group.new_file('BPAWidgets.swift')
 widget.source_build_phase.add_file_reference(ref, true)
 shared.each { |file| widget.source_build_phase.add_file_reference(file, true) }
-%w[SwiftUI.framework WidgetKit.framework AppIntents.framework UIKit.framework].each { |name| widget.add_system_framework(name) }
+%w[SwiftUI WidgetKit AppIntents UIKit].each { |name| widget.add_system_framework(name) }
 runner.add_dependency(widget) unless runner.dependencies.any? { |dependency| dependency.target == widget }
 embed = runner.copy_files_build_phases.find { |phase| phase.name == 'Embed App Extensions' } || runner.new_copy_files_build_phase('Embed App Extensions')
 embed.dst_subfolder_spec = '13'
