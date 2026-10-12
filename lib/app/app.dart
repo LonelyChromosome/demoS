@@ -63,9 +63,9 @@ class _BetterPhenikaaScheduleAppState extends State<BetterPhenikaaScheduleApp> {
           theme: buildBetterTheme(palette),
           builder: (context, child) => ThemeDustSurface(
             key: ThemeDustSurface.surfaceKey,
-            child: BpaPenTraceSplash(
-              child: child ?? const SizedBox.shrink(),
-            ),
+            child: scriptableLoginResuming
+                ? child ?? const SizedBox.shrink()
+                : BpaPenTraceSplash(child: child ?? const SizedBox.shrink()),
           ),
           home: const _AppRoot(),
         );
@@ -95,7 +95,7 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
   );
 
   bool _booting = true;
-  bool _syncing = false;
+  bool _syncing = scriptableLoginResuming;
   bool _panelOpen = false;
   ImportedScheduleData? _data;
   // Fix test fixture times for a whole day: rebuilding the screen (including
@@ -129,9 +129,20 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     // Both jobs start on entry. Cache restoration, network checking and
     // the independent pen-trace animation never wait for one another.
     unawaited(_update.restore());
-    unawaited(_checkLatestOnLaunch());
+    if (!scriptableLoginResuming) unawaited(_checkLatestOnLaunch());
     unawaited(_loadAppVersionName());
-    unawaited(_restore().then((_) => _handleIosWidgetAction()));
+    unawaited(_restore().then((_) async {
+      if (scriptableLoginResuming && mounted &&
+          await const BpaChannel('better_phenikaa/qldt_scriptable')
+              .invokeMethod<bool>('takeLoginResume') == true) {
+        if (mounted) await _loginOrSync(resume: true);
+      } else {
+        if (scriptableLoginResuming && mounted) {
+          setState(() => _syncing = false);
+        }
+        await _handleIosWidgetAction();
+      }
+    }));
   }
 
   // Background-only signed check on launches after the first successful login.
@@ -702,7 +713,8 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _loginOrSync() async {
+  Future<void> _loginOrSync({bool resume = false}) async {
+    if (_syncing && !resume) return;
     if (!supportsLiveQldtLogin) {
       if (!mounted) {
         return;

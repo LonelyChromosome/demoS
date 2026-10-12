@@ -16,13 +16,18 @@
   storagePrototype.removeItem=function(k){ originalRemove.call(this,k);if(this===localStorage){dirty=true;notify();} };
   storagePrototype.clear=function(){originalClear.call(this);if(this===localStorage){dirty=true;notify();} };
   window.bpaHost={
-    init(preferences) {
+    init(preferences, options={}) {
+      document.documentElement.dataset.bpaLoginResume=options.loginResume===true?'true':'false';
       originalClear.call(localStorage);
       for (const [key,value] of Object.entries(preferences || {})) originalSet.call(localStorage,key,value);
       document.documentElement.dataset.bpaScriptable='ready';
       document.documentElement.dataset.betterPhenikaaBridge='ready';
       window.dispatchEvent(new CustomEvent('better-phenikaa-bridge-ready'));
       return window.bpaStart();
+    },
+    suspend() {
+      notify();
+      return Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)]));
     },
     poll(done) {
       const finish=()=>{

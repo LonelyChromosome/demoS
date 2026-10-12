@@ -5,6 +5,7 @@ import 'dart:html' as html;
 import 'package:flutter/services.dart';
 
 bool get available => html.document.documentElement?.dataset['bpaScriptable'] == 'ready';
+bool get loginResuming => available && html.document.documentElement?.dataset['bpaLoginResume'] == 'true';
 int _sequence = 0;
 final _handlers = <String, Future<dynamic> Function(MethodCall)>{};
 bool _listening = false;

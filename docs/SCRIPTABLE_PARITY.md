@@ -12,7 +12,7 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | App, ngày/tuần, card, tài khoản, trung tâm thông báo | IMPLEMENTED / UNVERIFIED | Build trực tiếp `lib/main.dart`, không dựng lại màn hình | Kiểm chứng WebView/iPhone và so ảnh/thao tác Android |
 | Theme Engine, preset, Tiên Môn, VFX | IMPLEMENTED / UNVERIFIED | Source Flutter, shader, ảnh và font gốc; transport file/palette được nối | Kiểm chứng shader, cảnh và animation trên iPhone |
 | Import ảnh/font, custom theme | IMPLEMENTED / UNVERIFIED | DocumentPicker → vùng file cục bộ Scriptable → bridge bytes → thuật toán gốc | Font/ảnh lớn, hủy picker, preview, so ảnh |
-| QLĐT, TraCuu, parse, xác minh, lưu | IMPLEMENTED / UNVERIFIED | Hai script Android nguyên gốc, parser JS, Flutter diff/retention gốc | Tài khoản thật, WebView cookie, retry và auto-login chưa tương đương Android |
+| QLĐT, TraCuu, parse, xác minh, lưu | IMPLEMENTED / UNVERIFIED | Hai script Android nguyên gốc, parser JS, Flutter diff/retention gốc | Đã nối nhận phiên khi WebView còn mở và resume sync; cookie/SSO/tài khoản thật trên iPhone chưa thử |
 | Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | 18 trường hợp/theme/state qua Chromium và WebKit; còn so pixel/thao tác trên iPhone |
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
 | NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; consumer Shortcut và ứng viên NFC Helper đọc-only; NFC.cool automation trả phí nên loại | Chưa có scan UID thật; callback NFC Helper chưa xác minh trên iPhone |
@@ -152,3 +152,13 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - API trả file AEA1 thật; input SHA-256, signed SHA-256 và size khớp phản hồi. Workflow compile có 36 action, đúng một Clock CreateAlarmIntent.
 - File `scriptable/shortcuts/BPA-Alarm.shortcut` và metadata được đưa vào source/gói app. CI kiểm tra hash, source không bị đổi và action Clock trước khi đóng gói; không gửi lại dịch vụ mỗi build.
 - Chưa có kiểm thử import, cấp quyền và chuông trên iPhone. Trạng thái SIGNED / UNVERIFIED, chưa DONE. Các phần đăng nhập, NFC, nền và Home Screen vẫn giữ phạm vi toàn bộ app.
+
+## Đăng nhập tự tiếp tục trong cùng WebView — 2026-10-13
+
+- Bỏ đường app chờ `portal.present()`/người dùng bấm Xong. Cùng WebView đang trình bày app chuyển tới QLĐT, kiểm tra hostname và session thực bằng script `_checkReady` Android, rồi tự khôi phục UI BPA khi session đủ.
+- Phiên được giữ Keychain, đồng bộ Request dùng wire format/parser/xác minh Android. Flutter nhận lại đúng Promise tác vụ cũ một lần; không mở QLĐT/lấy lịch thêm lần nữa.
+- Giữ preferences trước navigation; epoch chặn callback/ID cũ trả vào Dart mới. Poll được ngắt khi chuyển trang để context JavaScript cũ không giữ host loop.
+- Resume chỉ dùng trong RAM cho lần chuyển auth này. Không chạy lại VFX mở app/check cập nhật như một lần launch mới; vẫn dùng mini-game tên và transaction lưu học kỳ gốc.
+- Đóng view/hủy phiên ngăn ghi lịch và token cũ. HTTP/lỗi xác minh trả về UI cũ, không tự lặp đăng nhập. 46 kiểm tra Node qua, có 5 ca login lifecycle mới.
+- Thêm browser QA cho resume → màn hình sắp xếp tên thật → save gốc → lịch thật bằng dữ liệu synthetic riêng QA. Đang build kiểm tra, không gọi mock session là đăng nhập QLĐT thật hoặc parity trên iPhone.
+- Code tài nguyên mới 53 để host/UI không phối hợp với bundle 52 thiếu resume protocol. Phạm vi vẫn toàn bộ app, không bàn giao từng module để người dùng test.

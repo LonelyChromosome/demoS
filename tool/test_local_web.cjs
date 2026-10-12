@@ -23,10 +23,17 @@ async function main(){
   const qaUpdate={manifest:fs.readFileSync('test/scriptable/fixtures/release/latest.json').toString('base64'),signature:Buffer.from(signatureText).toString('base64'),badSignature:Buffer.from(badSignature.toString('base64')+'\n').toString('base64')};
   await page.addInitScript(qaUpdate=>{
     window.__bpaVerifiedReplies=[];
+    window.__bpaLoginSyncs=0;window.__bpaResumeClaims=0;
     window.addEventListener('bpa-asset-request',async event=>{const result=await window.readAsset(event.detail);window.bpaAssetResult(result);});
     window.addEventListener('bpa-platform-call',event=>{
       const call=JSON.parse(event.detail),method=call.method;
       let result=method==='versionCode'?51:method==='versionName'?'cooc.1.6':method==='hasBoundCard'?false:method==='installStatus'?'idle':method==='status'?{lastSuccessAtMillis:0}:null;
+      if(call.channel==='better_phenikaa/qldt_scriptable'&&method==='takeLoginResume') {
+        result=!!window.__bpaLoginFixture;window.__bpaResumeClaims++;
+      }
+      if(call.channel==='better_phenikaa/qldt_scriptable'&&method==='sync') {
+        window.__bpaLoginSyncs++;result=window.__bpaLoginFixture;
+      }
       if(call.channel==='better_phenikaa/update_http'&&method==='fetch')result=call.arguments.url.endsWith('.sig')?(window.__bpaBadSignature?qaUpdate.badSignature:qaUpdate.signature):qaUpdate.manifest;
       if(call.channel==='better_phenikaa/update'&&method==='verifyReply')window.__bpaVerifiedReplies.push(call.arguments);
       window.dispatchEvent(new CustomEvent('bpa-platform-result',{detail:JSON.stringify({id:call.id,result})}));
@@ -65,6 +72,28 @@ async function main(){
       await page.waitForTimeout(1500);
       await page.screenshot({path:qaDir+'/fixture-'+theme+'.png'});
     }
+    // Resume from managed WebView authentication through the actual Dart login,
+    // original first-login name screen and original save transaction. QA only.
+    await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
+    const semester={semesterId:'qa-term',semesterName:'2026_2027_1',displayName:'QALogin',syncedAt:new Date().toISOString(),subjects:rows.map((row,index)=>({subjectId:'qa-subject-'+index,name:row.subjectName,normalizedName:row.subjectName.toLowerCase(),studySchedules:[row],examSchedules:[]}))};
+    await page.evaluate(fixture=>{window.__bpaLoginFixture=fixture;window.bpaHost.init({},{loginResume:true});},{semester,termStartedAt:today+'T00:00:00'});
+    await page.waitForSelector('canvas',{timeout:30000});
+    await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
+    await page.getByText('Nhấp để sắp xếp tên của bạn',{exact:true}).waitFor({state:'visible',timeout:30000});
+    await page.screenshot({path:qaDir+'/login-resume-name.png'});
+    await page.getByText('QALogin',{exact:true}).click();
+    await page.waitForTimeout(250);
+    await page.getByRole('button').last().click();
+    await page.waitForFunction(()=>{
+      let value=localStorage.getItem('flutter.better_phenikaa_snapshot_v1');
+      for(let i=0;i<2&&typeof value==='string';i++){try{value=JSON.parse(value);}catch(_){break;}}
+      return value?.displayName==='QALogin'&&value.records?.length===4;
+    },{},{timeout:30000});
+    await page.locator('[aria-label="Lịch học"]').or(page.getByText('Lịch học',{exact:true})).first().waitFor({state:'visible',timeout:30000});
+    const resume=await page.evaluate(()=>({claims:window.__bpaResumeClaims,syncs:window.__bpaLoginSyncs,setup:localStorage.getItem('flutter.better_phenikaa_account_setup_complete_v1')}));
+    if(resume.claims!==1||resume.syncs!==1||resume.setup!=='true')throw Error('Login resume duplicated the task or skipped the original setup/save: '+JSON.stringify(resume));
+    fs.writeFileSync(qaDir+'/login-resume.json',JSON.stringify({resume,note:'Synthetic QA data; original Dart name/save flow, not a university or iPhone session'},null,2));
+    await page.screenshot({path:qaDir+'/login-resume-timetable.png'});
     await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
     // Exercise the exact source HTML. This is not an NFC hardware test.

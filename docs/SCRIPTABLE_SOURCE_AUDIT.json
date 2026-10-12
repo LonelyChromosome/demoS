@@ -132,7 +132,7 @@
       "source": "lib/app/app.dart",
       "android_sha256": "533bd9228563182a31fa66dcb6369cb459b11f412acb9bb538353effbd4aa5ee",
       "present": true,
-      "sha256": "bc4d45119564ff5027f834882e6d5b681238f666ddf038fb03617466a7db3bb0",
+      "sha256": "2933b9333ee6655a9c922d38a537fdc1c866b0dc65b779604cd61cc445880a54",
       "byte_identical": false,
       "classes": [
         "BetterPhenikaaScheduleApp",
@@ -185,6 +185,7 @@
       "channels": [
         "better_phenikaa/update",
         "better_phenikaa/widget_session",
+        "better_phenikaa/qldt_scriptable",
         "better_phenikaa/widget_pin",
         "better_phenikaa/assistant_test"
       ]

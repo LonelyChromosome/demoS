@@ -94,16 +94,17 @@ function commitPortalResult(result,generation) {
   writeState('semester-v1.json',state);
   return {semester:result.semester,termStartedAt:state.startedAt};
 }
-function syncPortal() {
+function syncPortal(app=null) {
+  const resumed=consumeLoginSync(app);if(resumed)return resumed;
   if(syncInFlight)return syncInFlight;
   const generation=syncGeneration;
-  const job=performPortalSync(generation);
+  const job=performPortalSync(generation,app);
   syncInFlight=job;
   const clear=()=>{if(syncInFlight===job)syncInFlight=null;};
   job.then(clear,clear);
   return job;
 }
-async function performPortalSync(generation) {
+async function performPortalSync(generation,app) {
   if(Keychain.contains('BPA.qldt-session')) {
     let session;
     try {session=JSON.parse(Keychain.get('BPA.qldt-session'));}
@@ -118,28 +119,12 @@ async function performPortalSync(generation) {
     }
   }
   checkSyncGeneration(generation);
-  const portal=new WebView();
-  await portal.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');
-  let ready=await portal.evaluateJavaScript("!!(window.edu&&edu.system&&edu.system.userId&&edu.system.iM!=null&&typeof edu.system.makeRequest==='function')",false);
-  if(!ready) {
-    await portal.present(false);
-    const host=await portal.evaluateJavaScript('location.hostname',false);
-    if(host!=='qldtbeta.phenikaa-uni.edu.vn')throw errorCode('login_incomplete','Chưa trở về cổng QLĐT sau đăng nhập.');
-  }
-  const raw=await callPortal(portal,REGISTRATION_SCRIPT,'betterPhenikaaRegistrationResult','betterPhenikaaRegistrationError',20000);
-  const session=await portal.evaluateJavaScript(SESSION_SCRIPT,false);
-  const reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg);
-  const schedule=chunks.length?await callPortal(portal,scheduleScript(chunks),'betterPhenikaaSyncResult','betterPhenikaaSyncError',20000):{response:{Success:true,Data:[]}};
-  const semester=BPACore.buildSemester(reg,BPACore.parseSchedule(schedule.response));
-  if(!semester.displayName)throw errorCode('canonical_name_missing','QLDT_CANONICAL_NAME_MISSING');
-  if(!chunks.length)throw errorCode('term_start_missing','Không xác định được môn đầu học kỳ.');
-  // Flutter then applies its original diff, retention and transaction algorithm.
-  const result=commitPortalResult({semester,termStartedAt:localISO(BPACore.vnDate(chunks[0].start))},generation);
-  if(session) {
-    const parsed=JSON.parse(session);
-    if(parsed.tokenJWT&&parsed.userId&&parsed.iM!=null&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
-  }
-  return result;
+  const session=await authenticatePortalInApp(app,generation);
+  checkSyncGeneration(generation);
+  Keychain.set('BPA.qldt-session',JSON.stringify(session));
+  // Original Android wire format/verification, while the restored app displays
+  // its existing sync state. Authentication is never restarted on fetch errors.
+  return commitPortalResult(await fetchNativeQldt(session),generation);
 }
 function safeManagedPath(path) {
   const root=bpaFM.joinPath(bpaDirectory(),'files')+'/';
@@ -204,7 +189,8 @@ async function assistantNotification(useCase) {
 async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
   if(channel==='qldt_scriptable') {
-    if(method==='sync')return await syncPortal();
+    if(method==='sync')return await syncPortal(app);
+    if(method==='takeLoginResume')return takeLoginResume(app);
     if(method==='clear'){syncGeneration++;syncInFlight=null;for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
   }
   if(channel==='ios_runtime') {
@@ -316,12 +302,18 @@ async function openOriginalApp() {
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
   await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))});null`,false);
-  let closed=false;
+  const state={phase:'app',epoch:0,closed:false,waiters:[],bundle,loginResume:null,failure:null};
+  appSessions.set(app,state);
   const jobs=new Set();
-  const presentation=app.present(true).then(()=>{closed=true;});
-  while(!closed) {
+  const presentation=app.present(true).then(()=>{state.closed=true;syncGeneration++;if(state.pollInterrupt)state.pollInterrupt();wakeAppSession(state);});
+  while(!state.closed) {
+    if(state.failure)throw state.failure;
+    if(state.phase!=='app'){await waitForAppSession(state);continue;}
+    const epoch=state.epoch;
     let packet;
-    try {packet=await app.evaluateJavaScript('bpaHost.poll(completion);',true);} catch(error){if(closed)break;throw error;}
+    try {packet=await pollAppPacket(app,state);}
+    catch(error){if(state.closed)break;if(epoch!==state.epoch||state.phase!=='app')continue;throw error;}
+    if(!packet||state.closed||epoch!==state.epoch||state.phase!=='app')continue;
     if(packet.preferences!==null)writeState('preferences.json',packet.preferences);
     for(const asset of packet.assets||[]) {
       let result;
@@ -329,14 +321,15 @@ async function openOriginalApp() {
         if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw Error('Tài nguyên ngoài gói BPA.');
         result={id:asset.id,data:bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String()};
       } catch(error){result={id:asset.id,error:error.message};}
-      if(!closed)await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
+      if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
     }
     for(const call of packet.calls) {
+      if(state.closed||epoch!==state.epoch||state.phase!=='app')break;
       const job=(async()=>{
         let result;
         try {result={id:call.id,result:await handlePlatform(call,app)};}
         catch(error){result={id:call.id,error:{code:error.code||'scriptable_error',message:error.message}};}
-        if(!closed)await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
+        if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
       })();
       jobs.add(job);job.then(()=>jobs.delete(job),()=>jobs.delete(job));
     }

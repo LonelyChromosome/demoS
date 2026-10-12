@@ -40,11 +40,11 @@ test('HTTP errors are identified before trying to parse HTML as JSON',async()=>{
   await assert.rejects(vm.runInContext('qldtPost({iM:"x"},"SV_X/key","f",{})',c),e=>e.code===expected);
  }
 });
-test('expired auth enters the portal once; cancellation never retries recursively',async()=>{
+test('expired auth requests one managed login; a rejected login never retries recursively',async()=>{
  const {c,keys}=host();let opened=0;
  c.fetchNativeQldt=async()=>{const e=Error('expired');e.code='qldt_session_expired';throw e;};
- c.WebView=class {constructor(){opened++;}async loadURL(){}async evaluateJavaScript(source){return source==='location.hostname'?'login.microsoftonline.com':false;}async present(){}};
- await assert.rejects(vm.runInContext('syncPortal()',c),e=>e.code==='login_incomplete');
+ c.authenticatePortalInApp=async()=>{opened++;throw c.errorCode('cancelled','Login closed');};
+ await assert.rejects(vm.runInContext('syncPortal()',c),e=>e.code==='cancelled');
  assert.equal(opened,1);assert.equal(keys.has('BPA.qldt-session'),false);
 });
 test('weekly failure stops new dispatch and drains the eight outstanding workers before retry',async()=>{

@@ -159,7 +159,7 @@ const SCHEDULE_SCRIPT="\n      (function () {\n        function scheduleStage(va
 function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }
 const SESSION_SCRIPT="\n          (function () {\n            try {\n              var s = window.edu && edu.system;\n              if (!s || !s.userId || s.iM == null || !s.tokenJWT ||\n                  typeof s.makeRequest !== 'function') {\n                return null;\n              }\n              return JSON.stringify({\n                tokenJWT: String(s.tokenJWT),\n                userId: String(s.userId),\n                iM: String(s.iM),\n                appId: String(s.appId || ''),\n                strChucNangId: String(s.strChucNang_Id || ''),\n                cookie: String(document.cookie || ''),\n                name: ''\n              });\n            } catch (_) {\n              return null;\n            }\n          })();\n        ";
 const BPA_ASSISTANT_CATALOG={"normal": {"U1": "Bạn đã lâu chưa đồng bộ dữ liệu rồi. Đồng bộ một chút để lịch học và lịch thi luôn chính xác nhé.", "U2": "Đồng bộ xong rồi. Hiện chưa có thay đổi mới trong lịch của bạn.", "U3": "Lịch học của bạn vừa có thay đổi. Kiểm tra lại để tránh nhầm lịch nhé.", "U4": "Lịch thi của bạn vừa có thay đổi. Kiểm tra lại để tránh nhầm lịch nhé.", "U5": "Lịch học và lịch thi của bạn vừa có thay đổi. Bạn kiểm tra lại nhé.", "U6": "Còn 7 ngày nữa thi rồi. Bạn kiểm tra lịch nhé.", "U7": "Còn 3 ngày nữa thi rồi. Bạn kiểm tra lịch nhé.", "U8": "Ngày mai thi rồi. Bạn kiểm tra lại lịch nhé.", "U9": "Còn X ngày nữa thi. Bạn kiểm tra lịch nhé.", "U10": "Bạn đang trong kỳ thi. Nhớ kiểm tra lịch thi nhé.", "U11": "Còn X ngày nữa bạn có N môn thi. Kiểm tra lịch nhé.", "U12": "Đồng bộ xong rồi. Lịch của bạn có thay đổi.", "U13": "Đồng bộ xong rồi. Lịch của bạn vẫn như cũ.", "U14": "Lịch của bạn có thay đổi. Mở chi tiết để kiểm tra nhé.", "U15": "Hiện tại bạn chưa có lịch thi.", "U16": "Hôm nay không có lịch học.", "U17": "Đồng bộ chưa thành công. Bạn thử lại nhé.", "U18": "Đồng bộ mất quá lâu. Bạn thử lại sau nhé."}, "serious": {"U1": "Chúng tôi ghi nhận bạn đã 2 ngày chưa đồng bộ dữ liệu mới. Yêu cầu bạn hợp tác thực hiện đồng bộ để bảo đảm tính chính xác của dữ liệu.", "U2": "Đồng bộ hoàn tất. Không ghi nhận thay đổi mới trong dữ liệu lịch học hoặc lịch thi.", "U3": "Hệ thống ghi nhận thay đổi trong lịch học. Yêu cầu bạn kiểm tra lại thông tin trước khi đến lớp.", "U4": "Hệ thống ghi nhận thay đổi trong lịch thi. Yêu cầu bạn kiểm tra lại thông tin để bảo đảm tham gia đúng ca thi.", "U5": "Hệ thống ghi nhận thay đổi đồng thời trong lịch học và lịch thi. Yêu cầu bạn kiểm tra lại toàn bộ thông tin liên quan.", "U6": "Còn 7 ngày trước kỳ thi. Vui lòng kiểm tra lịch.", "U7": "Còn 3 ngày trước kỳ thi. Vui lòng kiểm tra lại lịch.", "U8": "Ngày mai là ngày thi. Vui lòng kiểm tra lại lịch.", "U9": "Còn X ngày trước kỳ thi. Vui lòng rà soát lại lịch.", "U10": "Bạn đang trong kỳ thi. Vui lòng theo dõi lịch thi thường xuyên.", "U11": "Còn X ngày, bạn có N môn thi. Vui lòng rà soát lịch.", "U12": "Đồng bộ hoàn tất. Hệ thống ghi nhận thay đổi trong dữ liệu.", "U13": "Đồng bộ hoàn tất. Không ghi nhận thay đổi mới.", "U14": "Hệ thống ghi nhận thay đổi. Vui lòng mở chi tiết để kiểm tra.", "U15": "Hiện chưa ghi nhận lịch thi trong dữ liệu của bạn.", "U16": "Hôm nay không ghi nhận lịch học.", "U17": "Đồng bộ không hoàn tất. Vui lòng thực hiện lại.", "U18": "Quá trình đồng bộ đã vượt thời gian chờ. Vui lòng thử lại."}, "playful": {"U1": "Fen ơi, 2 ngày rồi đấy! Cập nhật dữ liệu mới đi chứ fen!", "U2": "Xong rồi fen! Lịch vẫn y nguyên, chưa có gì mới hết á.", "U3": "Fen ơi, lịch học đổi rồi kìa! Vào xem lại lẹ đi.", "U4": "Fen ơi, lịch thi đổi rồi kìa! Vào check lại lẹ nha.", "U5": "Fen ơi, cả lịch học lẫn lịch thi đều đổi rồi kìa! Vào check nhanh đi fen!", "U6": "Fen ơi, 7 ngày nữa thi rồi đó!", "U7": "Fen ơi, còn 3 ngày nữa thi thôi đó!", "U8": "Fen ơi, mai thi rồi đó!", "U9": "Fen ơi, còn X ngày nữa thi đó!", "U10": "Fen đang trong kỳ thi đó nha, nhớ check lịch!", "U11": "Fen ơi, X ngày nữa có tận N môn thi đó!", "U12": "Fen ơi, sync xong có lịch mới nè!", "U13": "Xong rồi fen! Vẫn y nguyên nha.", "U14": "Fen ơi, có thay đổi nè! Vào xem chi tiết đi.", "U15": "Fen ơi, chưa có lịch thi nha!", "U16": "Fen ơi, nay được nghỉ!", "U17": "Fen ơi, sync hụt mất rồi! Thử lại nha.", "U18": "Fen ơi, chờ lâu quá rồi! Thử sync lại nha."}, "affectionate": {"U1": "Lâu rồi mình chưa thấy cậu đồng bộ í... để ý mình chút nha!", "U2": "Mình kiểm tra xong rồi nè, lịch vẫn như cũ thôi... chưa có gì mới đâu.", "U3": "Mình thấy lịch học bạn có thay đổi, bạn kiểm tra nhaaa.", "U4": "Mình thấy lịch thi của bạn có thay đổi, bạn xem lại nhaaa.", "U5": "Mình thấy cả lịch học với lịch thi của bạn đều có thay đổi, bạn kiểm tra nhaaa.", "U6": "Còn 7 ngày nữa thi rồi, bạn nhớ chuẩn bị nha.", "U7": "Còn 3 ngày nữa thi rồi, bạn nhớ giữ sức nha.", "U8": "Mai thi rồi, bạn ngủ sớm nha.", "U9": "Còn X ngày nữa thi rồi, bạn chuẩn bị dần nha.", "U10": "Bạn đang trong kỳ thi rồi, nhớ giữ sức và xem lịch nha.", "U11": "X ngày nữa bạn có N môn thi rồi, nhớ chuẩn bị nha.", "U12": "Mình sync xong rồi, lịch của bạn có thay đổi nha.", "U13": "Mình kiểm tra xong rồi, chưa có gì thay đổi đâu nha.", "U14": "Mình thấy có thay đổi đó, bạn mở xem thử nha.", "U15": "Mình chưa thấy lịch thi của bạn đâu, yên tâm nha.", "U16": "Hôm nay được nghỉ rồi, thư giãn chút nha.", "U17": "Mình chưa đồng bộ được cho bạn rồi... thử lại giúp mình nha.", "U18": "Mình chờ mãi mà chưa lấy được dữ liệu... thử lại chút nha."}, "flirtatious": {"U1": "Biết là bận rồi? Nhưng mà người ta cũng cần phải sync mà!", "U2": "Sync xong rồi nè, vẫn như cũ nha ❤️", "U3": "Có gì đó giữa chúng ta đã thay đổi ấy, kiểm tra lịch học nha ❤️", "U4": "Mình còn mập mờ nhưng lịch thi thì đổi rõ ❤️ Bạn kiểm tra nha.", "U5": "Mình và bạn rồi ai cũng thay đổi, cả lịch học và lịch thi cũng vậy! ❤️", "U6": "7 ngày nữa thi rồi đó... học đi nha ❤️", "U7": "3 ngày nữa thi rồi... học đi, đừng để mình phải lo ❤️", "U8": "Mai thi rồi đó... tối nay ngoan ngoãn học bài nha ❤️", "U9": "Còn X ngày nữa thi thôi... nhớ để ý lịch, với để ý mình nữa nha ❤️", "U10": "Nhớ mình thì nhớ, nhưng nhớ cả lịch thi nữa nha ❤️", "U11": "Chắc gì nhớ mỗi người ta... vậy mà mình nhớ người ta còn X ngày nữa có N môn thi đó ❤️", "U12": "Lịch của chúng mình vừa đổi rồi ấy ❤️", "U13": "Chúng mình vẫn như cũ nha ❤️", "U14": "Có một thay đổi mình chưa kể bạn nè ❤️ Mở xem đi.", "U15": "Lịch thi thì chưa có... còn lịch với mình thì sao? ❤️", "U16": "Nay không học... Mình muốn đi chơi! ❤️", "U17": "Hỏng rồi! Chúng mình làm lại nha ❤️", "U18": "Đợi mình thì được ❤️ chứ đống dữ liệu này thì sync lại thôi."}, "academic": {"U1": "Đã vượt quá khoảng thời gian khuyến nghị giữa hai lần đồng bộ. Tôi đề nghị bạn cập nhật dữ liệu để giảm nguy cơ sai lệch so với hệ thống QLĐT.", "U2": "Quá trình đồng bộ đã hoàn tất. Dữ liệu hiện tại không có sai khác so với lần đồng bộ thành công gần nhất.", "U3": "Phát hiện sai khác trong dữ liệu lịch học so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết thay đổi.", "U4": "Phát hiện sai khác trong dữ liệu lịch thi so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết thay đổi.", "U5": "Phát hiện sai khác đồng thời trong dữ liệu lịch học và lịch thi so với lần đồng bộ gần nhất. Vui lòng kiểm tra chi tiết các thay đổi.", "U6": "Kỳ thi còn 7 ngày. Hãy rà soát lịch thi.", "U7": "Kỳ thi còn 3 ngày. Hãy rà soát lịch và chuẩn bị.", "U8": "Kỳ thi diễn ra vào ngày mai. Hãy rà soát lịch thi.", "U9": "Kỳ thi còn X ngày. Hãy kiểm tra lịch và điều chỉnh kế hoạch ôn tập.", "U10": "Bạn đang trong giai đoạn thi. Hãy thường xuyên rà soát lịch thi.", "U11": "Trong X ngày tới có N môn thi. Hãy phân bổ thời gian ôn tập phù hợp.", "U12": "Đồng bộ hoàn tất và phát hiện sai khác so với dữ liệu trước đó.", "U13": "Đồng bộ hoàn tất. Không phát hiện sai khác so với dữ liệu trước đó.", "U14": "Phát hiện sai khác trong dữ liệu. Vui lòng kiểm tra phần chi tiết.", "U15": "Dữ liệu hiện tại chưa ghi nhận ca thi nào.", "U16": "Dữ liệu hiện tại không ghi nhận buổi học nào trong hôm nay.", "U17": "Quá trình đồng bộ không hoàn tất. Vui lòng thực hiện lại để cập nhật dữ liệu.", "U18": "Yêu cầu đồng bộ đã vượt ngưỡng thời gian chờ. Vui lòng thực hiện lại."}, "blunt": {"U1": "Có mỗi cái việc sync mà mày cũng lười? Mai đi học muộn đừng đổ tại tao nhé.", "U2": "Tao sync xong rồi đấy, mày chả được nghỉ buổi nào.", "U3": "Lịch học đổi rồi đấy, còn không mau check đi?", "U4": "Lịch thi đổi rồi đấy. Không check thì trượt ráng chịu.", "U5": "Mày làm gì mà người ta đổi cả lịch học lẫn lịch thi của mày rồi kìa.", "U6": "7 ngày nữa thi rồi mà mày chưa chịu học à?", "U7": "3 ngày nữa thi mà giờ vẫn ngồi lướt?", "U8": "Nói không nghe!? Mai thi giờ lại cắm đầu ôn.", "U9": "Còn X ngày nữa thi, giờ mới nhớ tới à?", "U10": "Đang trong kỳ thi đấy, quên lịch thì tự đi mà gánh.", "U11": "Còn X ngày nữa mày có N môn thi đấy, chơi ít thôi!", "U12": "Lịch đổi rồi đấy, vào xem đi? Lạy Bốốố!", "U13": "Sync xong rồi đấy, vẫn chả được nghỉ.", "U14": "Vào xem có gì đổi chi tiết kìa? Đợi tao đọc cho nghe à?", "U15": "Quẩy đê, nào có lịch tao báo.", "U16": "Mãi mới được nghỉ 1 hôm.", "U17": "Có mỗi cái sync mà mày cũng lỗi? Làm lại đê!", "U18": "Mày định chờ bao lâu nữa? Không biết đường mà sync lại à?"}, "cultivation": {"U1": "Pháp trận lâu ngày chưa được vận, truyền tống tắc nghẽn. Mau đồng bộ kẻo tu hành gặp sai sót.", "U2": "Pháp trận khai thông, truyền tống không có sai sót. Thiên đạo bất biến — an tâm tu hành.", "U3": "Thiên cơ đại biến, dễ sinh dị tượng. Còn không mau kiểm tra?", "U4": "Bí cảnh mới xuất hiện, thí luyện ắt biến. Mau kiểm tra lại!", "U5": "Thiên cơ hỗn loạn, bí cảnh đại biến. Còn không mau rà soát?", "U6": "7 ngày nữa, thiên kiếp giáng lâm. Trời sinh dị biến — mau chuẩn bị độ kiếp.", "U7": "3 ngày sau, thiên kiếp đã cận kề. Lôi vân tích tụ — còn không mau bế quan?", "U8": "Thiên kiếp giáng lâm. Giữ vững đạo tâm — chúc ngươi may mắn!", "U9": "X ngày sau, tu vi viên mãn. Lôi kiếp giáng lâm — hãy chuẩn bị thật tốt!", "U10": "Đã tới kỳ độ kiếp, Thiên đạo khảo hạch. Dị động lưu tâm — đạo này đi sai, vạn kiếp bất phục.", "U11": "Còn X ngày, N đạo thiên kiếp cùng lúc giáng xuống. Tu vi có hạn — chớ có lơ là!", "U12": "Pháp trận khai thông, truyền tống sinh biến. Thiên cơ nghịch vận — mau kiểm tra.", "U13": "Pháp trận vừa khai thông, truyền tống không có sai sót. Thiên đạo bất biến — an tâm tu hành.", "U14": "Thiên cơ khẽ động, bí cảnh ắt biến. Mau mở chi tiết kiểm tra.", "U15": "Bí cảnh chưa mở, chớ vội khảo hạch. Hãy chuẩn bị thật tốt!", "U16": "Nay vô biến vô mưu, an tâm tĩnh dưỡng.", "U17": "Pháp trận phản phệ, truyền tống không thành. Còn không mau thử lại?", "U18": "Pháp trận đình trệ, thiên đạo khó dung. Chớ cưỡng cầu — hãy quay lại sau."}};
-const BPA_UPDATE_CHANNEL={"manifestUrl": "https://raw.githubusercontent.com/LonelyChromosome/demoS/scriptable-release/latest.json", "publicKeyBase64": "62splcM91ZF6kt7ydxqmvN7Hc45c54n8bfCIVp8maFc=", "versionCode": 52, "versionName": "cooc.1.6"};
+const BPA_UPDATE_CHANNEL={"manifestUrl": "https://raw.githubusercontent.com/LonelyChromosome/demoS/scriptable-release/latest.json", "publicKeyBase64": "62splcM91ZF6kt7ydxqmvN7Hc45c54n8bfCIVp8maFc=", "versionCode": 53, "versionName": "cooc.1.6"};
 // Direct algorithm port of DemoF3 ExamReminderPlanner.kt and AssistantText.kt.
 function examHash(text) {return sha256Raw(unescape(encodeURIComponent(text)));}
 function examLocalTime(text) {
@@ -629,6 +629,96 @@ function cancelWebUpdate() {
   writeState('pending-bundle.json',null);writeState('install-status.json',{status:'cancelled'});
 }
 
+// Login uses the already presented app WebView. No second presentation or
+// undocumented dismiss API, and no requirement to press Done after login.
+const appSessions = new WeakMap();
+function nativeDelay(milliseconds) {
+  return new Promise(resolve => Timer.schedule(milliseconds, false, resolve));
+}
+async function portalProbe(app) {
+  let timer;
+  try {
+    return await Promise.race([
+      app.evaluateJavaScript(`location.hostname==='qldtbeta.phenikaa-uni.edu.vn'?(${SESSION_SCRIPT.trim().replace(/;$/, '')}):null`, false),
+      new Promise((_, reject) => {timer=Timer.schedule(5000,false,()=>reject(errorCode('login_readiness_timeout','QLĐT chưa phản hồi. Hãy thử lại.')));})
+    ]);
+  } catch(error) {
+    if(error.code==='login_readiness_timeout')throw error;
+    // Navigation can replace the JavaScript world between probes.
+    return null;
+  } finally {if(timer)timer.invalidate();}
+}
+async function waitForPortalSession(app, state, generation, timeoutMs=600000) {
+  const deadline=Date.now()+timeoutMs;
+  while(Date.now()<deadline) {
+    checkSyncGeneration(generation);
+    if(state.closed)throw errorCode('cancelled','Đã đóng đăng nhập QLĐT.');
+    const raw=await portalProbe(app);
+    checkSyncGeneration(generation);
+    if(state.closed)throw errorCode('cancelled','Đã đóng đăng nhập QLĐT.');
+    if(raw) {
+      let value;try {value=JSON.parse(raw);}catch(_){value=null;}
+      if(value&&['tokenJWT','userId','iM','appId','strChucNangId'].every(key=>typeof value[key]==='string'&&value[key].trim()))return value;
+    }
+    await nativeDelay(100);
+  }
+  throw errorCode('login_timeout','Phiên đăng nhập QLĐT đã hết thời gian. Hãy thử lại.');
+}
+function wakeAppSession(state) {
+  for(const resolve of state.waiters.splice(0))resolve();
+}
+function waitForAppSession(state) {
+  if(state.phase==='app'||state.closed||state.failure)return Promise.resolve();
+  return new Promise(resolve=>state.waiters.push(resolve));
+}
+async function restoreAppAfterLogin(app,state,generation) {
+  checkSyncGeneration(generation);
+  if(state.closed)return;
+  // Keep the original task (including its error) for the rebuilt Flutter UI.
+  // Its next sync consumes this once instead of opening login or fetching twice.
+  state.loginResume={generation,promise:syncInFlight,claimed:false};
+  await app.loadHTML(localAppHTML(state.bundle),'https://bpa.local/');
+  checkSyncGeneration(generation);
+  if(state.closed)return;
+  await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))},{loginResume:true});null`,false);
+  state.phase='app';wakeAppSession(state);
+}
+async function authenticatePortalInApp(app,generation) {
+  const state=app&&appSessions.get(app);
+  if(!state||state.closed)throw errorCode('login_context','Không tìm thấy giao diện đăng nhập BPA.');
+  state.phase='portal';state.epoch++;
+  if(state.pollInterrupt)state.pollInterrupt();
+  try {
+    const preferences=await app.evaluateJavaScript('bpaHost.suspend();',false);
+    checkSyncGeneration(generation);
+    if(preferences)writeState('preferences.json',preferences);
+    await app.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');
+    return await waitForPortalSession(app,state,generation);
+  } finally {
+    if(!state.closed&&generation===syncGeneration) {
+      try {await restoreAppAfterLogin(app,state,generation);}
+      catch(error){state.failure=error;wakeAppSession(state);throw error;}
+    }
+  }
+}
+function takeLoginResume(app) {
+  const state=app&&appSessions.get(app),resume=state&&state.loginResume;
+  if(!resume||resume.claimed||resume.generation!==syncGeneration)return false;
+  resume.claimed=true;return true;
+}
+function consumeLoginSync(app) {
+  const state=app&&appSessions.get(app),resume=state&&state.loginResume;
+  if(!resume||!resume.claimed||resume.generation!==syncGeneration)return null;
+  state.loginResume=null;return resume.promise;
+}
+
+async function pollAppPacket(app,state) {
+  let interrupt;
+  const interrupted=new Promise(resolve=>{interrupt=()=>resolve(null);state.pollInterrupt=interrupt;});
+  try {return await Promise.race([app.evaluateJavaScript('bpaHost.poll(completion);',true),interrupted]);}
+  finally {if(state.pollInterrupt===interrupt)state.pollInterrupt=null;}
+}
+
 // Unified Scriptable host. All app UI is the original Flutter release.
 const BPA_WEB='https://lonelychromosome.github.io/demoS/';
 const DEFAULT_KIND='small';
@@ -725,16 +815,17 @@ function commitPortalResult(result,generation) {
   writeState('semester-v1.json',state);
   return {semester:result.semester,termStartedAt:state.startedAt};
 }
-function syncPortal() {
+function syncPortal(app=null) {
+  const resumed=consumeLoginSync(app);if(resumed)return resumed;
   if(syncInFlight)return syncInFlight;
   const generation=syncGeneration;
-  const job=performPortalSync(generation);
+  const job=performPortalSync(generation,app);
   syncInFlight=job;
   const clear=()=>{if(syncInFlight===job)syncInFlight=null;};
   job.then(clear,clear);
   return job;
 }
-async function performPortalSync(generation) {
+async function performPortalSync(generation,app) {
   if(Keychain.contains('BPA.qldt-session')) {
     let session;
     try {session=JSON.parse(Keychain.get('BPA.qldt-session'));}
@@ -749,28 +840,12 @@ async function performPortalSync(generation) {
     }
   }
   checkSyncGeneration(generation);
-  const portal=new WebView();
-  await portal.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');
-  let ready=await portal.evaluateJavaScript("!!(window.edu&&edu.system&&edu.system.userId&&edu.system.iM!=null&&typeof edu.system.makeRequest==='function')",false);
-  if(!ready) {
-    await portal.present(false);
-    const host=await portal.evaluateJavaScript('location.hostname',false);
-    if(host!=='qldtbeta.phenikaa-uni.edu.vn')throw errorCode('login_incomplete','Chưa trở về cổng QLĐT sau đăng nhập.');
-  }
-  const raw=await callPortal(portal,REGISTRATION_SCRIPT,'betterPhenikaaRegistrationResult','betterPhenikaaRegistrationError',20000);
-  const session=await portal.evaluateJavaScript(SESSION_SCRIPT,false);
-  const reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg);
-  const schedule=chunks.length?await callPortal(portal,scheduleScript(chunks),'betterPhenikaaSyncResult','betterPhenikaaSyncError',20000):{response:{Success:true,Data:[]}};
-  const semester=BPACore.buildSemester(reg,BPACore.parseSchedule(schedule.response));
-  if(!semester.displayName)throw errorCode('canonical_name_missing','QLDT_CANONICAL_NAME_MISSING');
-  if(!chunks.length)throw errorCode('term_start_missing','Không xác định được môn đầu học kỳ.');
-  // Flutter then applies its original diff, retention and transaction algorithm.
-  const result=commitPortalResult({semester,termStartedAt:localISO(BPACore.vnDate(chunks[0].start))},generation);
-  if(session) {
-    const parsed=JSON.parse(session);
-    if(parsed.tokenJWT&&parsed.userId&&parsed.iM!=null&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
-  }
-  return result;
+  const session=await authenticatePortalInApp(app,generation);
+  checkSyncGeneration(generation);
+  Keychain.set('BPA.qldt-session',JSON.stringify(session));
+  // Original Android wire format/verification, while the restored app displays
+  // its existing sync state. Authentication is never restarted on fetch errors.
+  return commitPortalResult(await fetchNativeQldt(session),generation);
 }
 function safeManagedPath(path) {
   const root=bpaFM.joinPath(bpaDirectory(),'files')+'/';
@@ -835,7 +910,8 @@ async function assistantNotification(useCase) {
 async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
   if(channel==='qldt_scriptable') {
-    if(method==='sync')return await syncPortal();
+    if(method==='sync')return await syncPortal(app);
+    if(method==='takeLoginResume')return takeLoginResume(app);
     if(method==='clear'){syncGeneration++;syncInFlight=null;for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
   }
   if(channel==='ios_runtime') {
@@ -947,12 +1023,18 @@ async function openOriginalApp() {
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
   await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))});null`,false);
-  let closed=false;
+  const state={phase:'app',epoch:0,closed:false,waiters:[],bundle,loginResume:null,failure:null};
+  appSessions.set(app,state);
   const jobs=new Set();
-  const presentation=app.present(true).then(()=>{closed=true;});
-  while(!closed) {
+  const presentation=app.present(true).then(()=>{state.closed=true;syncGeneration++;if(state.pollInterrupt)state.pollInterrupt();wakeAppSession(state);});
+  while(!state.closed) {
+    if(state.failure)throw state.failure;
+    if(state.phase!=='app'){await waitForAppSession(state);continue;}
+    const epoch=state.epoch;
     let packet;
-    try {packet=await app.evaluateJavaScript('bpaHost.poll(completion);',true);} catch(error){if(closed)break;throw error;}
+    try {packet=await pollAppPacket(app,state);}
+    catch(error){if(state.closed)break;if(epoch!==state.epoch||state.phase!=='app')continue;throw error;}
+    if(!packet||state.closed||epoch!==state.epoch||state.phase!=='app')continue;
     if(packet.preferences!==null)writeState('preferences.json',packet.preferences);
     for(const asset of packet.assets||[]) {
       let result;
@@ -960,14 +1042,15 @@ async function openOriginalApp() {
         if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw Error('Tài nguyên ngoài gói BPA.');
         result={id:asset.id,data:bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String()};
       } catch(error){result={id:asset.id,error:error.message};}
-      if(!closed)await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
+      if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
     }
     for(const call of packet.calls) {
+      if(state.closed||epoch!==state.epoch||state.phase!=='app')break;
       const job=(async()=>{
         let result;
         try {result={id:call.id,result:await handlePlatform(call,app)};}
         catch(error){result={id:call.id,error:{code:error.code||'scriptable_error',message:error.message}};}
-        if(!closed)await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
+        if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
       })();
       jobs.add(job);job.then(()=>jobs.delete(job),()=>jobs.delete(job));
     }

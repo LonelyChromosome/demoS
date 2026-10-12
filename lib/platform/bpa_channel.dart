@@ -3,6 +3,7 @@ import 'scriptable_bridge_stub.dart'
     if (dart.library.html) 'scriptable_bridge_web.dart' as bridge;
 
 bool get scriptableAvailable => bridge.available;
+bool get scriptableLoginResuming => bridge.loginResuming;
 
 /// Native channels keep their original implementation. In Scriptable, only
 /// the platform transport is replaced; app widgets and controllers are reused.
