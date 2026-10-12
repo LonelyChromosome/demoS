@@ -13,7 +13,8 @@ const targetValue = getValue(input, "target")
 @target = "{targetValue}"
 const requestIdValue = getValue(input, "requestId")
 @requestId = "{requestIdValue}"
-@time = "{@hour}:{@minute}"
+const timeValue = getValue(input, "timeText")
+@time = "{timeValue}"
 const created = createAlarm(@label, @time, true, [])
 @createdAlarm = "{created}"
 if @createdAlarm == "" {

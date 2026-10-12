@@ -41,11 +41,11 @@ test('NFC bridge rejects invalid UID rather than treating content as an ID',()=>
 test('NFC receipt must match this request nonce and scan time',async()=>{
   const c=context();c.UUID={string:()=> 'request-1'};
   c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-2',scannedAt:new Date().toISOString()})};}};
-  await assert.rejects(vm.runInContext('requestCardUID()',c),/yêu cầu BPA/);
+  await assert.rejects(vm.runInContext('requestCardUIDFromShortcut()',c),/yêu cầu BPA/);
   c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-1',scannedAt:'2000-01-01T00:00:00Z'})};}};
-  await assert.rejects(vm.runInContext('requestCardUID()',c),/hiện tại/);
+  await assert.rejects(vm.runInContext('requestCardUIDFromShortcut()',c),/hiện tại/);
   c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04:A2:7F:1B:5E:80:00',requestId:'request-1',scannedAt:new Date().toISOString()})};}};
-  assert.equal(await vm.runInContext('requestCardUID()',c),'04A27F1B5E8000');
+  assert.equal(await vm.runInContext('requestCardUIDFromShortcut()',c),'04A27F1B5E8000');
 });
 test('Scriptable Data semantics preserve binary file hashes and UTF8 QLDT envelopes',()=>{
   const c=context();

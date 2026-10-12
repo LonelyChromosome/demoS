@@ -671,7 +671,7 @@ function normalizeCardUID(value) {
   if(!/^(?:[0-9A-F]{2}){4,10}$/.test(uid))throw errorCode('nfc_invalid_uid','Shortcut không trả UID thẻ hợp lệ.');
   return uid;
 }
-async function requestCardUID() {
+async function requestCardUIDFromShortcut() {
   const requestId=UUID.string(),started=Date.now();
   const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
   callback.addParameter('name','BPA — Quét thẻ');callback.addParameter('input','text');
@@ -682,6 +682,33 @@ async function requestCardUID() {
   const at=Date.parse(value.scannedAt);
   if(!Number.isFinite(at)||at<started-2000||at>Date.now()+2000)throw errorCode('nfc_stale','Kết quả thẻ không thuộc lần quét hiện tại.');
   return normalizeCardUID(value.uid);
+}
+function urlQueryValue(url,name) {
+  for(const field of String(url).split('?').slice(1).join('?').split('&')) {
+    const i=field.indexOf('=');if(i<0)continue;
+    if(decodeURIComponent(field.slice(0,i))===name)return decodeURIComponent(field.slice(i+1));
+  }
+  return null;
+}
+async function requestCardUIDViaHelper() {
+  const requestId=UUID.string(),started=Date.now(),callback=new CallbackURL('nfchelper://read');
+  // Reuse the native Scriptable return URL rather than inventing an IPC scheme.
+  const success=urlQueryValue(callback.getURL(),'x-success');
+  if(!success||!success.startsWith('scriptable:'))throw errorCode('nfc_callback_transport','Chưa xác minh được callback cục bộ của NFC Helper.');
+  callback.addParameter('callback',success);callback.addParameter('params','true');callback.addParameter('custom',requestId);
+  // No `write`, `url` or remote `post` parameter: the student card is read only.
+  const response=await callback.open();
+  if(!response||response.custom!==requestId||Date.now()-started>90000)throw errorCode('nfc_unverified','Callback NFC không thuộc lần đọc hiện tại.');
+  if(typeof response.tagid!=='string') {
+    writeState('nfc-diagnostics.json',{provider:'helper',returnedKeys:Object.keys(response),at:new Date().toISOString()});
+    throw errorCode('nfc_callback_missing_uid','Callback chưa có trường serial thẻ đã xác minh.');
+  }
+  return normalizeCardUID(response.tagid);
+}
+async function requestCardUID() {
+  // Optional provider; the existing Shortcut consumer remains the default until
+  // getURL()/reader callback shape is exercised on an actual iPhone.
+  return preference('better_phenikaa_nfc_provider')==='helper'?await requestCardUIDViaHelper():await requestCardUIDFromShortcut();
 }
 async function sendNativeEvent(app,channel,type,extra={}) {
   await app.evaluateJavaScript(`bpaHost.event(${JSON.stringify('better_phenikaa/'+channel)},'event',${JSON.stringify({type,...extra})});null`,false);
@@ -831,7 +858,7 @@ async function handlePlatform(call,app) {
   }
   if(channel==='widget_pin'&&method==='requestPin') {
     installWidgetScripts();
-    const a=new Alert();a.title='Widget BPA';a.message='Các script widget đã được chuẩn bị. Nhấn giữ màn hình chính → thêm widget Scriptable → chọn script BPA tương ứng. iOS không có API để BPA tự thêm widget lên Home Screen.';a.addAction('Xong');await a.presentAlert();return false;
+    const a=new Alert();a.title='Widget BPA';a.message='Các script widget đã được chuẩn bị. Nhấn giữ màn hình chính → thêm widget Scriptable → chọn script BPA tương ứng.';a.addAction('Xong');await a.presentAlert();return false;
   }
   if(channel==='assistant_test'&&method==='trigger')return await assistantNotification(args);
   if(channel==='daily_sync') {
@@ -867,7 +894,7 @@ async function handlePlatform(call,app) {
     if(!Number.isInteger(args.hour)||!Number.isInteger(args.minute)||args.hour<0||args.hour>23||args.minute<0||args.minute>59||next.getTime()!==args.target||args.target>=args.classStart||args.target<=now.getTime()+30000||args.classStart-now.getTime()>=86400000)throw errorCode('alarm_occurrence','Thời điểm báo thức không khớp buổi học trong 24 giờ.');
     const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
     const requestId=UUID.string();
-    callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify({...args,requestId}));
+    callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify({...args,requestId,timeText:String(args.hour).padStart(2,'0')+':'+String(args.minute).padStart(2,'0')}));
     const response=await callback.open();
     const receipt=JSON.parse(response.result||'null');
     if(!receipt||receipt.status!=='BPA_ALARM_CREATED'||Number(receipt.hour)!==args.hour||Number(receipt.minute)!==args.minute||receipt.label!==args.label||Number(receipt.target)!==args.target||receipt.requestId!==requestId||typeof receipt.createdAlarm!=='string'||!receipt.createdAlarm.trim())throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');

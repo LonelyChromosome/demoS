@@ -13,15 +13,15 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | Theme Engine, preset, Tiên Môn, VFX | IMPLEMENTED / UNVERIFIED | Source Flutter, shader, ảnh và font gốc; transport file/palette được nối | Kiểm chứng shader, cảnh và animation trên iPhone |
 | Import ảnh/font, custom theme | IMPLEMENTED / UNVERIFIED | DocumentPicker → vùng file cục bộ Scriptable → bridge bytes → thuật toán gốc | Font/ảnh lớn, hủy picker, preview, so ảnh |
 | QLĐT, TraCuu, parse, xác minh, lưu | IMPLEMENTED / UNVERIFIED | Hai script Android nguyên gốc, parser JS, Flutter diff/retention gốc | Tài khoản thật, WebView cookie, retry và auto-login chưa tương đương Android |
-| Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | Renderer chưa đạt pixel parity, Tiên Môn/glow/timeline/trạng thái còn phải đối chiếu |
+| Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | 18 trường hợp/theme/state qua Chromium và WebKit; còn so pixel/thao tác trên iPhone |
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
-| NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; Actions có action đọc identifier miễn phí; NFC.cool automation trả phí nên loại | Chưa có Shortcut NFC cài được/kiểm chứng; Actions bản hiện tại cần iOS 26, tương thích phiên bản cũ chưa xác minh |
-| Báo thức | COMPILED / UNVERIFIED | Workflow 35 action có Clock CreateAlarmIntent thật; receipt có nonce và đối tượng Alarm trả về | Ký artifact thực đang chờ đồng ý gửi source tới Shortcuty; import/chuông đúng ngày trên iPhone chưa thử |
+| NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; consumer Shortcut và ứng viên NFC Helper đọc-only; NFC.cool automation trả phí nên loại | Chưa có scan UID thật; callback NFC Helper chưa xác minh trên iPhone |
+| Báo thức | COMPILED / UNVERIFIED | Workflow đã compile có Clock CreateAlarmIntent thật; receipt có nonce và đối tượng Alarm trả về | Ký artifact thực đang chờ đồng ý gửi source tới Shortcuty; import/chuông đúng ngày trên iPhone chưa thử |
 | Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Port planner Android: 09:00, gộp môn, due range 7/3/1, SHA-256 identity, catalog trợ lý gốc; Notification API | Delivery/reconcile khi app tắt, quyền và hủy/đổi lịch phải so trên iPhone |
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
 | Đồng bộ theo lịch | NOT STARTED | Không thêm auto 06:00 vì người dùng đã bác việc coi đó là chức năng mới | Chỉ triển khai nếu có hành vi tương ứng trong bản chuẩn đã chốt |
-| Updater web tương đương Android | IMPLEMENTED / UNVERIFIED | Schema web riêng, Ed25519 gốc, staged resources, cập nhật host và rollback, giữ UI/gate ủy quyền | Đang kiểm tra build/browser và ký feed thật; áp dụng trên iPhone và gate NFC chưa thử |
-| Một file chuẩn bị scripts | IMPLEMENTED / UNVERIFIED | `BPA.js` tự chuẩn bị 3 scripts widget và vùng dữ liệu, không iCloud | Loader đã qua Chromium/WebKit, gói tài nguyên và file import đã phát hành; import iPhone và updater chưa xong |
+| Updater web tương đương Android | IMPLEMENTED / UNVERIFIED | Schema web riêng, Ed25519 gốc, staged resources, cập nhật host và rollback, giữ UI/gate ủy quyền | Feed thật đã ký/phát hành, browser xác minh chữ ký tốt/xấu qua; áp dụng trên iPhone và gate NFC chưa thử |
+| Một file chuẩn bị scripts | IMPLEMENTED / UNVERIFIED | `BPA.js` tự chuẩn bị 3 scripts widget và vùng dữ liệu, không iCloud | Loader đã qua Chromium/WebKit, gói tài nguyên và file import đã phát hành; import và áp dụng updater trên iPhone chưa thử |
 
 ## Bằng chứng thử nghiệm và hành vi API
 
@@ -129,3 +129,19 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Build mới dùng code 52, cùng tên `cooc.1.6` (bản port Scriptable; không đổi release Android). Producer feed còn phải chạy sau khi artifact mới compile thành công, không tạo thông báo cập nhật giả.
 - 38 kiểm tra Node qua, thêm fixture chữ ký cho Flutter/Dart và Chromium/WebKit. Fixture browser ký một index compile cũ thật, chỉ dùng trong QA, không copy vào bộ cài hoặc feed phát hành.
 - Clock workflow đã compile cục bộ: 35 action, một `com.apple.clock/CreateAlarmIntent`, tên/giờ/no-repeat từ input. Ký artifact thực bị automatic approval review chặn vì chưa có đồng ý gửi source tới Shortcuty; pipeline đã ngừng gửi và chỉ giữ bản unsigned cho chẩn đoán. Không dùng CI để vòng qua chặn này.
+
+## NFC: đường callback reader khác, không đoán Actions schema
+
+- Đã đọc metadata thật của bản Actions 4.0.1 macOS do nhà phát triển phát hành: 99 App Intent trong app và 128 trong extension, không có NFC. Không suy ra tên identifier của action iOS từ bản macOS.
+- NFC Helper có tài liệu `nfchelper://read` với `callback`, `params=true`, `custom` và được App Store liệt kê miễn phí (iOS 12.4+): https://nfchelper.woy.app/docs và https://apps.apple.com/us/app/nfc-helper/id6472720100 . Không dùng `write` hoặc gửi `post` tới server.
+- Thêm consumer thử nghiệm `requestCardUIDViaHelper`, lấy return URL bằng API `CallbackURL.getURL`, ràng buộc custom nonce và giới hạn cửa sổ nhận; chỉ chấp nhận serial hex, không coi NDEF content là UID. Không dùng API `successParameter` vì Scriptable không công bố thuộc tính đó.
+- Consumer chưa bật mặc định: cần xác minh `getURL()` có x-success ổn định và schema callback đọc trên iPhone. Tài liệu chỉ nêu tagid cụ thể ở ví dụ ghi, nên không công nhận callback đọc có tagid cho đến khi thử thật. Khi thiếu field, chỉ lưu tên khóa trả về, không log UID/nội dung thẻ.
+- 2 kiểm tra giả lập cho consumer qua; không phải scan thẻ thật. Đây là hướng tiếp theo cụ thể, chưa phải DONE hoặc quyền bỏ chức năng NFC.
+
+## Checkpoint phát hành tài nguyên thật
+
+- Run 38303400077 tại source `0c4fbd89ad76f02eba9e1c34d69fdf8e756d8557` qua: 88 test core, test Ed25519/schema web, 39 Node test, 18 case widget trên mỗi browser, kiểm tra chữ ký tốt/xấu trong Dart web thật.
+- Index code 52 có 84 tài nguyên, ở commit compile bất biến `e197500e00c81003571ec3b6a1110fa274503e40`. Feed `scriptable-release` ký Ed25519 trên index này đã publish tại `e895741ec543a835e6a79f52b643937e4a6716cb`; đã tải lại feed và kiểm tra chữ ký bằng key công khai đã ghim.
+- Clock source cuối đã compile cục bộ, truyền giờ dạng HH:mm; chưa gửi artifact thực tới Shortcuty vì đang chờ xác nhận sau automatic approval rejection. Feed không chứa một file Clock đã ký giả.
+- Phạm vi vẫn là toàn bộ app. Các mục chưa khép kín: đăng nhập tự hoàn tất/auto-login tương đương; lifecycle sync khi chuyển app; tương tác/animation Home Screen; scan UID trên thẻ/iPhone thật; import/chạy Clock. Không đánh dấu ứng dụng hoàn tất vì CI xanh.
+- Hướng tiếp theo cho login: thử dùng cùng WebView để chuyển auth rồi phục hồi UI qua token một lần, tránh phụ thuộc nút đóng; cần chứng minh vòng đời JS/queue và không replay VFX trước khi bật. Hướng sync nền: thử executor Run Script của Shortcuts/App Intent với giao diện app tách khỏi tác vụ, đo thực tế sau khi chuyển app. Đây là hướng chưa kiểm chứng, không phải đã cấp thời gian nền.
