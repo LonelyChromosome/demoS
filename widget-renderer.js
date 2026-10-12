@@ -1,5 +1,5 @@
 // Geometry ported from schedule_widget/overview_widget and Widget2BitmapRenderer.
-// Browser output is a bitmap. Home Screen animation parity remains BLOCKED.
+// Browser output is a bitmap. Home Screen animation parity: CHƯA TÌM RA GIẢI PHÁP.
 async function renderWidget(p) {
   const w=340,h=p.kind==='small'?104:150,s=h/150,c=document.createElement('canvas');c.width=w*2;c.height=h*2;
   const ctx=c.getContext('2d');ctx.scale(2,2);
