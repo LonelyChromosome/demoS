@@ -1,0 +1,16 @@
+{
+  "bytes": 134814438,
+  "sha256": "5e39a93c0f314201c8f3ed62a0f7ce0e48ed8c22d35228a5abc98d8afe4e2c15",
+  "bundleId": "vn.edu.phenikaa.bpa",
+  "version": "1.6.0",
+  "build": "51",
+  "extensionBundleId": "vn.edu.phenikaa.bpa.widgets",
+  "extensionBinaryPresent": true,
+  "applicationBinaryPresent": true,
+  "signedApp": false,
+  "provisioned": false,
+  "sourceCommit": "d3e8e423786f23fbd28c45329353157535c53364",
+  "workflowRun": "https://github.com/LonelyChromosome/demoS/actions/runs/38268436131",
+  "coreTestsPassed": 88,
+  "widget2ThemeImages": 13
+}
