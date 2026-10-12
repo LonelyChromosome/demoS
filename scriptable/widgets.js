@@ -33,7 +33,8 @@ async function widgetAction(action,kind,id,params) {
   } else if(action==='sync') {
     writeState('pending-action.json',{kind,action:'sync'});await openOriginalApp();return;
   } else {writeState('pending-action.json',{kind,action:'open'});await openOriginalApp();return;}
-  await renderBPAWidget(kind,id,true);
+  // No preview sheet masquerading as a Home Screen update. The new selection
+  // is committed; actual launcher refresh behavior still needs device tests.
 }
 async function renderBPAWidget(kind,id,preview=false) {
   if(!['small','overview','widget2'].includes(kind))throw errorCode('widget_kind','Loại widget không hợp lệ.');
@@ -51,7 +52,22 @@ async function renderBPAWidget(kind,id,preview=false) {
     }
   }
   if(theme.fontPath&&bpaFM.fileExists(safeManagedPath(theme.fontPath)))payload.fontData='data:font/ttf;base64,'+bpaFM.read(safeManagedPath(theme.fontPath)).toBase64String();
-  const renderer=new WebView();await renderer.loadURL(BPA_WEB+'widget-renderer.html');
+  const bundle=await ensureLocalBundle();
+  const named={classic:'macdinh.png',lol:'lol.jpg',valorant:'vlr.jpg',minecraft:'minecraft.jpg',facebook:'facebooj.png',shopee:'shoppee.png',tiktok:'tiktok.png',ben10:'ben10.png.webp',youtube:'ytb.png',steam:'steam.png'};
+  if(theme.theme==='tien_mon_premium'){const now=new Date(),minutes=now.getHours()*60+now.getMinutes();named.tien_mon_premium=minutes>=990&&minutes<1110?'tinemon-trua.png':minutes>=1110||minutes<300?'tienmon-toi.png':'tienmon-sang.png';}
+  if(kind==='widget2'&&!payload.widget2ImagePath&&named[theme.theme||'classic']) {
+    const path=bpaFM.joinPath(bundle.path,'widget-assets/widget2_themes/'+named[theme.theme||'classic']);
+    payload.widget2ImagePath='data:image/'+path.split('.').pop()+';base64,'+bpaFM.read(path).toBase64String();
+  }
+  if(!payload.fontData&&['FzCoTrang','MinecraftCustom'].includes(theme.fontFamily)) {
+    const name=theme.fontFamily==='FzCoTrang'?'assets/assets/tien_mon_premium/fonts/FzCoTrang.ttf':'assets/assets/fonts/minecraft.ttf';
+    payload.fontData='data:font/ttf;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,name)).toBase64String();
+  }
+  payload.icons={};
+  for(const [name,file]of Object.entries({calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:'ic_widget_bell',previous:'ic_widget_up',next:'ic_widget_down'}))payload.icons[name]='data:image/svg+xml;base64,'+bpaFM.read(bpaFM.joinPath(bundle.path,'widget-assets/icons/'+file+'.svg')).toBase64String();
+  const renderer=new WebView();
+  const code=bpaFM.readString(bpaFM.joinPath(bundle.path,'widget-renderer.js')).replace(/<\/script/gi,'<\\/script');
+  await renderer.loadHTML('<html><body><script>'+code+'</script></body></html>');
   const result=await renderer.evaluateJavaScript(`renderWidget(${JSON.stringify(payload)}).then(completion).catch(e=>completion({error:String(e)}));`,true);
   if(result.error)throw errorCode('widget_render',result.error);
   const image=Image.fromData(Data.fromBase64String(result.png));

@@ -11,7 +11,7 @@ for name in names:
     svg=ET.Element('svg',{'xmlns':'http://www.w3.org/2000/svg','viewBox':f"0 0 {vector.attrib[android+'viewportWidth']} {vector.attrib[android+'viewportHeight']}"})
     for node in vector.iter('path'):
         color=node.attrib.get(android+'fillColor','#ffffff')
-        attr={'d':node.attrib[android+'pathData'],'fill':color[-6:] if False else color}
+        attr={'d':node.attrib[android+'pathData'],'fill':color}
         if len(color)==9:
             attr['fill']='#'+color[3:];attr['fill-opacity']=str(int(color[1:3],16)/255)
         for key,new in [('strokeColor','stroke'),('strokeWidth','stroke-width'),('strokeLineCap','stroke-linecap'),('strokeLineJoin','stroke-linejoin'),('fillType','fill-rule')]:

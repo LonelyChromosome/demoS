@@ -135,7 +135,7 @@ function base64url(text) {
 }
 function buildSemester(reg, records, now = new Date()) {
   const valid = verify(reg,records);
-  return {semesterId:reg.id,semesterName:reg.name,displayName:reg.displayName,syncedAt:now.toISOString(),subjects:reg.subjects.map(s => {
+  return {semesterId:reg.id,semesterName:reg.name,displayName:reg.displayName,syncedAt:localISO(now),subjects:reg.subjects.map(s => {
     const normalizedName = normalizeSubject(s.name), subjectId='S'+base64url(`${reg.id.length}:${reg.id}${normalizedName}`);
     return {subjectId,name:displayName(s.name),normalizedName,studySchedules:valid.filter(r=>!r.isExam&&normalizeSubject(r.subjectName)===normalizedName),examSchedules:valid.filter(r=>r.isExam&&normalizeSubject(r.subjectName)===normalizedName)};
   })};

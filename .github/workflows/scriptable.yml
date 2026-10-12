@@ -5,7 +5,7 @@ on:
     paths: [lib/**, assets/**, shaders/**, pubspec.*, web/**, scriptable/**, .github/workflows/scriptable.yml]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -27,7 +27,7 @@ jobs:
         run: |
           bash tool/test_core.sh
           python3 scriptable/build.py
-          TZ=Asia/Ho_Chi_Minh node --test test/scriptable/core.test.js
+          TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js
       - name: Build original app UI for Scriptable WebView
         run: flutter build web --release --no-web-resources-cdn --base-href=/demoS/
       - name: Include Scriptable host and original widget assets
@@ -36,23 +36,36 @@ jobs:
           cp scriptable/BPA.js scriptable/BPA-Scriptable-Sync.js scriptable/README.md build/web/scriptable/
           cp -R ios/WidgetAssets build/web/widget-assets
           python3 tool/build_widget_assets.py
+      - name: Exercise local Flutter loader in Chromium
+        env:
+          BPA_QA_NODE_MODULES: ${{ runner.temp }}/bpa-web-qa/node_modules
+        run: |
+          npm install --prefix "$RUNNER_TEMP/bpa-web-qa" playwright
+          node tool/test_local_web.cjs
+      - name: Keep loader diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BPA-local-loader-QA
+          path: build/qa
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         with:
           name: BPA-Scriptable-app
           path: build/web
           retention-days: 14
-      - uses: actions/configure-pages@v5
+      - name: Open isolated compiled-resource branch
+        uses: actions/checkout@v5
         with:
-          enablement: true
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: build/web
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/deploy-pages@v4
-        id: deployment
+          ref: scriptable-web
+          path: compiled-resources
+      - name: Publish files for the local Scriptable installer
+        run: |
+          git -C compiled-resources rm -rf .
+          cp -R build/web/. compiled-resources/
+          python3 tool/build_local_package.py compiled-resources
+          git -C compiled-resources config user.name github-actions[bot]
+          git -C compiled-resources config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C compiled-resources add .
+          git -C compiled-resources commit -m "Compile BPA resources from $GITHUB_SHA"
+          git -C compiled-resources push origin HEAD:scriptable-web

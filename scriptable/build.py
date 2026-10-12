@@ -5,6 +5,7 @@ root=Path(__file__).resolve().parents[1]
 source=root/'lib/features/dang_nhap_qldt'
 registration=re.search(r"String get _script => r'''(.*?)''';",(source/'tracuu_api.dart').read_text(),re.S).group(1).replace('__ATTEMPT__','1')
 mobile=(source/'qldt_login_mobile.dart').read_text()
+session_script=re.search(r"source: r'''(.*?)'''",mobile[mobile.index('Future<void> _checkReady()'):],re.S).group(1)
 schedule=re.search(r"final script =\s*'''(.*?)''';",mobile[mobile.index('const concurrency = 8;'):],re.S).group(1)
 schedule=schedule.replace('$epoch','1').replace('$concurrency','8').replace('$chunksJson','__BPA_CHUNKS__')
 bundle='// Variables used by Scriptable.\n// icon-color: deep-blue; icon-glyph: calendar-alt;\n// BPA 1.6 Scriptable SYNC CORE — not the complete application.\n'
@@ -24,5 +25,6 @@ host=host_header+(root/'scriptable/core.js').read_text()+'\n'
 host+='const REGISTRATION_SCRIPT='+json.dumps(registration,ensure_ascii=False)+';\n'
 host+='const SCHEDULE_SCRIPT='+json.dumps(schedule,ensure_ascii=False)+';\n'
 host+='function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }\n'
-host+=shared_runtime+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
+host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n'
+host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)

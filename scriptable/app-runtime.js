@@ -35,6 +35,10 @@ function setWidgetSelection(kind,id,value) {
 }
 function errorCode(code,message) { const error=new Error(message);error.code=code;return error; }
 async function syncPortal() {
+  if(Keychain.contains('BPA.qldt-session')) {
+    try {return await fetchNativeQldt(JSON.parse(Keychain.get('BPA.qldt-session')));}
+    catch(error){if(error.code==='qldt_verification')throw error;}
+  }
   const portal=new WebView();
   await portal.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');
   let ready=await portal.evaluateJavaScript("!!(window.edu&&edu.system&&edu.system.userId&&edu.system.iM!=null&&typeof edu.system.makeRequest==='function')",false);
@@ -44,6 +48,11 @@ async function syncPortal() {
     if(host!=='qldtbeta.phenikaa-uni.edu.vn')throw errorCode('login_incomplete','Chưa trở về cổng QLĐT sau đăng nhập.');
   }
   const raw=await callPortal(portal,REGISTRATION_SCRIPT,'betterPhenikaaRegistrationResult','betterPhenikaaRegistrationError',20000);
+  const session=await portal.evaluateJavaScript(SESSION_SCRIPT,false);
+  if(session) {
+    const parsed=JSON.parse(session);
+    if(parsed.tokenJWT&&parsed.userId&&parsed.iM&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
+  }
   const reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg);
   const schedule=chunks.length?await callPortal(portal,scheduleScript(chunks),'betterPhenikaaSyncResult','betterPhenikaaSyncError',20000):{response:{Success:true,Data:[]}};
   const semester=BPACore.buildSemester(reg,BPACore.parseSchedule(schedule.response));
@@ -98,7 +107,7 @@ async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
   if(channel==='qldt_scriptable') {
     if(method==='sync')return await syncPortal();
-    if(method==='clear'){if(Keychain.contains('BPA.credentials'))Keychain.remove('BPA.credentials');return null;}
+    if(method==='clear'){for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
   }
   if(channel==='ios_runtime') {
     if(method==='publishSnapshot'){writeState('snapshot.json',args?JSON.parse(args):{classes:[],exams:[]});return null;}
@@ -158,8 +167,9 @@ function installWidgetScripts() {
   }
 }
 async function openOriginalApp() {
+  const bundle=await ensureLocalBundle();
   const app=new WebView();
-  await app.loadURL(BPA_WEB+'?scriptable=1');
+  await app.loadHTML(localAppHTML(bundle),'https://bpa.local/');
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
   await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))});null`,false);
@@ -169,6 +179,14 @@ async function openOriginalApp() {
     let packet;
     try {packet=await app.evaluateJavaScript('bpaHost.poll(completion);',true);} catch(error){if(closed)break;throw error;}
     if(packet.preferences!==null)writeState('preferences.json',packet.preferences);
+    for(const asset of packet.assets||[]) {
+      let result;
+      try {
+        if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw Error('Tài nguyên ngoài gói BPA.');
+        result={id:asset.id,data:bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String()};
+      } catch(error){result={id:asset.id,error:error.message};}
+      if(!closed)await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
+    }
     for(const call of packet.calls) {
       let result;
       try {result={id:call.id,result:await handlePlatform(call,app)};}

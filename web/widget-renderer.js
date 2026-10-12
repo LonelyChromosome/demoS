@@ -27,7 +27,7 @@ async function renderWidget(p) {
   if(p.kind==='overview')await photo(p.largeImagePath,0,0,w,h);
   if(p.kind==='widget2')await photo(p.widget2ImagePath||(images[t.theme||'classic']?'widget-assets/widget2_themes/'+images[t.theme||'classic']:null),w-108,0,108,h);
   const icons={},iconNames={calendar:'ic_widget_calendar',sync:'ic_widget_reload',mode:'ic_widget_bell',previous:'ic_widget_up',next:'ic_widget_down'};
-  for(const [name,file]of Object.entries(iconNames)){const img=new Image();img.src='widget-assets/icons/'+file+'.svg';try{await img.decode();icons[name]=img;}catch(_){}}
+  for(const [name,file]of Object.entries(iconNames)){const img=new Image();img.src=p.icons&&p.icons[name]||'widget-assets/icons/'+file+'.svg';await img.decode();icons[name]=img;}
   const icon=(name,x,y,size=18)=>{if(icons[name])ctx.drawImage(icons[name],x,y,size,size);};
   const hits=[];
   const hit=(action,x,y,width,height)=>hits.push({action,x,y,width,height});
