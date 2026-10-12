@@ -541,7 +541,7 @@ async function syncPortal() {
   const session=await portal.evaluateJavaScript(SESSION_SCRIPT,false);
   if(session) {
     const parsed=JSON.parse(session);
-    if(parsed.tokenJWT&&parsed.userId&&parsed.iM&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
+    if(parsed.tokenJWT&&parsed.userId&&parsed.iM!=null&&parsed.appId&&parsed.strChucNangId)Keychain.set('BPA.qldt-session',session);
   }
   const reg=BPACore.registration(raw),chunks=BPACore.chunksFor(reg);
   const schedule=chunks.length?await callPortal(portal,scheduleScript(chunks),'betterPhenikaaSyncResult','betterPhenikaaSyncError',20000):{response:{Success:true,Data:[]}};
@@ -708,7 +708,7 @@ async function handlePlatform(call,app) {
 function installWidgetScripts() {
   const source=bpaFM.readString(module.filename);
   for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']]) {
-    const content=source.replace("const DEFAULT_KIND='small';",`const DEFAULT_KIND='${kind}';`);
+    const content=source.replace(/const DEFAULT_KIND='(?:small|overview|widget2)';/,`const DEFAULT_KIND='${kind}';`);
     bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),name+'.js'),content);
   }
 }
