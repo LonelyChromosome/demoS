@@ -36,6 +36,19 @@ async function main(){
     await page.waitForSelector('canvas',{timeout:30000});
     await page.waitForTimeout(6000);
     await page.screenshot({path:qaDir+'/local-loader-login.png'});
+    // Clearly labelled synthetic fixtures, confined to QA, exercise persisted
+    // schedules and the original premium renderer. Never copied into BPA data.
+    const local=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const today=local(new Date()),rows=[8,10,13,15].map((hour,index)=>({id:'qa-'+index,isExam:false,subjectName:['Cơ sở dữ liệu','Lập trình','Toán rời rạc','Mạng máy tính'][index],room:'QA '+index,className:'QA',startAt:today+'T'+String(hour).padStart(2,'0')+':00:00.000',endAt:today+'T'+String(hour+1).padStart(2,'0')+':00:00.000',periodStart:index*2+1,periodEnd:index*2+2}));
+    const snapshot={displayName:'DỮ LIỆU KIỂM THỬ',source:'qldt',syncedAt:new Date().toISOString(),records:rows};
+    for(const theme of ['classic','tien_mon_premium']) {
+      await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
+      const preferences={'flutter.better_phenikaa_snapshot_v1':JSON.stringify(JSON.stringify(snapshot)),'flutter.better_phenikaa_theme_v3':JSON.stringify(theme)};
+      await page.evaluate(preferences=>window.bpaHost.init(preferences),preferences);
+      await page.waitForSelector('canvas',{timeout:30000});await page.waitForTimeout(7000);
+      await page.screenshot({path:qaDir+'/fixture-'+theme+'.png'});
+    }
+    if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
     // Exercise the exact source HTML. This is not an NFC hardware test.
     const cardHTML=fs.readFileSync(path.join(root,'assets/assets/card_vfx/link.html'),'utf8');
     await page.evaluate(html=>{

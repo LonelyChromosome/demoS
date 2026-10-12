@@ -2,7 +2,7 @@ name: BPA Scriptable app and original Flutter UI
 on:
   push:
     branches: [main, feature/scriptable-android-parity]
-    paths: [lib/**, assets/**, shaders/**, pubspec.*, web/**, scriptable/**, .github/workflows/scriptable.yml]
+    paths: [lib/**, assets/**, shaders/**, pubspec.*, web/**, scriptable/**, tool/**, test/scriptable/**, .github/workflows/scriptable.yml]
   workflow_dispatch:
 permissions:
   contents: write
