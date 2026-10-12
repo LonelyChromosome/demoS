@@ -192,7 +192,16 @@ async function handlePlatform(call,app) {
   if(channel==='qldt_scriptable') {
     if(method==='sync')return await syncPortal(app);
     if(method==='takeLoginResume')return takeLoginResume(app);
-    if(method==='clear'){syncGeneration++;syncInFlight=null;for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);return null;}
+    if(method==='clear'){
+      syncGeneration++;syncInFlight=null;
+      for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);
+      // A new student can share the university's semester ID, but must not
+      // inherit the previous account's earliest class/retention or widget day.
+      writeState('semester-v1.json',null);writeState('snapshot.json',{classes:[],exams:[]});
+      writeState('widgets.json',{});writeState('pending-action.json',null);
+      const state=app&&appSessions.get(app);if(state)state.loginResume=null;
+      return null;
+    }
   }
   if(channel==='ios_runtime') {
     if(method==='publishSnapshot'){writeState('snapshot.json',args?JSON.parse(args):{classes:[],exams:[]});return null;}

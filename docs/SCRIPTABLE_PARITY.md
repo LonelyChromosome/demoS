@@ -171,3 +171,5 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - NFC candidate dùng action Shortcuts openxcallbackurl thật, custom success key callback, gọi nfchelper://read?params=true&custom=nonce. Compile 18 action; không ghi thẻ/POST. Host chỉ nhận serial tagid và custom đúng nonce từ URL/JSON, không chấp nhận NDEF giả UID.
 - Automatic approval review chặn ký source NFC mới vì xác nhận trước chỉ áp dụng Clock. Không gửi lại hoặc dùng CI vòng qua. Còn chờ xác nhận riêng trước khi nhúng artifact NFC đã ký; callback/UID thực trên thiết bị chưa xác minh.
 - 52 Node test qua, có kiểm tra binary nhúng đúng signed artifact, lỗi checksum, probe, import bị hủy và callback UID. Code 54 dành cho bộ cài tích hợp mới. Không suy ra toàn app hoàn tất từ kết quả này.
+
+- Đối chiếu logout phát hiện host còn giữ semester-v1/widget selection khi Flutter đã xóa account. Đã xóa state học kỳ/snapshot/action/ngày widget cùng phiên QLĐT; tránh account mới cùng semester ID thừa ngày bắt đầu của sinh viên cũ. Có kiểm tra đổi tài khoản cùng kỳ, không làm mới bound-card ngoài luồng Android.

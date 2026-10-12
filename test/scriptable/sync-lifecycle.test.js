@@ -22,7 +22,7 @@ test('logout invalidates in-flight sync without resurrecting state or credential
  const pending=vm.runInContext('syncPortal()',c);
  await vm.runInContext('handlePlatform({channel:"better_phenikaa/qldt_scriptable",method:"clear"},null)',c);
  finish(c.result);await assert.rejects(pending,e=>e.code==='cancelled');
- assert.equal(states.has('semester-v1.json'),false);assert.equal(keys.has('BPA.qldt-session'),false);
+ assert.equal(states.get('semester-v1.json'),null);assert.equal(keys.has('BPA.qldt-session'),false);
 });
 test('network and verification failure keep saved data and do not open a login loop',async()=>{
  for(const code of ['qldt_http','qldt_response','qldt_verification',undefined]){
@@ -61,4 +61,14 @@ test('weekly failure stops new dispatch and drains the eight outstanding workers
  await new Promise(r=>setImmediate(r));
  assert.equal(dispatched,8);assert.equal(settled,false);assert.equal(release.length,7);
  release.forEach(r=>r());await assert.rejects(observed,/503/);assert.equal(dispatched,8);
+});
+
+test('switching accounts cannot inherit another student semester start or widget navigation state',async()=>{
+ const {c,states,keys}=host();
+ states.set('semester-v1.json',{current:{semesterId:'2026_2027_1',displayName:'Previous'},startedAt:'2026-08-25T00:00:00'});
+ states.set('widgets.json',{'small:main':{day:'2026-08-25'}});states.set('pending-action.json',{action:'sync'});
+ await vm.runInContext('handlePlatform({channel:"better_phenikaa/qldt_scriptable",method:"clear"},null)',c);
+ assert.equal(states.get('semester-v1.json'),null);assert.equal(Object.keys(states.get('widgets.json')).length,0);assert.equal(states.get('pending-action.json'),null);assert.equal(states.get('snapshot.json').classes.length,0);
+ keys.set('BPA.qldt-session','{"tokenJWT":"new"}');c.fetchNativeQldt=async()=>c.result;
+ const out=await vm.runInContext('syncPortal()',c);assert.equal(out.termStartedAt,'2026-09-01T00:00:00');
 });
