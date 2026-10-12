@@ -1,46 +1,47 @@
-# BPA 1.6 — chuyển sang Scriptable
+# BPA — Scriptable host
 
-Đây là bộ đồng bộ để kiểm tra trên iPhone, **chưa phải bản BPA hoàn chỉnh**.
-Không cần tài khoản Apple Developer hay chữ ký IPA. Cần ứng dụng Scriptable.
+**Đang triển khai; chưa đủ điều kiện gọi là BPA hoàn chỉnh.**
+Đầu ra là Scriptable + WebView + Shortcuts, miễn phí, không IPA và không iCloud.
 
-## Chạy bộ đồng bộ
+`BPA.js` là điểm khởi chạy thống nhất: tự chuẩn bị thư mục dữ liệu, tải và
+kiểm tra SHA-256 gói tài nguyên web, cache cục bộ và tạo ba script widget.
+Giao diện web được compile từ source Flutter DemoF3, dùng ảnh, font, shader
+và các màn hình gốc. Không yêu cầu chỉnh source khi dùng.
 
-1. Mở `BPA-Scriptable-Sync.js` bằng Scriptable. Nếu bảng chia sẻ không có
-   Scriptable, tạo script mới rồi dán toàn bộ nội dung file vào.
-2. Chạy script, chọn đăng nhập và đồng bộ.
-3. Đăng nhập trên trang QLĐT của trường. Khi đã vào cổng sinh viên, bấm **Xong**
-   trên WebView. Script lấy TraCuu, xác minh kế hoạch/môn/lớp, lấy lịch và lưu.
+## Trạng thái cài đặt
 
-Nếu tài khoản/trang chưa sẵn sàng, script báo lỗi và không thay lịch đã lưu.
-Dữ liệu lưu cục bộ tại `BPA-Scriptable/semester-v1.json` trong vùng dữ liệu
-của Scriptable. Không lưu dữ liệu vào iCloud. Script không ghi mật khẩu,
-token hay cookie ra file hoặc log; phiên đăng nhập do WebView của Scriptable quản lý.
+Bộ nạp đang được kiểm tra trong CI. Nhánh `scriptable-web` chỉ được phát hành
+sau khi kiểm tra bộ nạp qua. Chưa xác minh cài/chạy trên iPhone thật.
+Không trình bày file host hiện tại là gói app đã hoàn tất.
 
-## Đã triển khai
+Khi tài nguyên đã được phát hành, mở `BPA.js` bằng Scriptable và chạy BPA.
+Bộ nạp lưu tài nguyên trong vùng dữ liệu cục bộ của Scriptable. Thêm widget
+lên Home Screen vẫn cần thao tác iOS; khả năng tương tác/cập nhật và hình ảnh
+của cả ba widget chưa đạt hợp đồng Android parity.
 
-- Tái sử dụng hai đoạn JavaScript QLĐT của Android: TraCuu và lấy lịch từng
-  tuần, concurrency 8. Không đổi action, func hay cách gọi `edu.system`.
-- Port parser, tên môn không fuzzy, subjectId, kiểm tra ngày/giờ,
-  xác minh lớp và học kỳ, giữ kỳ cũ đến hết ngày +4 tháng 7 ngày.
-- Chỉ thay dữ liệu sau khi toàn bộ yêu cầu và xác minh thành công.
-- Bản lưu có phục hồi khi lỗi đổi tên file, không thay bằng dữ liệu demo.
-- Kiểm tra Node cho parser, cầu callback, giới hạn 8 yêu cầu, timeout,
-  session hết hạn và rollback lưu dữ liệu.
+Phiên QLĐT dùng WebView và Keychain; mật khẩu, token, cookie không gửi qua
+máy chủ trung gian. Server tài nguyên chỉ chứa code, font và ảnh ứng dụng.
+Bản ghi học kỳ chỉ thay sau xác minh; lỗi lưu phục hồi bản cũ.
 
-## Chưa hoàn tất
+## Phần chưa hoàn tất
 
-- Giao diện app, cả ba widget, Theme Engine/VFX, diff đồng bộ, thông báo,
-  báo thức, cập nhật, tự đăng nhập và sync khi chuyển sang app khác.
-- Đọc UID NFC trực tiếp: API công khai Scriptable không có đầu đọc NFC.
-  NFC Automation của Shortcuts không được coi là thay thế tương đương
-  thao tác bấm quét và đọc UID thẻ. Chưa có giải pháp tương đương đã kiểm chứng.
-- Chưa chạy trên Scriptable/iPhone thật hoặc tài khoản QLĐT thật.
-  Test Node không chứng minh đăng nhập/cookie/WebView hoạt động trên iPhone.
-- Chưa xác nhận mức tương đồng 95%; không dùng file này thay app BPA đầy đủ.
+- Đăng nhập/cookie, chuyển app khi sync và kiểm thử tài khoản thật.
+- Pixel parity, tương tác, animation và Tiên Môn của widget.
+- Shortcut quét UID NFC và tạo báo thức thật: có consumer callback, chưa có
+  Shortcut cài được và chưa kiểm chứng phần cứng.
+- Updater có chữ ký, áp dụng/rollback và gate thẻ như Android.
+- Toàn bộ kiểm thử chức năng/ảnh/hiệu ứng trên iPhone.
 
-## Dành cho phát triển
+Chi tiết hướng đã thử và hướng tiếp theo: `docs/SCRIPTABLE_PARITY.md`.
+`BPA-Scriptable-Sync.js` chỉ là công cụ chẩn đoán đồng bộ cũ, không phải sản
+phẩm bàn giao thay cho app.
 
-`python3 scriptable/build.py` trích hai đoạn JavaScript từ source Android và
-đóng gói thành một file. `reuse.json` ghi hash để kiểm tra việc tái sử dụng.
+## Kiểm tra phát triển
 
-`TZ=Asia/Ho_Chi_Minh node --test test/scriptable/core.test.js`
+```sh
+python3 scriptable/build.py
+python3 tool/audit_scriptable.py
+TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js
+```
+
+Kiểm tra Node và Chromium không thay thế kiểm thử Scriptable trên iPhone.

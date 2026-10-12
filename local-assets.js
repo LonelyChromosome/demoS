@@ -2,6 +2,17 @@
 // enter this protocol. Scriptable returns only files from BPA's local bundle.
 (() => {
   if(!window.__BPA_LOCAL__)return;
+  // loadHTML has an opaque/file origin on WebKit. Flutter's initial route
+  // bookkeeping may resolve "/" against the synthetic asset base. Keep the
+  // real history state, but never move a local document to that asset origin.
+  for (const method of ['replaceState','pushState']) {
+    const original=history[method].bind(history);
+    history[method]=(state,title,url)=>{
+      if(url!=null&&new URL(String(url),document.baseURI).origin!==location.origin)
+        return original(state,title);
+      return original(state,title,url);
+    };
+  }
   let sequence=0;const awaiting=new Map();
   const bytes=b64=>Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
   window.bpaAssetResult=packet=>{const pending=awaiting.get(packet.id);if(!pending)return;awaiting.delete(packet.id);packet.error?pending.reject(new Error(packet.error)):pending.resolve(bytes(packet.data));};
