@@ -5,7 +5,8 @@ async function renderWidget(p) {
   const ctx=c.getContext('2d');ctx.scale(2,2);
   const t=p.theme||{},config=t.widgetConfig?JSON.parse(t.widgetConfig):{};
   const color=(n,fallback)=>typeof n==='number'?'#'+(n>>>0).toString(16).padStart(8,'0').slice(2):fallback;
-  const start=color(t.widgetStart,'#1747b5'),end=color(t.widgetEnd,'#4c79d8'),text=color(t.widgetText,'#ffffff'),sub=color(t.widgetSubtext,'#e2edff');
+  const textOverride=config[p.kind==='small'?'smallTextColor':p.kind==='overview'?'largeTextColor':'widget2TextColor'];
+  const start=color(t.widgetStart,'#1747b5'),end=color(t.widgetEnd,'#4c79d8'),text=color(textOverride,color(t.widgetText,'#ffffff')),sub=color(t.widgetSubtext,'#e2edff');
   let font='Arial';
   const fontURL=p.fontData||(t.fontFamily==='FzCoTrang'?'assets/assets/tien_mon_premium/fonts/FzCoTrang.ttf':t.fontFamily==='MinecraftCustom'?'assets/assets/fonts/minecraft.ttf':null);
   if(fontURL){const face=new FontFace('BPAWidget',`url(${JSON.stringify(fontURL)})`);await face.load();document.fonts.add(face);font='BPAWidget';}

@@ -15,7 +15,7 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | QLĐT, TraCuu, parse, xác minh, lưu | IMPLEMENTED / UNVERIFIED | Hai script Android nguyên gốc, parser JS, Flutter diff/retention gốc | Tài khoản thật, WebView cookie, retry và auto-login chưa tương đương Android |
 | Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | Renderer chưa đạt pixel parity, Tiên Môn/glow/timeline/trạng thái còn phải đối chiếu |
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
-| NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã kiểm tra API Scriptable và NFC Automation; NFC.cool có UID/deep-link nhưng cầu automation trả phí, nên loại | Chưa có đường thay thế miễn phí tương đương đã kiểm chứng |
+| NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; Actions có action đọc identifier miễn phí; NFC.cool automation trả phí nên loại | Chưa có Shortcut NFC cài được/kiểm chứng; Actions bản hiện tại cần iOS 26, tương thích phiên bản cũ chưa xác minh |
 | Báo thức | NOT STARTED | Có cầu callback tới Shortcut, chỉ nhận thành công khi callback xác nhận | Shortcut thật chưa được tạo/cài/test, hẹn đúng ngày chưa được chứng minh |
 | Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Notification API, key theo môn/lịch, hủy pending cũ, tránh delivered | Text trợ lý, timing, expiry và delivery phải so với Android |
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
@@ -51,3 +51,12 @@ bàn giao là BPA hoàn chỉnh, chưa xác nhận 95%.
 - App offline: thử loader blob/import-map + cầu fetch/XHR đọc tài nguyên cục bộ; không lệ thuộc quyền tạo GitHub Pages.
 
 Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm iPhone, không có quyền tự chấp thuận sai khác.
+
+## Kết quả thử nghiệm bổ sung
+
+- Flutter web đã compile thật trên Linux (run 38276126387 và 38278660539). Không build hay bàn giao IPA.
+- Run 38276126387 tạo artifact web 98,170,061 byte; Pages setup thất bại với `Resource not accessible by integration`. Đã thay bằng hướng cache cục bộ.
+- Run 38278660539 tạo `flutter-view` trong Chromium nhưng kiểm tra canvas timeout. Đang sửa test shadow DOM và bổ sung ảnh/log, chưa kết luận loader đã chạy hoàn chỉnh.
+- 21 kiểm tra Node qua, gồm wire format Android, SHA-256 tài nguyên nhị phân theo API Data của Scriptable, điều kiện callback UID và state widget. Không quy đổi kết quả này thành thử nghiệm iPhone.
+- Một POST probe tới HubSign với workflow chỉ trả chuỗi kiểm tra, không chứa dữ liệu sinh viên, nhận HTTP 403. Chưa có tệp Shortcut được ký/import thật. Hướng tiếp theo: đối chiếu dịch vụ ký được công bố hoặc cách xuất hợp lệ trên thiết bị, không yêu cầu Mac hay tài khoản trả phí.
+- Màn hình sắp xếp tên lần đầu được tách nguyên các lớp UI từ `qldt_login_mobile.dart` để tái sử dụng trên web; tên lựa chọn được giữ riêng và chỉ đánh dấu setup hoàn tất sau transaction lưu học kỳ gốc.

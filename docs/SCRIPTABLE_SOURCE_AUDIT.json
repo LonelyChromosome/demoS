@@ -132,7 +132,7 @@
       "source": "lib/app/app.dart",
       "android_sha256": "533bd9228563182a31fa66dcb6369cb459b11f412acb9bb538353effbd4aa5ee",
       "present": true,
-      "sha256": "9e9fb80a6c52249bc9ee76f1a4312ff24fd0004bb58010d1d89bae0318f5e326",
+      "sha256": "bc4d45119564ff5027f834882e6d5b681238f666ddf038fb03617466a7db3bb0",
       "byte_identical": false,
       "classes": [
         "BetterPhenikaaScheduleApp",
@@ -440,7 +440,7 @@
       "source": "lib/features/dang_nhap_qldt/qldt_login_web.dart",
       "android_sha256": "08f2ba3eb07b8242b9f0832c6a7e677ac57cd68808a473ffe62533548f974085",
       "present": true,
-      "sha256": "0cd4bc77dd15e4b422b02a56f154e408a1e77310906c4002ec3ef01fe51057d6",
+      "sha256": "4a731421c50c4a876e8e7a8f8588a5e94640a3d924567db8fe8c280c1ed3f63f",
       "byte_identical": false,
       "classes": [
         "_WebQldtBridgeDialog",
@@ -1446,6 +1446,14 @@
       "byte_identical": true,
       "classes": [],
       "channels": []
+    }
+  ],
+  "reused_ui_slices": [
+    {
+      "source": "lib/features/dang_nhap_qldt/qldt_login_mobile.dart",
+      "target": "lib/features/dang_nhap_qldt/qldt_name_arrange.dart",
+      "sha256": "5682048c32fd2d5746190de57c5cbfa2103fd4ebe5f916682102a619d434e53d",
+      "byte_identical_slice": true
     }
   ],
   "note": "Inventory and hash evidence only; not an exhaustive behavioral audit or iPhone functional test."

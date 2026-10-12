@@ -26,10 +26,7 @@ async function widgetAction(action,kind,id,params) {
   if(action==='previous'||action==='next')setWidgetSelection(kind,id,navigateWidget(selection,rows,kind,action==='previous'?-1:1));
   else if(action==='mode')setWidgetSelection(kind,id,{...selection,mode:selection.mode==='exam'?'study':'exam',index:0});
   else if(action==='calendar') {
-    const picker=new DatePicker();picker.initialDate=new Date(selection.day+'T12:00:00');
-    const dates=(snapshot().classes||[]).map(r=>new Date(r.startAt)).sort((a,b)=>a-b);
-    if(dates.length){picker.minimumDate=dates[0];picker.maximumDate=dates[dates.length-1];}
-    const value=await picker.pickDate();if(value)setWidgetSelection(kind,id,{...selection,day:isoDay(value),index:0});
+    writeState('pending-action.json',{kind,action:'calendar',day:selection.day});await openOriginalApp();return;
   } else if(action==='sync') {
     writeState('pending-action.json',{kind,action:'sync'});await openOriginalApp();return;
   } else {writeState('pending-action.json',{kind,action:'open'});await openOriginalApp();return;}

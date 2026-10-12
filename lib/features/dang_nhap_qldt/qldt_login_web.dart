@@ -11,23 +11,27 @@ import 'package:flutter/material.dart';
 import 'package:better_phenikaa_schedule/platform/bpa_channel.dart';
 import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/semester_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:better_phenikaa_schedule/features/dang_nhap_qldt/qldt_name_arrange.dart';
 
 const bool supportsLiveQldtLogin = true;
 
 Future<void> clearQldtSession() async {
   if (scriptableAvailable) await const BpaChannel('better_phenikaa/qldt_scriptable').invokeMethod<void>('clear');
+  final prefs=await SharedPreferences.getInstance();
+  for (final key in ['better_phenikaa_scriptable_name','better_phenikaa_account_display_name_v1','better_phenikaa_account_setup_complete_v1']) {await prefs.remove(key);}
 }
 
 Future<String> readCachedQldtDisplayName() async =>
   (await SharedPreferences.getInstance()).getString('better_phenikaa_scriptable_name') ?? '';
 
-Future<String> readQldtAccountDisplayName() => readCachedQldtDisplayName();
+Future<String> readQldtAccountDisplayName() async =>
+  (await SharedPreferences.getInstance()).getString('better_phenikaa_account_display_name_v1') ?? '';
 
 Future<bool> isQldtFirstLoginSetupComplete() async =>
-  (await SharedPreferences.getInstance()).getBool('better_phenikaa_scriptable_first_login') ?? false;
+  (await SharedPreferences.getInstance()).getBool('better_phenikaa_account_setup_complete_v1') ?? false;
 
 Future<void> markQldtFirstLoginSetupComplete() async {
-  await (await SharedPreferences.getInstance()).setBool('better_phenikaa_scriptable_first_login',true);
+  if (!await (await SharedPreferences.getInstance()).setBool('better_phenikaa_account_setup_complete_v1',true)) throw StateError('ACCOUNT_SETUP_COMPLETE_NOT_PERSISTED');
 }
 
 Future<QldtLoginResult?> openQldtLogin(BuildContext context) async {
@@ -35,7 +39,16 @@ Future<QldtLoginResult?> openQldtLogin(BuildContext context) async {
     final value = await const BpaChannel('better_phenikaa/qldt_scriptable').invokeMapMethod<String,dynamic>('sync');
     if (value == null) return null;
     final semester=CurrentSemester.fromJson(Map<String,dynamic>.from(value['semester'] as Map));
-    await (await SharedPreferences.getInstance()).setString('better_phenikaa_scriptable_name',semester.displayName);
+    final prefs=await SharedPreferences.getInstance();
+    await prefs.setString('better_phenikaa_scriptable_name',semester.displayName);
+    if (!await isQldtFirstLoginSetupComplete()) {
+      if (!context.mounted) return null;
+      final words=semester.displayName.split(RegExp(r'\s+')).where((word)=>word.isNotEmpty).toList(growable:false);
+      if (words.isEmpty) throw const FormatException('QLDT_API_NAME_MISSING');
+      final chosen=await showQldtNameArrange(context,words);
+      if (chosen==null||chosen.trim().isEmpty) throw const FormatException('ACCOUNT_DISPLAY_NAME_REQUIRED');
+      if(!await prefs.setString('better_phenikaa_account_display_name_v1',chosen)) throw StateError('ACCOUNT_DISPLAY_NAME_NOT_PERSISTED');
+    }
     return QldtLoginResult(schedule:semester.toImportedScheduleData(),semester:semester,
       termStartedAt:DateTime.parse(value['termStartedAt'] as String));
   }

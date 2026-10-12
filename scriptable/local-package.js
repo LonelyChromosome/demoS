@@ -4,7 +4,7 @@ function sha256Raw(raw) {
   const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],n=raw.length,blocks=Math.ceil((n+9)/64),rotate=(v,b)=>(v>>>b)|(v<<(32-b));
   for(let block=0;block<blocks;block++) {
     const W=new Array(64);
-    for(let i=0;i<16;i++){let value=0;for(let j=0;j<4;j++){const at=block*64+i*4+j;const b=at<n?raw.charCodeAt(at):at===n?128:at>=blocks*64-4?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:at>=blocks*64-8?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:0;value=(value<<8)|b;}W[i]=value;}
+    for(let i=0;i<16;i++){let value=0;for(let j=0;j<4;j++){const at=block*64+i*4+j;const b=at<n?(typeof raw==='string'?raw.charCodeAt(at):raw.byteAt(at)):at===n?128:at>=blocks*64-4?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:at>=blocks*64-8?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:0;value=(value<<8)|b;}W[i]=value;}
     for(let i=16;i<64;i++){const a=W[i-15],b=W[i-2];W[i]=(W[i-16]+(rotate(a,7)^rotate(a,18)^(a>>>3))+W[i-7]+(rotate(b,17)^rotate(b,19)^(b>>>10)))|0;}
     let[a,b,c,d,e,f,g,h]=H;
     for(let i=0;i<64;i++){const t1=(h+(rotate(e,6)^rotate(e,11)^rotate(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rotate(a,2)^rotate(a,13)^rotate(a,22))+((a&b)^(a&c)^(b&c)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
@@ -12,6 +12,13 @@ function sha256Raw(raw) {
   }
   return H.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');
 }
+function base64ByteView(base64) {
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',values={};for(let i=0;i<64;i++)values[alphabet[i]]=i;
+  const length=base64.length/4*3-(base64.endsWith('==')?2:base64.endsWith('=')?1:0);
+  return {length,byteAt(index){const i=Math.floor(index/3)*4,a=values[base64[i]],b=values[base64[i+1]],c=values[base64[i+2]]||0,d=values[base64[i+3]]||0;return index%3===0?(a<<2)|(b>>4):index%3===1?((b&15)<<4)|(c>>2):((c&3)<<6)|d;}};
+}
+function dataSize(data) {return base64ByteView(data.toBase64String()).length;}
+function sha256Data(data) {return sha256Raw(base64ByteView(data.toBase64String()));}
 function validBundlePath(path) {
   return typeof path==='string'&&path.length<300&&!path.startsWith('/')&&!path.includes('\\')&&!path.split('/').some(v=>v==='..'||v==='.'||v==='.git'||!v);
 }
@@ -29,10 +36,10 @@ async function ensureLocalBundle() {
   // after every asset matches its declared size and digest.
   for(const file of manifest.files) {
     const path=bpaFM.joinPath(directory,file.path);
-    if(bpaFM.fileExists(path)&&sha256Raw(bpaFM.read(path).toRawString())===file.sha256)continue;
+    if(bpaFM.fileExists(path)&&sha256Data(bpaFM.read(path))===file.sha256)continue;
     const req=new Request(BPA_RESOURCE_ROOT+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
-    const data=await req.load(),raw=data.toRawString();
-    if(req.response.statusCode!==200||raw.length!==file.size||sha256Raw(raw)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
+    const data=await req.load();
+    if(req.response.statusCode!==200||dataSize(data)!==file.size||sha256Data(data)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
     const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
     bpaFM.write(path,data);
   }

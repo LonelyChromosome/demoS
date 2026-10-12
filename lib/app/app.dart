@@ -212,7 +212,8 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
       await DailySync.refreshWidgetToday();
       await _loginOrSync();
     } else if (request['action'] == 'calendar') {
-      await _showCalendarPicker(context, _selectedDate, (value) {
+      final selectedWidgetDay = DateTime.tryParse(request['day'] ?? '') ?? _selectedDate;
+      await _showCalendarPicker(context, selectedWidgetDay, (value) {
         unawaited(IosRuntime.selectWidgetDay(kind, value));
       }, studyDays: _data?.classes.map((item) => item.startAt.toIso8601String().substring(0, 10)).toSet() ?? <String>{},
          examDays: _data?.exams.map((item) => item.startAt.toIso8601String().substring(0, 10)).toSet() ?? <String>{});

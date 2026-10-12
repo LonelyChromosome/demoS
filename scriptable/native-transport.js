@@ -6,7 +6,8 @@ function qldtEncode(text,key) {
   return Buffer.from(cipher,'utf8').toString('base64');
 }
 function qldtDecode(encoded,key) {
-  const cipher=typeof Data!=='undefined'?decodeURIComponent(escape(Data.fromBase64String(encoded).toRawString())):Buffer.from(encoded,'base64').toString('utf8');
+  const cipher=typeof Data!=='undefined'?Data.fromBase64String(encoded).toRawString():Buffer.from(encoded,'base64').toString('utf8');
+  if(typeof cipher!=='string')throw errorCode('qldt_encoding','QLĐT trả envelope không phải UTF-8.');
   let text='';for(let i=0;i<cipher.length;i++)text+=String.fromCharCode(cipher.charCodeAt(i)^key.charCodeAt(i%key.length));return text;
 }
 async function qldtPost(session,action,func,extra) {

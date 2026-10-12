@@ -234,7 +234,7 @@ function sha256Raw(raw) {
   const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],n=raw.length,blocks=Math.ceil((n+9)/64),rotate=(v,b)=>(v>>>b)|(v<<(32-b));
   for(let block=0;block<blocks;block++) {
     const W=new Array(64);
-    for(let i=0;i<16;i++){let value=0;for(let j=0;j<4;j++){const at=block*64+i*4+j;const b=at<n?raw.charCodeAt(at):at===n?128:at>=blocks*64-4?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:at>=blocks*64-8?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:0;value=(value<<8)|b;}W[i]=value;}
+    for(let i=0;i<16;i++){let value=0;for(let j=0;j<4;j++){const at=block*64+i*4+j;const b=at<n?(typeof raw==='string'?raw.charCodeAt(at):raw.byteAt(at)):at===n?128:at>=blocks*64-4?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:at>=blocks*64-8?Math.floor(n*8/Math.pow(256,blocks*64-1-at))&255:0;value=(value<<8)|b;}W[i]=value;}
     for(let i=16;i<64;i++){const a=W[i-15],b=W[i-2];W[i]=(W[i-16]+(rotate(a,7)^rotate(a,18)^(a>>>3))+W[i-7]+(rotate(b,17)^rotate(b,19)^(b>>>10)))|0;}
     let[a,b,c,d,e,f,g,h]=H;
     for(let i=0;i<64;i++){const t1=(h+(rotate(e,6)^rotate(e,11)^rotate(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rotate(a,2)^rotate(a,13)^rotate(a,22))+((a&b)^(a&c)^(b&c)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
@@ -242,6 +242,13 @@ function sha256Raw(raw) {
   }
   return H.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');
 }
+function base64ByteView(base64) {
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',values={};for(let i=0;i<64;i++)values[alphabet[i]]=i;
+  const length=base64.length/4*3-(base64.endsWith('==')?2:base64.endsWith('=')?1:0);
+  return {length,byteAt(index){const i=Math.floor(index/3)*4,a=values[base64[i]],b=values[base64[i+1]],c=values[base64[i+2]]||0,d=values[base64[i+3]]||0;return index%3===0?(a<<2)|(b>>4):index%3===1?((b&15)<<4)|(c>>2):((c&3)<<6)|d;}};
+}
+function dataSize(data) {return base64ByteView(data.toBase64String()).length;}
+function sha256Data(data) {return sha256Raw(base64ByteView(data.toBase64String()));}
 function validBundlePath(path) {
   return typeof path==='string'&&path.length<300&&!path.startsWith('/')&&!path.includes('\\')&&!path.split('/').some(v=>v==='..'||v==='.'||v==='.git'||!v);
 }
@@ -259,10 +266,10 @@ async function ensureLocalBundle() {
   // after every asset matches its declared size and digest.
   for(const file of manifest.files) {
     const path=bpaFM.joinPath(directory,file.path);
-    if(bpaFM.fileExists(path)&&sha256Raw(bpaFM.read(path).toRawString())===file.sha256)continue;
+    if(bpaFM.fileExists(path)&&sha256Data(bpaFM.read(path))===file.sha256)continue;
     const req=new Request(BPA_RESOURCE_ROOT+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
-    const data=await req.load(),raw=data.toRawString();
-    if(req.response.statusCode!==200||raw.length!==file.size||sha256Raw(raw)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
+    const data=await req.load();
+    if(req.response.statusCode!==200||dataSize(data)!==file.size||sha256Data(data)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
     const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
     bpaFM.write(path,data);
   }
@@ -292,7 +299,8 @@ function qldtEncode(text,key) {
   return Buffer.from(cipher,'utf8').toString('base64');
 }
 function qldtDecode(encoded,key) {
-  const cipher=typeof Data!=='undefined'?decodeURIComponent(escape(Data.fromBase64String(encoded).toRawString())):Buffer.from(encoded,'base64').toString('utf8');
+  const cipher=typeof Data!=='undefined'?Data.fromBase64String(encoded).toRawString():Buffer.from(encoded,'base64').toString('utf8');
+  if(typeof cipher!=='string')throw errorCode('qldt_encoding','QLĐT trả envelope không phải UTF-8.');
   let text='';for(let i=0;i<cipher.length;i++)text+=String.fromCharCode(cipher.charCodeAt(i)^key.charCodeAt(i%key.length));return text;
 }
 async function qldtPost(session,action,func,extra) {
@@ -360,10 +368,7 @@ async function widgetAction(action,kind,id,params) {
   if(action==='previous'||action==='next')setWidgetSelection(kind,id,navigateWidget(selection,rows,kind,action==='previous'?-1:1));
   else if(action==='mode')setWidgetSelection(kind,id,{...selection,mode:selection.mode==='exam'?'study':'exam',index:0});
   else if(action==='calendar') {
-    const picker=new DatePicker();picker.initialDate=new Date(selection.day+'T12:00:00');
-    const dates=(snapshot().classes||[]).map(r=>new Date(r.startAt)).sort((a,b)=>a-b);
-    if(dates.length){picker.minimumDate=dates[0];picker.maximumDate=dates[dates.length-1];}
-    const value=await picker.pickDate();if(value)setWidgetSelection(kind,id,{...selection,day:isoDay(value),index:0});
+    writeState('pending-action.json',{kind,action:'calendar',day:selection.day});await openOriginalApp();return;
   } else if(action==='sync') {
     writeState('pending-action.json',{kind,action:'sync'});await openOriginalApp();return;
   } else {writeState('pending-action.json',{kind,action:'open'});await openOriginalApp();return;}
@@ -460,6 +465,27 @@ function setWidgetSelection(kind,id,value) {
   const selections=readState('widgets.json');selections[kind+':'+id]=value;writeState('widgets.json',selections);
 }
 function errorCode(code,message) { const error=new Error(message);error.code=code;return error; }
+let cardGeneration=0;
+function normalizeCardUID(value) {
+  const uid=String(value||'').replace(/[:\s-]/g,'').toUpperCase();
+  if(!/^(?:[0-9A-F]{2}){4,10}$/.test(uid))throw errorCode('nfc_invalid_uid','Shortcut không trả UID thẻ hợp lệ.');
+  return uid;
+}
+async function requestCardUID() {
+  const requestId=UUID.string(),started=Date.now();
+  const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
+  callback.addParameter('name','BPA — Quét thẻ');callback.addParameter('input','text');
+  callback.addParameter('text',JSON.stringify({requestId}));
+  const response=await callback.open();
+  const value=JSON.parse(response.result||'null');
+  if(!value||value.requestId!==requestId)throw errorCode('nfc_unverified','Chưa xác minh được kết quả quét thuộc yêu cầu BPA.');
+  const at=Date.parse(value.scannedAt);
+  if(!Number.isFinite(at)||at<started-2000||at>Date.now()+2000)throw errorCode('nfc_stale','Kết quả thẻ không thuộc lần quét hiện tại.');
+  return normalizeCardUID(value.uid);
+}
+async function sendNativeEvent(app,channel,type,extra={}) {
+  await app.evaluateJavaScript(`bpaHost.event(${JSON.stringify('better_phenikaa/'+channel)},'event',${JSON.stringify({type,...extra})});null`,false);
+}
 async function syncPortal() {
   if(Keychain.contains('BPA.qldt-session')) {
     try {return await fetchNativeQldt(JSON.parse(Keychain.get('BPA.qldt-session')));}
@@ -496,13 +522,13 @@ function safeManagedPath(path) {
   return path;
 }
 async function pickManaged(kind) {
-  const paths=await DocumentPicker.open(kind==='font'?['public.font']:['public.image']);
+  const paths=await DocumentPicker.open(kind==='font'?['public.data']:['public.image']);
   if(!paths.length)return null;
   const source=paths[0],name=source.split('/').pop(),directory=bpaFM.joinPath(bpaDirectory(),'files');
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);
   const path=bpaFM.joinPath(directory,UUID.string()+'-'+name);
   bpaFM.copy(source,path);
-  const bytes=bpaFM.read(path),size=bytes.toRawString().length;
+  const bytes=bpaFM.read(path),size=dataSize(bytes);
   return {path,name,size,mimeType:kind==='font'?'font/ttf':'image/'+name.split('.').pop().toLowerCase()};
 }
 async function scheduleExamReminders() {
@@ -545,7 +571,7 @@ async function handlePlatform(call,app) {
   if(channel==='local_files') {
     if(method==='pickFile')return await pickManaged(args.kind);
     if(method==='fileExists')return bpaFM.fileExists(safeManagedPath(args));
-    if(method==='readFile'){const path=safeManagedPath(args.path),data=bpaFM.read(path);if(data.toRawString().length>args.maximumBytes)throw errorCode('file_too_large','Tệp vượt giới hạn.');return data.toBase64String();}
+    if(method==='readFile'){const path=safeManagedPath(args.path),data=bpaFM.read(path);if(dataSize(data)>args.maximumBytes)throw errorCode('file_too_large','Tệp vượt giới hạn.');return data.toBase64String();}
   }
   if(channel==='widget_pin'&&method==='requestPin') {
     installWidgetScripts();
@@ -554,31 +580,52 @@ async function handlePlatform(call,app) {
   if(channel==='daily_sync') {
     if(method==='syncReminders')return await scheduleExamReminders();
     if(method==='recordAppSyncSuccess'){writeState('sync-status.json',{lastSuccessAtMillis:Date.now()});return null;}
+    if(method==='refreshWidgetToday') {
+      const selections=readState('widgets.json');
+      for(const key of Object.keys(selections))selections[key]={...selections[key],day:isoDay(new Date()),index:0};
+      writeState('widgets.json',selections);return null;
+    }
     if(method==='status')return readState('sync-status.json',{lastSuccessAtMillis:0});
     if(method==='examNotice')return null;
     if(method==='clearReminders'){await Notification.removePending((await Notification.allPending()).filter(n=>n.identifier.startsWith('bpa.exam.')).map(n=>n.identifier));return null;}
-    if(['disable','refreshWidgetToday','ackExamNotice'].includes(method))return null;
+    if(['disable','ackExamNotice'].includes(method))return null;
     if(method==='enable')throw errorCode('automation_required','iOS yêu cầu thiết lập Automation; BPA không tự bật lịch đồng bộ.');
   }
   if(channel==='study_alarm'&&method==='setAlarm') {
+    const now=new Date(),next=new Date(now.getFullYear(),now.getMonth(),now.getDate(),args.hour,args.minute);
+    if(next.getTime()<=now.getTime()+30000)next.setDate(next.getDate()+1);
+    if(!Number.isInteger(args.hour)||!Number.isInteger(args.minute)||args.hour<0||args.hour>23||args.minute<0||args.minute>59||next.getTime()!==args.target||args.target>=args.classStart||args.target<=now.getTime()+30000||args.classStart-now.getTime()>=86400000)throw errorCode('alarm_occurrence','Thời điểm báo thức không khớp buổi học trong 24 giờ.');
     const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
     callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify(args));
     const response=await callback.open();
-    if(response.result!=='BPA_ALARM_CREATED')throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');
+    const receipt=JSON.parse(response.result||'null');
+    if(!receipt||receipt.status!=='BPA_ALARM_CREATED'||receipt.hour!==args.hour||receipt.minute!==args.minute||receipt.label!==args.label||receipt.target!==args.target||typeof receipt.alarmIdentifier!=='string'||!receipt.alarmIdentifier)throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');
     return true;
   }
   if(channel==='update_http'&&method==='fetch') {
     if(typeof args.url!=='string'||!/^https:\/\/[^/?#\s]+\//.test(args.url))throw errorCode('invalid_url','Cập nhật yêu cầu HTTPS.');
     const request=new Request(args.url);request.timeoutInterval=12;
-    const data=await request.load();if(data.toRawString().length>args.limit)throw errorCode('manifest_too_large','Manifest quá lớn.');return data.toBase64String();
+    const data=await request.load();if(dataSize(data)>args.limit)throw errorCode('manifest_too_large','Manifest quá lớn.');return data.toBase64String();
   }
   if(channel==='update') {
     if(method==='versionCode')return 51;
     if(method==='versionName')return 'cooc.1.6';
     if(method==='installStatus')return 'idle';
-    if(method==='hasBoundCard')return false;
-    if(['stopCard','cancel','removeBoundCard'].includes(method))return null;
-    if(['startBindCard','startCard'].includes(method))throw errorCode('scriptable_nfc_unavailable','Scriptable không có API mở đầu đọc NFC/đọc UID. Chưa có cầu tương đương đã kiểm chứng.');
+    if(method==='hasBoundCard')return Keychain.contains('BPA.bound-card-uid');
+    if(method==='removeBoundCard'){if(Keychain.contains('BPA.bound-card-uid'))Keychain.remove('BPA.bound-card-uid');return null;}
+    if(['stopCard','cancel'].includes(method)){cardGeneration++;return null;}
+    if(method==='startBindCard'||method==='startCard') {
+      const generation=++cardGeneration;
+      if(method==='startBindCard'&&Keychain.contains('BPA.bound-card-uid'))throw errorCode('already_bound','Thẻ đã được liên kết.');
+      const uid=await requestCardUID();
+      if(generation!==cardGeneration)throw errorCode('cancelled','Đã hủy yêu cầu thẻ.');
+      if(method==='startBindCard'){Keychain.set('BPA.bound-card-uid',uid);await sendNativeEvent(app,'update','cardBound');}
+      else {
+        const matched=Keychain.contains('BPA.bound-card-uid')&&Keychain.get('BPA.bound-card-uid')===uid;
+        await sendNativeEvent(app,'update',matched?'cardAccepted':'wrongCard');
+      }
+      return null;
+    }
     if(method==='canInstall')return false;
     if(['downloadAndInstall','installSettings'].includes(method))throw errorCode('web_update_unconfigured','Chưa có kênh cập nhật web đã ký tương đương updater Android.');
   }
@@ -600,6 +647,7 @@ async function openOriginalApp() {
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
   await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))});null`,false);
   let closed=false;
+  const jobs=new Set();
   const presentation=app.present(true).then(()=>{closed=true;});
   while(!closed) {
     let packet;
@@ -614,17 +662,27 @@ async function openOriginalApp() {
       if(!closed)await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
     }
     for(const call of packet.calls) {
-      let result;
-      try {result={id:call.id,result:await handlePlatform(call,app)};}
-      catch(error){result={id:call.id,error:{code:error.code||'scriptable_error',message:error.message}};}
-      if(!closed)await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
+      const job=(async()=>{
+        let result;
+        try {result={id:call.id,result:await handlePlatform(call,app)};}
+        catch(error){result={id:call.id,error:{code:error.code||'scriptable_error',message:error.message}};}
+        if(!closed)await app.evaluateJavaScript(`bpaHost.result(${JSON.stringify(result)});null`,false);
+      })();
+      jobs.add(job);job.then(()=>jobs.delete(job),()=>jobs.delete(job));
     }
   }
+  cardGeneration++;
+  await Promise.allSettled([...jobs]);
   await presentation;
 }
 async function bpaMain() {
   const params=typeof args==='undefined'?{}:args.queryParameters||{};
-  const kind=params.kind||DEFAULT_KIND,id=params.instance||DEFAULT_INSTANCE;
+  let widgetOptions={};
+  if(typeof args!=='undefined'&&args.widgetParameter) {
+    try {widgetOptions=JSON.parse(args.widgetParameter);}catch(_){widgetOptions={instance:String(args.widgetParameter)};}
+    if(!widgetOptions||typeof widgetOptions!=='object')throw errorCode('widget_parameter','Tham số widget không hợp lệ.');
+  }
+  const kind=params.kind||widgetOptions.kind||DEFAULT_KIND,id=params.instance||widgetOptions.instance||DEFAULT_INSTANCE;
   if(config.runsInWidget){Script.setWidget(await renderBPAWidget(kind,id));Script.complete();return;}
   installWidgetScripts();
   if(params.action){await widgetAction(params.action,kind,id,params);}

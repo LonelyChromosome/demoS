@@ -34,3 +34,33 @@ test('widget data is sorted by start and scoped to selected day',()=>{
   const c=context();c.input={classes:[{startAt:'2026-10-12T15:00:00',endAt:'2026-10-12T17:00:00',id:2},{startAt:'2026-10-13T08:00:00',endAt:'2026-10-13T09:00:00',id:3},{startAt:'2026-10-12T08:00:00',endAt:'2026-10-12T10:00:00',id:1}]};
   const ids=vm.runInContext('widgetRows(input,{mode:"study",day:"2026-10-12"},"small").map(x=>x.id)',c);assert.deepEqual(Array.from(ids),[1,2]);
 });
+test('NFC bridge rejects invalid UID rather than treating content as an ID',()=>{
+  const c=context();c.uid='04:A2:7F:1B:5E:80:00';assert.equal(vm.runInContext('normalizeCardUID(uid)',c),'04A27F1B5E8000');
+  for(const value of ['NoIdentifierInCompatibilityMode','https://example.com','123','ZZ:11:22:33']){c.uid=value;assert.throws(()=>vm.runInContext('normalizeCardUID(uid)',c));}
+});
+test('NFC receipt must match this request nonce and scan time',async()=>{
+  const c=context();c.UUID={string:()=> 'request-1'};
+  c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-2',scannedAt:new Date().toISOString()})};}};
+  await assert.rejects(vm.runInContext('requestCardUID()',c),/yêu cầu BPA/);
+  c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-1',scannedAt:'2000-01-01T00:00:00Z'})};}};
+  await assert.rejects(vm.runInContext('requestCardUID()',c),/hiện tại/);
+  c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04:A2:7F:1B:5E:80:00',requestId:'request-1',scannedAt:new Date().toISOString()})};}};
+  assert.equal(await vm.runInContext('requestCardUID()',c),'04A27F1B5E8000');
+});
+test('Scriptable Data semantics preserve binary file hashes and UTF8 QLDT envelopes',()=>{
+  const c=context();
+  class DataMock {
+    constructor(bytes){this.bytes=Buffer.from(bytes);}
+    static fromString(text){return new DataMock(Buffer.from(text,'utf8'));}
+    static fromBase64String(text){return new DataMock(Buffer.from(text,'base64'));}
+    toBase64String(){return this.bytes.toString('base64');}
+    toRawString(){try{return new TextDecoder('utf-8',{fatal:true}).decode(this.bytes);}catch(_){return null;}}
+  }
+  c.Data=DataMock;
+  for(const bytes of [Buffer.from([0,255,128,254,1]),Buffer.alloc(65539,254),Buffer.from('Việt Nam','utf8')]) {
+    c.data=new DataMock(bytes);assert.equal(vm.runInContext('dataSize(data)',c),bytes.length);
+    assert.equal(vm.runInContext('sha256Data(data)',c),crypto.createHash('sha256').update(bytes).digest('hex'));
+  }
+  c.text=JSON.stringify({name:'Nguyễn Đạo',subject:'Cơ sở dữ liệu'});c.key='mode';
+  assert.equal(vm.runInContext('qldtDecode(qldtEncode(text,key),key)',c),c.text);
+});
