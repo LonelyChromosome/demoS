@@ -71,3 +71,6 @@ Tất cả hướng này giữ yêu cầu miễn phí. Chưa có thử nghiệm 
 - `reference/android-full-inventory.json` kiểm kê đủ 370 tệp tracked tại commit Android chuẩn, đọc blob Git nguyên bản; không đọc thay đổi ảnh cục bộ, không sửa DemoF3. Có hash, class, channel, action và XML ID; đây là kiểm kê, chưa phải đối chiếu hoàn tất từng thao tác.
 - Run 38283729172: build web qua, HTML VFX gốc chạy liên kết và xóa, phát đủ hai callback hoàn tất; ảnh/log đã lưu. Chưa kiểm chứng NFC hoặc vòng đời iframe trong Scriptable.
 - Data hướng dẫn action của nhà phát triển Actions tại gist chính thức (cập nhật 2026-08-06) chưa có NFC; không suy đoán identifier/parameters để tạo Shortcut giả. Cần xác minh export/action schema thật trước khi đóng gói.
+
+- Run 38284260747: Chromium và WebKit đều qua loader/VFX; bước publish lỗi `nothing to commit` do tài nguyên không đổi. Đã sửa để không tạo commit khi tree không đổi.
+- Bộ cài `BPA.scriptable` dùng envelope từ export Scriptable thật (source công khai `supermamon/scriptable-scripts/Import-Script/Import-Script.scriptable`); tự chuẩn bị tài nguyên và script widget. Chưa xác minh import trên iPhone.

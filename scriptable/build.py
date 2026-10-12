@@ -30,3 +30,6 @@ host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/ass
 host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'
 host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)
+
+# Export envelope matches a real Scriptable-exported file; device import unverified.
+(root/'scriptable/BPA.scriptable').write_text(json.dumps({'always_run_in_app':True,'icon':{'color':'deep-blue','glyph':'calendar-alt'},'name':'BPA','script':host,'share_sheet_inputs':[]},ensure_ascii=False,indent=2)+'\n')

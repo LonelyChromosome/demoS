@@ -33,7 +33,7 @@ jobs:
       - name: Include Scriptable host and original widget assets
         run: |
           mkdir -p build/web/scriptable
-          cp scriptable/BPA.js scriptable/BPA-Scriptable-Sync.js scriptable/README.md build/web/scriptable/
+          cp scriptable/BPA.js scriptable/BPA.scriptable scriptable/BPA-Scriptable-Sync.js scriptable/README.md build/web/scriptable/
           cp -R ios/WidgetAssets build/web/widget-assets
           python3 tool/build_widget_assets.py
       - name: Exercise local Flutter loader in Chromium
@@ -74,5 +74,7 @@ jobs:
           git -C compiled-resources config user.name github-actions[bot]
           git -C compiled-resources config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git -C compiled-resources add .
-          git -C compiled-resources commit -m "Compile BPA resources from $GITHUB_SHA"
-          git -C compiled-resources push origin HEAD:scriptable-web
+          if ! git -C compiled-resources diff --cached --quiet; then
+            git -C compiled-resources commit -m "Compile BPA resources from $GITHUB_SHA"
+            git -C compiled-resources push origin HEAD:scriptable-web
+          fi
