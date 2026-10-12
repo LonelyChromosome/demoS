@@ -27,13 +27,25 @@ jobs:
       - name: Verify preserved BPA core contracts
         run: bash tool/test_core.sh
       - name: Compile app and three-widget extension
-        run: flutter build ios --release --no-codesign --build-number=51
+        run: |
+          set -euo pipefail
+          flutter build ios --release --no-codesign --build-number=51 2>&1 | tee "$RUNNER_TEMP/ios-build.log"
       - name: Package unsigned build for inspection only
         run: |
           mkdir -p dist/Payload
           cp -R build/ios/iphoneos/Runner.app dist/Payload/
           cd dist
           zip -qr BPA-1.6-iPhone-UNSIGNED.ipa Payload
+      - name: Save native build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BPA-iOS-build-diagnostics-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/ios-build.log
+            ios/Runner.xcodeproj/project.pbxproj
+            ios/Podfile
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         with:
           name: BPA-1.6-iPhone-unsigned-${{ github.sha }}

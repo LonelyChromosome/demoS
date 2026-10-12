@@ -40,6 +40,8 @@ embed.add_file_reference(widget.product_reference, true).settings = { 'ATTRIBUTE
   end
 end
 widget.build_configurations.each do |config|
+  config.build_settings['PRODUCT_NAME'] = 'BPAWidgets'
+  config.build_settings['PRODUCT_MODULE_NAME'] = 'BPAWidgets'
   config.build_settings['INFOPLIST_FILE'] = 'BPAWidgets/Info.plist'
   config.build_settings['GENERATE_INFOPLIST_FILE'] = 'NO'
   config.build_settings['SKIP_INSTALL'] = 'YES'

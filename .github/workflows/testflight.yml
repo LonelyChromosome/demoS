@@ -1,0 +1,81 @@
+name: BPA iPhone signed TestFlight build
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  FLUTTER_SUPPRESS_ANALYTICS: true
+jobs:
+  signed:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - name: Derive monotonically increasing build number
+        run: echo "BPA_BUILD_NUMBER=$((51 + $GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
+      - name: Restore protected signing files
+        env:
+          P12_BASE64: ${{ secrets.IOS_DISTRIBUTION_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_P12_PASSWORD }}
+          RUNNER_PROFILE: ${{ secrets.IOS_RUNNER_PROFILE_BASE64 }}
+          WIDGET_PROFILE: ${{ secrets.IOS_WIDGET_PROFILE_BASE64 }}
+        run: python3 tool/prepare_signing.py
+      - name: Unlock signing keychain
+        env:
+          P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_P12_PASSWORD }}
+        run: |
+          set -euo pipefail
+          security create-keychain -p "$SIGNING_KEYCHAIN_PASSWORD" "$RUNNER_TEMP/bpa-signing.keychain-db"
+          security set-keychain-settings -lut 21600 "$RUNNER_TEMP/bpa-signing.keychain-db"
+          security unlock-keychain -p "$SIGNING_KEYCHAIN_PASSWORD" "$RUNNER_TEMP/bpa-signing.keychain-db"
+          security import "$RUNNER_TEMP/bpa-signing.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$RUNNER_TEMP/bpa-signing.keychain-db"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$SIGNING_KEYCHAIN_PASSWORD" "$RUNNER_TEMP/bpa-signing.keychain-db"
+          security list-keychains -d user -s "$RUNNER_TEMP/bpa-signing.keychain-db" login.keychain-db
+      - name: Configure standard host and signed widget extension
+        run: |
+          gem install xcodeproj --no-document --user-install
+          bash tool/generate_ios.sh
+          flutter pub get
+      - run: python3 tool/check_source_reuse.py
+      - run: bash tool/test_core.sh
+      - name: Build signed iPhone package
+        run: flutter build ipa --release --build-number="$BPA_BUILD_NUMBER" --export-options-plist="$RUNNER_TEMP/bpa-export.plist"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BPA-iPhone-signed-${{ github.run_number }}
+          path: build/ios/ipa/*.ipa
+          retention-days: 14
+      - name: Upload to TestFlight
+        env:
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ASC_ISSUER: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          ASC_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,os
+          from pathlib import Path
+          directory=Path.home()/'.appstoreconnect/private_keys'
+          directory.mkdir(parents=True,exist_ok=True)
+          key=directory/('AuthKey_'+os.environ['ASC_KEY_ID']+'.p8')
+          key.write_bytes(base64.b64decode(os.environ['ASC_KEY'],validate=True)); key.chmod(0o600)
+          PY
+          xcrun altool --upload-app --type ios --file build/ios/ipa/*.ipa --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER"
+      - name: Clean runner signing material
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/bpa-signing.keychain-db" || true
+          python3 - <<'PY'
+          import os,shutil
+          from pathlib import Path
+          for name in ('bpa-signing.p12','bpa-export.plist','RUNNER_PROFILE.mobileprovision','WIDGET_PROFILE.mobileprovision'):
+              (Path(os.environ['RUNNER_TEMP'])/name).unlink(missing_ok=True)
+          shutil.rmtree(Path.home()/'.appstoreconnect/private_keys',ignore_errors=True)
+          PY
