@@ -14,7 +14,9 @@ Bộ nạp đã render màn hình đăng nhập gốc trong Chromium, ảnh/log 
 Nhánh `scriptable-web` đã có tài nguyên. Chưa xác minh cài/chạy trên iPhone thật.
 Không trình bày file host hiện tại là gói app đã hoàn tất.
 
-Khi tài nguyên đã được phát hành, mở `BPA.js` bằng Scriptable và chạy BPA.
+File nhập là `BPA.scriptable`: lưu trong Files, mở/chia sẻ sang Scriptable,
+thêm BPA rồi chạy. Envelope được tạo theo file export Scriptable thật,
+nhưng thao tác import chưa được xác minh trên iPhone. `BPA.js` là source cùng gói.
 Bộ nạp lưu tài nguyên trong vùng dữ liệu cục bộ của Scriptable. Thêm widget
 lên Home Screen vẫn cần thao tác iOS; khả năng tương tác/cập nhật và hình ảnh
 của cả ba widget chưa đạt hợp đồng Android parity.
