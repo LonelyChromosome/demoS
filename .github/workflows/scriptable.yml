@@ -30,6 +30,20 @@ jobs:
           TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js
       - name: Build original app UI for Scriptable WebView
         run: flutter build web --release --no-web-resources-cdn --base-href=/demoS/
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.0'
+          cache: false
+      - name: Compile and sign the real Clock Shortcut on Linux
+        run: |
+          cherri_dir="$RUNNER_TEMP/bpa-cherri-src"
+          git clone https://github.com/electrikmilk/cherri.git "$cherri_dir"
+          git -C "$cherri_dir" checkout a66db15b7f247f3121726c2a2b72becfeef3d96b
+          (cd "$cherri_dir" && go build -o "$RUNNER_TEMP/bpa-cherri" .)
+          mkdir -p build/shortcuts
+          cp scriptable/shortcuts/BPA-Alarm.cherri build/shortcuts/
+          "$RUNNER_TEMP/bpa-cherri" build/shortcuts/BPA-Alarm.cherri --skip-sign --derive-uuids
+          python3 tool/sign_shortcut.py "build/shortcuts/BPA — Đặt báo thức_unsigned.shortcut" build/web/shortcuts/BPA-Alarm.shortcut
       - name: Include Scriptable host and original widget assets
         run: |
           mkdir -p build/web/scriptable

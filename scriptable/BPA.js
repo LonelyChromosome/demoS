@@ -753,10 +753,11 @@ async function handlePlatform(call,app) {
     if(next.getTime()<=now.getTime()+30000)next.setDate(next.getDate()+1);
     if(!Number.isInteger(args.hour)||!Number.isInteger(args.minute)||args.hour<0||args.hour>23||args.minute<0||args.minute>59||next.getTime()!==args.target||args.target>=args.classStart||args.target<=now.getTime()+30000||args.classStart-now.getTime()>=86400000)throw errorCode('alarm_occurrence','Thời điểm báo thức không khớp buổi học trong 24 giờ.');
     const callback=new CallbackURL('shortcuts://x-callback-url/run-shortcut');
-    callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify(args));
+    const requestId=UUID.string();
+    callback.addParameter('name','BPA — Đặt báo thức');callback.addParameter('input','text');callback.addParameter('text',JSON.stringify({...args,requestId}));
     const response=await callback.open();
     const receipt=JSON.parse(response.result||'null');
-    if(!receipt||receipt.status!=='BPA_ALARM_CREATED'||receipt.hour!==args.hour||receipt.minute!==args.minute||receipt.label!==args.label||receipt.target!==args.target||typeof receipt.alarmIdentifier!=='string'||!receipt.alarmIdentifier)throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');
+    if(!receipt||receipt.status!=='BPA_ALARM_CREATED'||Number(receipt.hour)!==args.hour||Number(receipt.minute)!==args.minute||receipt.label!==args.label||Number(receipt.target)!==args.target||receipt.requestId!==requestId||typeof receipt.createdAlarm!=='string'||!receipt.createdAlarm.trim())throw errorCode('clock_unverified','Shortcut chưa xác nhận tạo đúng báo thức.');
     return true;
   }
   if(channel==='update_http'&&method==='fetch') {

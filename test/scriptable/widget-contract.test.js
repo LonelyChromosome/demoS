@@ -23,3 +23,12 @@ test('theme editor previews use the shared widget renderer without changing the 
  const out=await vm.runInContext('handlePlatform({channel:"better_phenikaa/widget_render",method:"renderPreview",arguments:{surface:"large",widthDp:320,heightDp:150,theme:"custom",widgetStart:0xffdddddd}},null)',c);
  assert.equal(out,'preview-bytes');assert.equal(captured.kind,'overview');assert.equal(captured.hostWidth,320);assert.equal(captured.items[0].id,'a');
 });
+test('Clock receipts must contain a returned alarm and this request nonce',async()=>{
+ const c=host(),target=new Date(Date.now()+3600000);target.setSeconds(0,0);
+ c.input={hour:target.getHours(),minute:target.getMinutes(),target:+target,classStart:+target+3600000,label:'QA fixture'};c.UUID={string:()=> 'alarm-request'};
+ let captured;
+ c.CallbackURL=class {addParameter(k,v){if(k==='text')captured=JSON.parse(v);}async open(){return {result:JSON.stringify({...captured,status:'BPA_ALARM_CREATED',createdAlarm:'Mock Clock output; not device evidence'})};}};
+ assert.equal(await vm.runInContext('handlePlatform({channel:"better_phenikaa/study_alarm",method:"setAlarm",arguments:input},null)',c),true);assert.equal(captured.requestId,'alarm-request');
+ c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({...c.input,status:'BPA_ALARM_CREATED',requestId:'old',createdAlarm:'Mock'})};}};
+ await assert.rejects(vm.runInContext('handlePlatform({channel:"better_phenikaa/study_alarm",method:"setAlarm",arguments:input},null)',c),e=>e.code==='clock_unverified');
+});

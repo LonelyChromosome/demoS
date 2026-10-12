@@ -111,3 +111,11 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Đã nối `NativeWidgetPreview` trên Scriptable bằng cầu `widget_render/renderPreview`; editor và Home Screen dùng chung renderer, preview không thay theme đang áp dụng.
 - Đối chiếu thêm renderer slide Android: small dùng tỷ lệ 320×64 và baseline/font fractions gốc, có dòng hình thức thi. Cập nhật cache dependency để host mới không dùng gói cũ thiếu `widget-palette.js`.
 - Run 38298285495 dừng tại QA widget do trang kiểm tra origin `about:blank` tải ảnh HTTP, khiến canvas tainted; chưa publish tài nguyên. Đã đổi trang QA sang cùng origin, không bỏ kiểm tra hoặc coi run đỏ là thành công.
+
+## Đường ký Shortcut mới — 2026-10-13
+
+- Shortcuty có API multipart không cần key theo tài liệu của nhà cung cấp: https://github.com/Shortcuty/Signing-Server-API-Documentation . Không lặp lại HubSign.
+- Probe chỉ chứa một action trả chuỗi chẩn đoán đã nhận HTTP 200, AEA1, 21,593 bytes. SHA-256 input và signed envelope đều khớp phản hồi. Đây là bằng chứng có thể ký workflow từ Linux, chưa phải bằng chứng iPhone đã import/chạy.
+- Thêm source `BPA-Alarm.cherri`: Clock CreateAlarmIntent thật, không nhắc việc hay notification giả; không lặp theo ngày. Chỉ tạo receipt khi action Clock trả đối tượng Alarm, gửi kèm nonce yêu cầu. Không tạo UUID báo thức giả.
+- Pipeline compile bằng Cherri source cố định `a66db15b7f247f3121726c2a2b72becfeef3d96b`, ký qua Shortcuty một lần với timeout, kiểm tra AEA1 và cả hai digest. Không gửi giá trị runtime hoặc dữ liệu tài khoản.
+- Chưa công nhận Clock DONE: còn kiểm tra compiler, gói ký thật, import và thời điểm chuông trên iPhone. NFC vẫn cần schema/export thật của action Read NFC Tag, không bịa AppIntent identifier.
