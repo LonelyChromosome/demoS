@@ -24,6 +24,12 @@ runner.add_dependency(widget) unless runner.dependencies.any? { |dependency| dep
 embed = runner.copy_files_build_phases.find { |phase| phase.name == 'Embed App Extensions' } || runner.new_copy_files_build_phase('Embed App Extensions')
 embed.dst_subfolder_spec = '13'
 embed.add_file_reference(widget.product_reference, true).settings = { 'ATTRIBUTES' => ['RemoveHeadersOnCopy'] }
+# Flutter Thin Binary reads the processed app plist. Embed extensions before it
+# so Xcode's bundle dependency graph has no copy -> thin -> plist -> copy cycle.
+phases = runner.build_phases
+phases.delete(embed)
+thin_index = phases.index { |phase| phase.respond_to?(:name) && phase.name == 'Thin Binary' }
+phases.insert(thin_index || 0, embed)
 [runner, widget].each do |target|
   target.build_configurations.each do |config|
     config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.0'
