@@ -16,7 +16,7 @@ thật trong môi trường này. Unit test và build không thay thế kiểm t
 | Ba renderer widget | IMPLEMENTED / UNVERIFIED | Canvas port từ XML/Kotlin, vector icon gốc, 13 ảnh gốc Widget2, state riêng | 18 trường hợp/theme/state qua Chromium và WebKit; còn so pixel/thao tác trên iPhone |
 | Tương tác widget tại Home Screen | CHƯA TÌM RA GIẢI PHÁP | Scriptable dùng URL mở app; small chỉ một vùng bấm; `refreshAfterDate` không bảo đảm thời điểm cập nhật | Chưa tìm được cách giữ nguyên thao tác/tốc độ cập nhật và animation ngay trên Home Screen |
 | NFC bấm gọi đầu đọc và UID | CHƯA TÌM RA GIẢI PHÁP | Đã có callback UID + nonce/thời gian quét, lưu Keychain và ghép state/VFX gốc; consumer Shortcut và ứng viên NFC Helper đọc-only; NFC.cool automation trả phí nên loại | Chưa có scan UID thật; callback NFC Helper chưa xác minh trên iPhone |
-| Báo thức | COMPILED / UNVERIFIED | Workflow đã compile có Clock CreateAlarmIntent thật; receipt có nonce và đối tượng Alarm trả về | Ký artifact thực đang chờ đồng ý gửi source tới Shortcuty; import/chuông đúng ngày trên iPhone chưa thử |
+| Báo thức | SIGNED / UNVERIFIED | Workflow đã compile có Clock CreateAlarmIntent thật; receipt có nonce và đối tượng Alarm trả về | Artifact đã ký AEA1 sau khi người dùng cho phép; import/chuông đúng ngày trên iPhone chưa thử |
 | Nhắc thi 7/3/1 | IMPLEMENTED / UNVERIFIED | Port planner Android: 09:00, gộp môn, due range 7/3/1, SHA-256 identity, catalog trợ lý gốc; Notification API | Delivery/reconcile khi app tắt, quyền và hủy/đổi lịch phải so trên iPhone |
 | Sync khi chuyển sang app khác | CHƯA TÌM RA GIẢI PHÁP | Đã thêm Request transport dùng nguyên wire format Android và phiên Keychain; chưa thử chuyển app trên iPhone | Chưa kiểm chứng thực tế; code không được coi là đã cấp thời gian nền |
 | Đồng bộ theo lịch | NOT STARTED | Không thêm auto 06:00 vì người dùng đã bác việc coi đó là chức năng mới | Chỉ triển khai nếu có hành vi tương ứng trong bản chuẩn đã chốt |
@@ -145,3 +145,10 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Clock source cuối đã compile cục bộ, truyền giờ dạng HH:mm; chưa gửi artifact thực tới Shortcuty vì đang chờ xác nhận sau automatic approval rejection. Feed không chứa một file Clock đã ký giả.
 - Phạm vi vẫn là toàn bộ app. Các mục chưa khép kín: đăng nhập tự hoàn tất/auto-login tương đương; lifecycle sync khi chuyển app; tương tác/animation Home Screen; scan UID trên thẻ/iPhone thật; import/chạy Clock. Không đánh dấu ứng dụng hoàn tất vì CI xanh.
 - Hướng tiếp theo cho login: thử dùng cùng WebView để chuyển auth rồi phục hồi UI qua token một lần, tránh phụ thuộc nút đóng; cần chứng minh vòng đời JS/queue và không replay VFX trước khi bật. Hướng sync nền: thử executor Run Script của Shortcuts/App Intent với giao diện app tách khỏi tác vụ, đo thực tế sau khi chuyển app. Đây là hướng chưa kiểm chứng, không phải đã cấp thời gian nền.
+
+## Clock artifact được người dùng cho phép ký — 2026-10-13
+
+- Người dùng đã xác nhận cho phép gửi source Shortcut tới Shortcuty. Đã gửi đúng workflow công khai, không kèm input runtime/tài khoản/dữ liệu sinh viên.
+- API trả file AEA1 thật; input SHA-256, signed SHA-256 và size khớp phản hồi. Workflow compile có 36 action, đúng một Clock CreateAlarmIntent.
+- File `scriptable/shortcuts/BPA-Alarm.shortcut` và metadata được đưa vào source/gói app. CI kiểm tra hash, source không bị đổi và action Clock trước khi đóng gói; không gửi lại dịch vụ mỗi build.
+- Chưa có kiểm thử import, cấp quyền và chuông trên iPhone. Trạng thái SIGNED / UNVERIFIED, chưa DONE. Các phần đăng nhập, NFC, nền và Home Screen vẫn giữ phạm vi toàn bộ app.
