@@ -580,7 +580,7 @@ async function scheduleExamReminders() {
   let plan=examReminderPlan(current,Date.now(),scheduled,delivered);
   const pack=preference('better_phenikaa_assistant_pack_v1')||'normal';
   async function publish(id,subjects,days,at,keys) {
-    const n=new Notification();n.identifier=id;n.threadIdentifier='bpa.exam';n.title='Nhắc lịch thi';
+    const n=new Notification();n.identifier=id;n.threadIdentifier='bpa.exam';n.title='Nhắc lịch thi';n.sound='default';
     n.body=examAssistantText(pack,Math.min(...days),subjects.length,days.size>1);
     n.openURL=actionURL('open','overview','main');if(at)n.setTriggerDate(new Date(at));
     ledger.records[id]={milestoneKeys:keys};writeState('exam-reminders.json',{...ledger,delivered:[...delivered]});
@@ -610,7 +610,7 @@ function examChangeEvent(difference) {
 async function assistantNotification(useCase) {
   if(![1,3,4,5,6,7,8,9,11].includes(useCase))return false;
   const n=new Notification();n.identifier=useCase===1?'bpa.stale':useCase<=5?'bpa.changes':'bpa.exam.test';
-  n.threadIdentifier=n.identifier;n.title=useCase===1?'Đã lâu chưa đồng bộ':useCase<=5?'Lịch học kỳ thay đổi':'Nhắc lịch thi';
+  n.threadIdentifier=n.identifier;n.sound='default';n.title=useCase===1?'Đã lâu chưa đồng bộ':useCase<=5?'Lịch học kỳ thay đổi':'Nhắc lịch thi';
   n.body=assistantTemplate(useCase).replace('X','5').replace('N','2');n.openURL=actionURL('open','overview','main');
   await n.schedule();return true;
 }
