@@ -19,9 +19,19 @@ test('base manifest matches every installable module and excludes full app bundl
 test('base sync uses the original live page transport, not Scriptable Request',()=>{
  const source=fs.readFileSync('scriptable/base/sync.js','utf8');assert.match(source,/original\.makeRequest\.call\(original/);assert.doesNotMatch(source,/new Request\(/);assert.match(source,/QLDT_REQUEST_TIMEOUT/);
 });
-test('duplicate completion in the same page callback is ignored and original bridge is restored',async()=>{
+test('mailbox works without completion, ignores duplicate results and restores original bridge',async()=>{
  const original={marker:'university'},page=vm.createContext({window:{edu:{system:{makeRequest(){}}},flutter_inappwebview:original},edu:{system:{makeRequest(){}}},setTimeout,clearTimeout});
  const c=vm.createContext({module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);
- c.evaluate=(_web,code)=>new Promise((resolve,reject)=>{page.completion=resolve;try{vm.runInContext(code,page);}catch(error){reject(error);}});c.source='(()=>{window.flutter_inappwebview.callHandler("ok",1,"{}");window.flutter_inappwebview.callHandler("ok",1,"{}");return "done";})()';
- const result=await vm.runInContext('portalCall(null,evaluate,source,"ok","error",()=>{})',c);assert.equal(JSON.stringify(result),'{}');await new Promise(r=>setTimeout(r,5));assert.equal(page.window.flutter_inappwebview,original);
+ c.evaluate=async(_web,code,callback)=>{assert.equal(callback,false);assert.equal(typeof page.completion,'undefined');return vm.runInContext(code,page);};c.delay=ms=>new Promise(r=>setTimeout(r,ms));c.source='(()=>{window.flutter_inappwebview.callHandler("ok",1,"{}");window.flutter_inappwebview.callHandler("ok",1,"{}");return "done";})()';
+ const result=await vm.runInContext('portalCall(null,evaluate,source,"ok","error",()=>{},delay)',c);assert.equal(JSON.stringify(result),'{}');await new Promise(r=>setTimeout(r,5));assert.equal(page.window.flutter_inappwebview,original);assert.equal(Object.keys(page.window.__bpaPortalJobs).length,0);
+});
+test('asynchronous portal results cross mailbox without any callback evaluation',async()=>{
+ const page=vm.createContext({window:{edu:{system:{makeRequest(){}}}},edu:{system:{makeRequest(){}}},setTimeout,clearTimeout}),c=vm.createContext({module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);
+ c.evaluate=async(_web,code,callback)=>{assert.equal(callback,false);return vm.runInContext(code,page);};c.delay=ms=>new Promise(r=>setTimeout(r,ms));c.source='(()=>{setTimeout(()=>window.flutter_inappwebview.callHandler("ok",1,JSON.stringify({records:[1]})),10);return "started";})()';
+ assert.equal(JSON.stringify(await vm.runInContext('portalCall(null,evaluate,source,"ok","error",()=>{},delay)',c)),JSON.stringify({records:[1]}));assert.equal(Object.keys(page.window.__bpaPortalJobs).length,0);
+});
+test('cancelled mailbox gates late success and restores the original bridge',async()=>{
+ const original={marker:'original'},page=vm.createContext({window:{edu:{system:{makeRequest(){}}},flutter_inappwebview:original},edu:{system:{makeRequest(){}}},setTimeout,clearTimeout}),c=vm.createContext({module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);
+ let cancelled=false;c.evaluate=async(_web,code,callback)=>{assert.equal(callback,false);return vm.runInContext(code,page);};c.check=()=>{if(cancelled)throw Object.assign(Error('closed'),{code:'cancelled'});};c.delay=async()=>{cancelled=true;};c.source='(()=>{window.lateBridge=window.flutter_inappwebview;return "started";})()';
+ await assert.rejects(vm.runInContext('portalCall(null,evaluate,source,"ok","error",check,delay)',c),{code:'cancelled'});await page.window.lateBridge.callHandler('ok',1,'{}');await new Promise(r=>setTimeout(r,5));assert.equal(page.window.flutter_inappwebview,original);assert.equal(Object.keys(page.window.__bpaPortalJobs).length,0);
 });

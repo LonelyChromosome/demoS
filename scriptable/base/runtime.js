@@ -10,11 +10,13 @@ function portalOverlay(ui,nonce,state){
  const html=ui.replace('<head>','<head><script>window.__BPA_PARENT_NONCE__='+JSON.stringify(nonce)+';</script>');
  return `(()=>{
   if(!window.bpaBaseNative){
-   const frame=document.createElement('iframe');frame.id='bpa-base-frame';frame.setAttribute('sandbox','allow-scripts allow-forms');frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#f9fbff';
+   const viewport=document.querySelector('meta[name=viewport]')||document.head.appendChild(document.createElement('meta'));viewport.name='viewport';viewport.content='width=device-width,initial-scale=1,viewport-fit=cover';
+   document.documentElement.style.setProperty('transform','none','important');document.documentElement.style.setProperty('zoom','1','important');
+   const frame=document.createElement('iframe');frame.id='bpa-base-frame';frame.setAttribute('sandbox','allow-scripts allow-forms');frame.style.cssText='all:initial;position:fixed;inset:0;width:100%;height:100%;box-sizing:border-box;border:0;z-index:2147483647;background:#f9fbff;transform:none;zoom:1';
    const queue=[];let current=${JSON.stringify(state)};
    window.bpaBaseNative={drain:()=>JSON.stringify(queue.splice(0)),set:value=>{current=value;frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');}};
    window.addEventListener('message',event=>{if(event.source===frame.contentWindow&&event.data?.bpa===${JSON.stringify(nonce)}&&event.data.command)queue.push(event.data.command);});
-   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');frame.srcdoc=${JSON.stringify(html)};document.body.append(frame);
+   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');frame.srcdoc=${JSON.stringify(html)};document.documentElement.append(frame);
   }else window.bpaBaseNative.set(${JSON.stringify(state)});
   return 'mounted';
  })()`;
@@ -42,17 +44,18 @@ async function run(web,ctx){
  const presentation=ctx.presentation.then(()=>{closed=true;});
  async function session(sync){
   diagnostic('login');
-  let deadline=Date.now()+600000,opened=false;
+  let deadline=Date.now()+600000,opened=false,readyKey=null;
   while(Date.now()<deadline){check();let raw=null;try{raw=await ctx.evaluate(web,`location.hostname==='qldtbeta.phenikaa-uni.edu.vn'?(${sync.probeScript.trim().replace(/;$/,'')}):null`,false,5000);}catch(error){if(error.code==='cancelled')throw error;}
-   check();if(raw){let value;try{value=JSON.parse(raw);}catch(_){}if(value&&['tokenJWT','userId','iM'].every(k=>typeof value[k]==='string'&&value[k].trim())){portal=true;Keychain.set('BPA.qldt-session',JSON.stringify(value));diagnostic('portal-ready');return value;}}
-   if(!opened){portal=false;opened=true;await web.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');}else await ctx.delay(200);
+   check();if(raw){let value;try{value=JSON.parse(raw);}catch(_){}if(value&&['tokenJWT','userId','iM'].every(k=>typeof value[k]==='string'&&value[k].trim())){const key=JSON.stringify([value.tokenJWT,value.userId,value.iM]);if(readyKey!==key){readyKey=key;await ctx.delay(200);continue;}portal=true;Keychain.set('BPA.qldt-session',JSON.stringify(value));diagnostic('portal-ready');return value;}}
+   readyKey=null;if(!opened){portal=false;opened=true;await web.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');}else await ctx.delay(200);
   }throw Object.assign(Error('Đăng nhập QLĐT quá thời gian. Hãy thử lại.'),{code:'login_timeout'});
  }
  async function synchronize(){
-  if(busy)return;busy=true;await status('Đang chuẩn bị đồng bộ…');
+  if(busy)return;busy=true;
   try{
+   await status('Đang chuẩn bị đồng bộ…');
    const sync=importModule(await ctx.install('sync.js'));check();await session(sync);await screen('Đang lấy và xác minh lịch QLĐT…');
-   const result=await sync.fetch(web,ctx.evaluate,check,diagnostic);diagnostic('verified');
+   const result=await sync.fetch(web,ctx.evaluate,check,diagnostic,ctx.delay);diagnostic('verified');
    check();const nextPrefs={...readJSON(fm,prefPath,{})};let name=prefValue(nextPrefs,'better_phenikaa_account_display_name_v1');
    if(prefValue(nextPrefs,'better_phenikaa_account_setup_complete_v1')!==true){const alert=new Alert();alert.title='Tên hiển thị';alert.message='Kiểm tra tên của bạn trước khi lưu lịch.';alert.addTextField('Tên của bạn',result.semester.displayName);alert.addAction('Lưu');alert.addCancelAction('Hủy');if(await alert.presentAlert()===-1)throw Object.assign(Error('Đã hủy lưu lịch.'),{code:'cancelled'});name=alert.textFieldValue(0).trim();if(!name)throw Error('Cần có tên hiển thị.');}
    check();const previous=prefValue(nextPrefs,'better_phenikaa_base_retention_v1')||readJSON(fm,fm.joinPath(root,'semester-v1.json'),null),retention=sync.retain(previous,result.semester);if(!retention.startedAt)retention.startedAt=result.termStartedAt;

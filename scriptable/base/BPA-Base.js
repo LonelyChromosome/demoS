@@ -4,16 +4,16 @@
 const BASE_RELEASE="__BPA_BASE_RELEASE__";
 const BASE_FILES={
   "runtime.js": {
-    "size": 10037,
-    "sha256": "fff3db439a3ef835ee0bf497809793faa22fea1d3ce35b8be862fadbea9cb5cd"
+    "size": 10642,
+    "sha256": "14e0721bc0ee565b74ec657fb447595b71b1e32f17f5ec90c687785e87fc600c"
   },
   "ui.html": {
-    "size": 13566,
-    "sha256": "703bdea2bb0857e939caf0d13e85fa4368a8bd6ed3f6d5047e28ed4db04c83eb"
+    "size": 13909,
+    "sha256": "ab9ea7b2dca594ba2c891cf63cb2345a871b0f8baac3b70b59e2f03a7ebee4ef"
   },
   "sync.js": {
-    "size": 25711,
-    "sha256": "a1ff996bc98f5a6e15bfc8ce3053f8797f22abab762b876b9eaeacc910a59200"
+    "size": 26619,
+    "sha256": "6dfd2789945c5454b4fd87d58b6df0297e7c974fecbce448ac4e05f74b3bab4d"
   },
   "Roboto-Regular.ttf": {
     "size": 171676,
