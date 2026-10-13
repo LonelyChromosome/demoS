@@ -4,12 +4,12 @@
 const BASE_RELEASE="__BPA_BASE_RELEASE__";
 const BASE_FILES={
   "runtime.js": {
-    "size": 14386,
-    "sha256": "29eeb6a754aefe56eb9461683a2acb3b6dcd1cc6c815aaffea942b3f08ac4cf6"
+    "size": 14457,
+    "sha256": "e00598651c9b09cea20c0fbf45b88432c94fa5d0aaf9133bca00878dcefb2c3c"
   },
   "ui.html": {
-    "size": 19301,
-    "sha256": "8fe4ea5bf905151bbbdb50c723bb5ae667d65312e0823a64062f4e67a8fb67ba"
+    "size": 19519,
+    "sha256": "f27248e9bfaccb934c4567c2c840114a2859d4cc1113f7d1483ab104b05df663"
   },
   "sync.js": {
     "size": 26619,

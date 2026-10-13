@@ -29,7 +29,7 @@ async function run(web,ctx){
  if(journal&&journal.epoch===oldEpoch&&readJSON(fm,fm.joinPath(root,'sync-job-'+journal.requestId+'.json'),null)?.status!=='committed')for(const [name,value]of Object.entries(journal.before))saveAtomic(fm,fm.joinPath(root,name),value);
  if(journal)saveAtomic(fm,fm.joinPath(root,'sync-commit.json'),null);
  const ownedEpoch=oldEpoch+1;saveAtomic(fm,epochPath,{value:ownedEpoch});saveAtomic(fm,fm.joinPath(root,'sync-lease.json'),null);
- let manager=null,service=null,lastMedia={};
+ let manager=null,service=null,lastMedia={},localLoaded=false;
  let prefs=readJSON(fm,prefPath,{}),snapshot=prefValue(prefs,'better_phenikaa_snapshot_v1'),busy=false,closed=false,portal=false;const nonce=UUID.string();
  const check=()=>{ctx.check();if(closed||readJSON(fm,epochPath,{value:0}).value!==ownedEpoch)throw Object.assign(Error('Đã đóng BPA.'),{code:'cancelled'});};
  // Keep imported old data even if its optional module is absent.
@@ -40,7 +40,7 @@ async function run(web,ctx){
  function extraState(){return {modules:manager?.list()||[],theme:readJSON(fm,fm.joinPath(root,'theme.json'),{}),alarms:!!readJSON(fm,fm.joinPath(root,'modules.json'),{active:{}}).active.alarms};}
  async function screen(message='',error=false){check();const state={snapshot,authenticated:portal,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error,...extraState()};
   if(portal){await ctx.evaluate(web,portalOverlay(ui,nonce,state),false,10000);}
-  else {await Promise.race([web.loadHTML(ui,'https://bpa.local/'),ctx.presentation.then(()=>{throw Object.assign(Error('Đã đóng BPA.'),{code:'cancelled'});})]);check();await ctx.evaluate(web,`bpaBase.set(${JSON.stringify(state)});null`,false,10000);lastMedia={};}
+  else {if(!localLoaded){await Promise.race([web.loadHTML(ui,'https://bpa.local/'),ctx.presentation.then(()=>{throw Object.assign(Error('Đã đóng BPA.'),{code:'cancelled'});})]);check();localLoaded=true;lastMedia={};}await ctx.evaluate(web,`bpaBase.set(${JSON.stringify(state)});null`,false,10000);}
   await applyMedia();
  }
  async function status(message){check();await ctx.evaluate(web,`(window.bpaBaseNative||window.bpaBase).set(${JSON.stringify({snapshot,authenticated:portal,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error:false,...extraState()})});null`,false,10000);}
@@ -54,7 +54,7 @@ async function run(web,ctx){
   let deadline=Date.now()+600000,opened=false,readyKey=null;
   while(Date.now()<deadline){check();let raw=null;try{raw=await ctx.evaluate(web,`location.hostname==='qldtbeta.phenikaa-uni.edu.vn'?(${sync.probeScript.trim().replace(/;$/,'')}):null`,false,5000);}catch(error){if(error.code==='cancelled')throw error;}
    check();if(raw){let value;try{value=JSON.parse(raw);}catch(_){}if(value&&['tokenJWT','userId','iM'].every(k=>typeof value[k]==='string'&&value[k].trim())){const key=JSON.stringify([value.tokenJWT,value.userId,value.iM]);if(readyKey!==key){readyKey=key;await ctx.delay(200);continue;}portal=true;Keychain.set('BPA.qldt-session',JSON.stringify(value));diagnostic('portal-ready');return value;}}
-   readyKey=null;if(!opened){portal=false;opened=true;await web.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');}else await ctx.delay(200);
+   readyKey=null;if(!opened){portal=false;localLoaded=false;opened=true;await web.loadURL('https://qldtbeta.phenikaa-uni.edu.vn/');}else await ctx.delay(200);
   }throw Object.assign(Error('Đăng nhập QLĐT quá thời gian. Hãy thử lại.'),{code:'login_timeout'});
  }
  async function synchronize(){
