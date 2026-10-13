@@ -34,11 +34,11 @@ async function run(web,ctx){
  const fontPath=await ctx.install('Roboto-Regular.ttf');
  ui=ui.replace('<style>',"<style>@font-face{font-family:Roboto;src:url(data:font/ttf;base64,"+fm.read(fontPath).toBase64String()+");font-display:swap}");
  function diagnostic(phase,extra={}){saveAtomic(fm,fm.joinPath(root,'base-sync-status.json'),{phase,at:Date.now(),...extra});}
- async function screen(message='',error=false){check();const state={snapshot,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error};
+ async function screen(message='',error=false){check();const state={snapshot,authenticated:portal,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error};
   if(portal){await ctx.evaluate(web,portalOverlay(ui,nonce,state),false,10000);}
   else {await Promise.race([web.loadHTML(ui,'https://bpa.local/'),ctx.presentation.then(()=>{throw Object.assign(Error('Đã đóng BPA.'),{code:'cancelled'});})]);check();await ctx.evaluate(web,`bpaBase.set(${JSON.stringify(state)});null`,false,10000);}
  }
- async function status(message){check();await ctx.evaluate(web,`(window.bpaBaseNative||window.bpaBase).set(${JSON.stringify({snapshot,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error:false})});null`,false,10000);}
+ async function status(message){check();await ctx.evaluate(web,`(window.bpaBaseNative||window.bpaBase).set(${JSON.stringify({snapshot,authenticated:portal,displayName:prefValue(prefs,'better_phenikaa_account_display_name_v1'),busy,message,error:false})});null`,false,10000);}
  const presentation=ctx.presentation.then(()=>{closed=true;});
  async function session(sync){
   diagnostic('login');
