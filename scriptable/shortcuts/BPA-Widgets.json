@@ -1,9 +1,9 @@
 {
-  "source_sha256": "c38a1b629761ce4b57d5c7508f5c8ecd8b11d862c86e8067cca1f7b79c2fa252",
-  "workflow_source_sha256": "669365980b6621e93e7efc830d0aa39704d60d84db66cc2f53ba273fce992bef",
-  "signed_sha256": "cbde98074f2e2abdcf177e7254e6fc783bb81c5664b918ad3725cc43c39c4940",
+  "source_sha256": "c2f824a6c67a7cbb8b871321bf6215bf61af9bbc9a109f4d627ab8f2d17afb76",
+  "workflow_source_sha256": "88fd0d451da1e4a917f779a3b0f537284f95c5626245083dca7713e96e003ada",
+  "signed_sha256": "feb69376f6a90ddf137ae32cae04691efdae604b4d5d498ad30f24f35a92a322",
   "format": "AEA1",
-  "size": 24387,
+  "size": 24468,
   "clock_create_actions": 0,
   "reader_callback_actions": 0,
   "widget_refresh_actions": 1,
