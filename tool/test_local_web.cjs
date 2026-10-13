@@ -1,6 +1,6 @@
 // Browser QA of the local loader, not a Scriptable/iPhone functional test.
 const fs=require('fs'),path=require('path'),vm=require('vm'),http=require('http');
-async function capturePaintedFrame(page,file) {
+async function capturePaintedFrame(page,file,content=false) {
   for(let attempt=0;attempt<30;attempt++) {
     const bytes=await page.screenshot();
     // Decode outside WebKit: creating another canvas in the app while its
@@ -8,7 +8,8 @@ async function capturePaintedFrame(page,file) {
     const {PNG}=require(path.join(process.env.BPA_QA_NODE_MODULES,'pngjs'));
     const image=PNG.sync.read(bytes);let ink=0;
     const end=Math.floor(image.height*.75)*image.width*4;
-    for(let i=0;i<end;i+=4)if(image.data[i]<160&&image.data[i+1]<160&&image.data[i+2]<160&&image.data[i+3]>200)ink++;
+    const start=Math.floor(image.height*(content?.25:0))*image.width*4;
+    for(let i=start;i<end;i+=4)if(image.data[i]<160&&image.data[i+1]<160&&image.data[i+2]<160&&image.data[i+3]>200)ink++;
     fs.writeFileSync(file,bytes);
     if(ink>1000)return bytes;
     await page.waitForTimeout(100);
@@ -136,15 +137,14 @@ async function main(){
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.locator('[aria-label="Lịch học"]').or(page.getByText('Lịch học',{exact:true})).first().waitFor({state:'visible',timeout:30000});
     await page.waitForTimeout(1200);
-    const beforeRefresh=await capturePaintedFrame(page,qaDir+'/worker-reopened-before.png');
+    const beforeRefresh=await capturePaintedFrame(page,qaDir+'/worker-reopened-before.png',true);
     await page.evaluate(preferences=>{window.bpaHost.replacePreferences(preferences);window.bpaHost.event('better_phenikaa/sync_worker','event',{type:'refresh'});},worker.preferences);
     await page.waitForFunction(()=>window.__bpaWorkerRefresh?.records===5,{},{timeout:30000});
     // Dart endOfFrame and WebKit's compositor commit are separate events.
     // Keep the visual assertion and wait for the changed native surface.
     let afterRefresh;
     for(let attempt=0;attempt<50;attempt++){
-      afterRefresh=await page.screenshot();
-      fs.writeFileSync(qaDir+'/worker-reopened-after.png',afterRefresh);
+      afterRefresh=await capturePaintedFrame(page,qaDir+'/worker-reopened-after.png',true);
       if(!beforeRefresh.equals(afterRefresh))break;
       await page.waitForTimeout(100);
     }
