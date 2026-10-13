@@ -63,11 +63,12 @@ function cachedBundleReady() {
 function acquireStartupLease() {
   const name='startup-lease.json',path=bpaPath(name),old=readState(name,null);
   if(old&&Date.now()-old.at<120000)throw errorCode('startup_busy','Một lượt chuẩn bị BPA đang chạy. Hãy quay lại lượt đó.');
-  if(bpaFM.fileExists(path))bpaFM.remove(path);
+  // Never remove a lease that appeared after an initially empty read.
+  if(old&&bpaFM.fileExists(path))bpaFM.remove(path);
   const id=UUID.string(),claim=bpaPath('startup-claim-'+id+'.json');
   bpaFM.writeString(claim,JSON.stringify({id,at:Date.now()}));
   try{bpaFM.move(claim,path);}catch(error){if(bpaFM.fileExists(claim))bpaFM.remove(claim);throw errorCode('startup_busy','Một lượt chuẩn bị BPA đang chạy.');}
-  return {check(){if(readState(name,null)?.id!==id)throw errorCode('cancelled','Lượt chuẩn bị đã bị hủy.');},heartbeat(){this.check();writeState(name,{id,at:Date.now()});},release(){if(readState(name,null)?.id===id)writeState(name,null);}};
+  return {check(){if(readState(name,null)?.id!==id)throw errorCode('cancelled','Lượt chuẩn bị đã bị hủy.');},heartbeat(){this.check();writeState(name,{id,at:Date.now()});},release(){if(readState(name,null)?.id===id)bpaFM.remove(path);}};
 }
 async function prepareAppBundle(app) {
   if(cachedBundleReady())return {bundle:await ensureLocalBundle(true),presentation:null};
