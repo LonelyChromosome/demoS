@@ -120,3 +120,15 @@ yêu cầu trùng, sai offset và cancellation. Browser QA chuyển các resourc
 Flutter thật theo cùng giao thức chunk trong Chromium/WebKit, kiểm tra cả login,
 ảnh/theme, card VFX và worker lưu/reopen. Hiệu năng và nhiệt độ iPhone vẫn cần
 đo trên thiết bị thật. Bản 60 bao gồm toàn bộ sửa startup của bản 59.
+
+## Bản thử nghiệm 61 — sửa định dạng code khi import
+
+Phản hồi mới xác định Scriptable đứng ngay khi chia sẻ/import file, trước khi
+màn hình BPA xuất hiện; điện thoại không đơ toàn hệ thống. Chưa có cơ sở gán
+lần lỗi này cho xử lý 128 MB hoặc Flutter. Source 60 có một dòng nhúng Shortcut
+dài 98.919 ký tự. Bản 61 chia literal dài thành các chuỗi 120 ký tự ghép lại,
+trình bày object nhiều dòng; longest line 1.054 ký tự. Signed binary và các
+portal script không đổi byte. Node kiểm tra import envelope/source/line limit
+và hash từng signed Shortcut. Đây là loại bỏ một nghi phạm ở bước editor/import,
+không phải bằng chứng đã xác nhận hoặc chữa hết lỗi trên iPhone. Không xóa dữ
+liệu/app Scriptable để thử bản sửa.
