@@ -1,0 +1,30 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const runtimeSource=fs.readFileSync('scriptable/base/runtime.js','utf8'),syncSource=fs.readFileSync('scriptable/base/sync.js','utf8');
+function fixture({saved=true,login=false,fail=false,cancelName=false}={}){
+ const old={displayName:'OLD QA',syncedAt:'2026-10-12T08:00:00',source:'qldt',records:[{id:'old',isExam:false,subjectName:'Old QA',startAt:'2026-10-13T08:00:00',endAt:'2026-10-13T09:00:00'}]};
+ const prefs={'flutter.theme':'preserve-optional-module'};if(saved){prefs['flutter.better_phenikaa_snapshot_v1']=JSON.stringify(JSON.stringify(old));prefs['flutter.better_phenikaa_account_setup_complete_v1']='true';prefs['flutter.better_phenikaa_account_display_name_v1']='"QA"';}
+ const files=new Map([['/docs/BPA/preferences.json',JSON.stringify(prefs)]]),dirs=new Set(),keys=new Map(),installed=[],requests=[],screens=[];const session={tokenJWT:'local-only-test-token',userId:'student',iM:'test-mode',appId:'app',strChucNangId:'function'};if(!login)keys.set('BPA.qldt-session',JSON.stringify(session));let closed=false,close,queue=[{action:'sync'}],portal=false;
+ const presentation=new Promise(resolve=>close=()=>{closed=true;resolve();});
+ const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>a+'/'+b,fileExists:p=>files.has(p)||dirs.has(p),createDirectory:p=>dirs.add(p),readString:p=>files.get(p),writeString:(p,v)=>files.set(p,v),read:p=>({toBase64String:()=>Buffer.from(files.get(p),'binary').toString('base64')}),remove:p=>files.delete(p),move:(a,b)=>{files.set(b,files.get(a));files.delete(a);}};
+ class Request{constructor(url){this.url=url;this.response={statusCode:fail?503:200};requests.push(this);}async loadString(){if(fail)return '503';const action=this.url.split('/').at(-2);let Data;if(action==='DKH_ThongTin_MH'&&this.url.includes('DSA4FSku'))Data=[{ID:'term',THOIGIAN:'2026_2027_1'}];else if(action==='DKH_ThongTin_MH')Data=[{ID:'plan',MAKEHOACH:'2026_2027_1',DAOTAO_THOIGIANDAOTAO_ID:'term'}];else if(action==='DKH_Chung_MH')Data=[{DANGKY_KEHOACHDANGKY_ID:'plan',DAOTAO_THOIGIANDAOTAO_ID:'term',DAOTAO_HOCPHAN_ID:'subject',DAOTAO_HOCPHAN_TEN:'Môn Cơ sở dữ liệu',DANGKY_LOPHOCPHAN_ID:'class',DANGKY_LOPHOCPHAN_TEN:'N01',NGAYBATDAU:'01/09/2026',NGAYKETTHUC:'30/12/2026',QLSV_NGUOIHOC_HODEM:'Nguyễn',QLSV_NGUOIHOC_TEN:'QA'}];else Data=[{PHANLOAI:'LICHHOC',TENHOCPHAN:'Môn Cơ sở dữ liệu',NGAYHOC:'13/10/2026',GIOBATDAU:8,PHUTBATDAU:0,GIOKETTHUC:9,PHUTKETTHUC:30,TENLOPHOCPHAN:'N01',PHONGHOC_TEN:'A101'}];return JSON.stringify({Success:true,Data});}}
+ const syncCtx=vm.createContext({Buffer,Request,module:{exports:{}}});vm.runInContext(syncSource,syncCtx);
+ const context=vm.createContext({module:{exports:{}},Keychain:{contains:k=>keys.has(k),get:k=>keys.get(k),set:(k,v)=>keys.set(k,v),remove:k=>keys.delete(k)},Alert:class{addTextField(){}addAction(){}addCancelAction(){}async presentAlert(){return cancelName?-1:0;}textFieldValue(){return 'Nguyễn QA';}},importModule:()=>syncCtx.module.exports});vm.runInContext(runtimeSource,context);
+ const web={async loadHTML(html){portal=false;assert.ok(html.includes('Theo tuần'));},async loadURL(url){assert.equal(url,'https://qldtbeta.phenikaa-uni.edu.vn/');portal=true;},async evaluateJavaScript(script){if(script.startsWith('bpaBase.set(')){screens.push(JSON.parse(script.slice(12,script.indexOf(');null'))));return null;}throw Error('Unexpected evaluation '+script.slice(0,50));}};
+ const ctx={fm,presentation,check(){if(closed)throw Object.assign(Error('closed'),{code:'cancelled'});},async delay(){},async install(name){installed.push(name);const p='/modules/'+name;files.set(p,name==='ui.html'?fs.readFileSync('scriptable/base/ui.html','utf8'):'font');return p;},async evaluate(_web,script){if(script.startsWith('location.hostname')){assert.equal(portal,true);return JSON.stringify(session);}if(queue.length)return queue.splice(0);close();return [];}};
+ return {files,prefs,old,screens,installed,requests,keys,close,setQueue:q=>queue=q,run:()=>context.module.exports.run(web,ctx)};
+}
+test('real base runtime restores old calendar and imports only the sync module on demand',async()=>{
+ const f=fixture();await f.run();assert.equal(f.screens[0].snapshot.records[0].id,'old');assert.deepEqual(f.installed,['ui.html','Roboto-Regular.ttf','sync.js']);const updated=JSON.parse(f.files.get('/docs/BPA/preferences.json'));assert.equal(updated['flutter.theme'],'preserve-optional-module');assert.equal(JSON.parse(JSON.parse(updated['flutter.better_phenikaa_snapshot_v1'])).records[0].subjectName,'Cơ sở dữ liệu');assert.ok(f.screens.some(s=>s.message==='Đồng bộ thành công'));assert.ok(f.requests.length>3);assert.ok([...f.files.keys()].every(k=>!k.includes('Widget')));
+});
+test('first login uses the already presented QLDT WebView then saves verified schedule',async()=>{
+ const f=fixture({saved:false,login:true});await f.run();assert.equal(f.screens[0].snapshot,null);assert.ok(f.keys.has('BPA.qldt-session'));assert.ok(f.screens.at(-1).snapshot.records.length===1);assert.equal(f.screens.at(-1).snapshot.displayName,'Nguyễn QA');
+});
+test('HTTP failure leaves the complete old snapshot and preferences intact',async()=>{
+ const f=fixture({fail:true});await f.run();assert.deepEqual(JSON.parse(f.files.get('/docs/BPA/preferences.json')),f.prefs);assert.equal(f.screens.at(-1).error,true);assert.equal(f.requests.length,1);assert.equal(f.screens.at(-1).snapshot.records[0].id,'old');
+});
+test('cancelling first name setup cannot save a partial new account',async()=>{
+ const f=fixture({saved:false,cancelName:true});await f.run();assert.deepEqual(JSON.parse(f.files.get('/docs/BPA/preferences.json')),f.prefs);assert.equal(f.screens.at(-1).snapshot,null);
+});
+test('opening cached calendar does not import sync or request QLDT until user action',async()=>{
+ const f=fixture();f.setQueue([]);await f.run();assert.deepEqual(f.installed,['ui.html','Roboto-Regular.ttf']);assert.equal(f.requests.length,0);assert.equal(f.screens[0].snapshot.records[0].id,'old');
+});

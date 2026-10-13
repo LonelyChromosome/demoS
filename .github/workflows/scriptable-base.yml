@@ -1,0 +1,49 @@
+name: BPA cooc 1.0 Scriptable base
+on:
+  push:
+    branches: [feature/scriptable-base]
+    paths: [scriptable/base/**, test/scriptable-base/**, tool/test_base_web.cjs, .github/workflows/scriptable-base.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: scriptable-base
+  cancel-in-progress: true
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Build pinned base installer and verify protocol/data contracts
+        run: |
+          python3 scriptable/base/build.py --release "$GITHUB_SHA"
+          git diff --exit-code -- scriptable/base/sync.js scriptable/base/manifest.json
+          TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js test/scriptable-base/*.test.js
+      - name: Base login and day/week calendar in Chromium
+        env:
+          BPA_QA_NODE_MODULES: ${{ runner.temp }}/bpa-base-qa/node_modules
+        run: |
+          npm install --prefix "$RUNNER_TEMP/bpa-base-qa" playwright
+          node tool/test_base_web.cjs
+      - name: Base login and day/week calendar in WebKit
+        env:
+          BPA_QA_NODE_MODULES: ${{ runner.temp }}/bpa-base-qa/node_modules
+          BPA_QA_ENGINE: webkit
+        run: |
+          "$RUNNER_TEMP/bpa-base-qa/node_modules/.bin/playwright" install --with-deps webkit
+          node tool/test_base_web.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: BPA-Base-QA
+          path: build/base-qa
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BPA-Base-installer
+          path: scriptable/base/BPA.scriptable
+          retention-days: 14
