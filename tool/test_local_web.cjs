@@ -1,6 +1,6 @@
 // Browser QA of the local loader, not a Scriptable/iPhone functional test.
 const fs=require('fs'),path=require('path'),vm=require('vm'),http=require('http');
-async function capturePaintedNameScreen(page,file) {
+async function capturePaintedFrame(page,file) {
   for(let attempt=0;attempt<30;attempt++) {
     const bytes=await page.screenshot();
     // Decode outside WebKit: creating another canvas in the app while its
@@ -10,10 +10,10 @@ async function capturePaintedNameScreen(page,file) {
     const end=Math.floor(image.height*.75)*image.width*4;
     for(let i=0;i<end;i+=4)if(image.data[i]<160&&image.data[i+1]<160&&image.data[i+2]<160&&image.data[i+3]>200)ink++;
     fs.writeFileSync(file,bytes);
-    if(ink>1000)return;
+    if(ink>1000)return bytes;
     await page.waitForTimeout(100);
   }
-  throw Error('Name screen semantics exist but its screenshot is still blank');
+  throw Error('App semantics exist but its screenshot is still blank');
 }
 async function main(){
   const root=path.resolve('build/web'),files=[];
@@ -101,7 +101,7 @@ async function main(){
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.getByText('Nhấp để sắp xếp tên của bạn',{exact:true}).waitFor({state:'visible',timeout:30000});
     await page.waitForTimeout(600); // Original Material route/chip transitions must settle before visual QA.
-    await capturePaintedNameScreen(page,qaDir+'/login-resume-name.png');
+    await capturePaintedFrame(page,qaDir+'/login-resume-name.png');
     await page.getByText('QALogin',{exact:true}).click();
     await page.waitForTimeout(250);
     await page.getByRole('button').last().click();
@@ -136,12 +136,19 @@ async function main(){
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.locator('[aria-label="Lịch học"]').or(page.getByText('Lịch học',{exact:true})).first().waitFor({state:'visible',timeout:30000});
     await page.waitForTimeout(1200);
-    const beforeRefresh=await page.screenshot();
+    const beforeRefresh=await capturePaintedFrame(page,qaDir+'/worker-reopened-before.png');
     await page.evaluate(preferences=>{window.bpaHost.replacePreferences(preferences);window.bpaHost.event('better_phenikaa/sync_worker','event',{type:'refresh'});},worker.preferences);
     await page.waitForFunction(()=>window.__bpaWorkerRefresh?.records===5,{},{timeout:30000});
-    const afterRefresh=await page.screenshot();
+    // Dart endOfFrame and WebKit's compositor commit are separate events.
+    // Keep the visual assertion and wait for the changed native surface.
+    let afterRefresh;
+    for(let attempt=0;attempt<50;attempt++){
+      afterRefresh=await page.screenshot();
+      fs.writeFileSync(qaDir+'/worker-reopened-after.png',afterRefresh);
+      if(!beforeRefresh.equals(afterRefresh))break;
+      await page.waitForTimeout(100);
+    }
     if(beforeRefresh.equals(afterRefresh))throw Error('Worker refresh acknowledged but the app frame did not change');
-    fs.writeFileSync(qaDir+'/worker-reopened-before.png',beforeRefresh);fs.writeFileSync(qaDir+'/worker-reopened-after.png',afterRefresh);
     if(await page.evaluate(()=>window.__bpaLoginSyncs)!==0)throw Error('Receiving a committed worker result started another sync');
     await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
