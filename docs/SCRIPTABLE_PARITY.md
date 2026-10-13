@@ -212,3 +212,10 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - Clock, NFC, widgets and detached sync now have implementations to exercise together from the single BPA installer. Actual iOS extension lifetime, import, tag compatibility, notification delivery, Clock ringing and Home Screen rendering remain UNVERIFIED. These are test candidates, not a confirmed complete-app release.
 
 - Added the missing stale-sync reminder bridge from Android: first notification strictly after two days, then daily 09:00 maintenance with duplicate suppression, cancellation on new success/logout and the original assistant text. The single installer generates the internal reminder runner and guides native daily Automation setup; acknowledgment is not recorded as verified delivery. No automatic 06:00 QLDT sync is added.
+
+## Single-file integrated test handoff 2026-10-13
+
+- Version 58 resource package published after run 38359221510, source `953ae86112984368d9468ea78eafda8b1dd6a15a`; core Flutter checks, 72 Node checks, real compiled/signed Shortcut verification, Chromium and WebKit passed.
+- Reviewed QA artifact 11794029364 directly. Both original Dart worker receipts contain payload/complete once, five synthetic records and zero recursive QLDT syncs. Both reopened-app before/after checks require painted schedule content. The WebKit after image visibly contains the new Worker QA row; no console errors or loader failures.
+- User-facing file: `scriptable/BPA.scriptable`, 225789 bytes, SHA-256 `88ce2ed959ba2ada51536ab4af28cb6b1c8620a826054b830929f555b6e629a7`. One installer only; internal components and native first-use setup remain part of iPhone testing.
+- Initial web resource download: 96 files, 128277994 bytes. No new signed public updater feed is issued for this test handoff. Physical iPhone behavior remains UNVERIFIED.
