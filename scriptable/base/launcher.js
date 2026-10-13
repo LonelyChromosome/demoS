@@ -2,6 +2,7 @@
 // icon-color: deep-blue; icon-glyph: calendar-alt;
 // BPA cooc 1.0 base. Additional features are not initialized by this installer.
 const BASE_RELEASE=__RELEASE__;
+const BASE_NAME=module.filename.split('/').pop().replace(/\.js$/,'');
 const BASE_FILES=__FILES__;
 __HASH__
 async function startBase(){
@@ -26,8 +27,21 @@ async function startBase(){
    const pending=path+'.pending';fm.write(pending,data);check();if((await integrity(fm.read(pending))).sha256!==expected.sha256)throw Error('Không lưu được phần cài BPA.');if(fm.fileExists(path))fm.remove(path);fm.move(pending,path);await delay(1);check();return path;
   })();installing.set(name,job);try{return await job;}finally{installing.delete(name);}
  }
- try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,baseFiles:BASE_FILES,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:module.filename.split('/').pop().replace(/\.js$/,''),evaluate,delay,check,presentation});}
+ try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,baseFiles:BASE_FILES,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:BASE_NAME,evaluate,delay,check,presentation});}
  catch(error){if(!closed){try{await progress(error.message||String(error));}catch(_){}await presentation;}if(error.code!=='cancelled')console.error(error.message||String(error));}
 }
-await startBase();
+function widgetNotice(message){const widget=new ListWidget();widget.setPadding(16,16,16,16);widget.backgroundColor=new Color('#f9fbff');const title=widget.addText('BPA');title.font=Font.boldSystemFont(20);title.textColor=new Color('#102b73');widget.addSpacer(8);const text=widget.addText(message);text.font=Font.systemFont(13);widget.url='scriptable:///run?scriptName='+encodeURIComponent(BASE_NAME);Script.setWidget(widget);}
+async function runEntry(){
+ if(typeof config!=='undefined'&&config.runsInWidget){
+  const fm=FileManager.local(),root=fm.joinPath(fm.documentsDirectory(),'BPA'),hostPath=fm.joinPath(root,'module-host.json'),registryPath=fm.joinPath(root,'modules.json');
+  try{if(!fm.fileExists(hostPath)||!fm.fileExists(registryPath)||!JSON.parse(fm.readString(registryPath)).active?.widgets){widgetNotice('Mở BPA → Phần mở rộng → cài Widget.');return;}
+   const host=JSON.parse(fm.readString(hostPath));host.scriptName=BASE_NAME;if(!host.services||!fm.fileExists(host.services))throw Error('Cài lại phần Widget trong BPA.');
+   const parts=String(args.widgetParameter||'').trim().split(':'),known=['small','overview','widget2'].includes(parts[0]),kind=known?parts[0]:'overview',instance=(known?parts.slice(1):parts).join(':')||'main';
+   await importModule(host.services).runWidget(host,kind,instance);
+  }catch(error){widgetNotice(error.message||'Mở BPA để kiểm tra Widget.');}return;
+ }
+ if(typeof config!=='undefined'&&config.runsInApp===false){Safari.open('scriptable:///run?scriptName='+encodeURIComponent(BASE_NAME));return;}
+ await startBase();
+}
+await runEntry();
 Script.complete();

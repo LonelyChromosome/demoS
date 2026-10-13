@@ -16,7 +16,7 @@ hash_code=re.sub(r'async function sha256Cooperative\(.*?\n}\n','',hash_code,flag
 files={name:{'size':(here/name).stat().st_size,'sha256':hashlib.sha256((here/name).read_bytes()).hexdigest()} for name in ['runtime.js','ui.html','sync.js','module-manager.js','services.js','catalog.json']}
 if (here/'Roboto-Regular.ttf').exists():files['Roboto-Regular.ttf']={'size':(here/'Roboto-Regular.ttf').stat().st_size,'sha256':hashlib.sha256((here/'Roboto-Regular.ttf').read_bytes()).hexdigest()}
 (here/'manifest.json').write_text(json.dumps({'schema':1,'scope':'cooc 1.0 base: in-app day/week calendar and verified QLDT sync','files':files},ensure_ascii=False,indent=2)+'\n')
-entry=(here/'launcher.js').read_text().replace('__RELEASE__',json.dumps(args.release)).replace('__FILES__',json.dumps(files,ensure_ascii=False,indent=2)).replace('__HASH__',hash_code)
+entry=(here/'launcher.js').read_text().replace('__RELEASE__',json.dumps(args.release)).replace('__FILES__',json.dumps(files,ensure_ascii=False,separators=(',',':'))).replace('__HASH__',hash_code)
 (here/'BPA-Base.js').write_text(entry)
 envelope={'always_run_in_app':True,'icon':{'color':'deep-blue','glyph':'calendar-alt'},'name':'BPA Base','script':entry,'share_sheet_inputs':[]}
 (here/'BPA.scriptable').write_text(json.dumps(envelope,ensure_ascii=False,indent=2)+'\n')

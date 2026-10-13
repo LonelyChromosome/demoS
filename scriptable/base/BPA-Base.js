@@ -2,36 +2,8 @@
 // icon-color: deep-blue; icon-glyph: calendar-alt;
 // BPA cooc 1.0 base. Additional features are not initialized by this installer.
 const BASE_RELEASE="__BPA_BASE_RELEASE__";
-const BASE_FILES={
-  "runtime.js": {
-    "size": 14457,
-    "sha256": "e9b02a974932c187674d9b5e0cf10a4562b7391389bafa2e2b13086eed40c168"
-  },
-  "ui.html": {
-    "size": 19676,
-    "sha256": "ef43d478fc82396440d86a45ee1c047e4827b53bbf0c0ae441c238d74a5ae42a"
-  },
-  "sync.js": {
-    "size": 26619,
-    "sha256": "6dfd2789945c5454b4fd87d58b6df0297e7c974fecbce448ac4e05f74b3bab4d"
-  },
-  "module-manager.js": {
-    "size": 4940,
-    "sha256": "952dcde9d9265446df8dc05a639028265753f041a0d41b8334115b0b3e7a3148"
-  },
-  "services.js": {
-    "size": 8800,
-    "sha256": "6476bf6e106623ff5411a5935ef797278cbecd0110c38eebb63057c3f2aae31e"
-  },
-  "catalog.json": {
-    "size": 11796,
-    "sha256": "445045f409198a5f16bbe1e601a149335bc61ed7b1f4a04053a232ddc8e20726"
-  },
-  "Roboto-Regular.ttf": {
-    "size": 171676,
-    "sha256": "79e851404657dac2106b3d22ad256d47824a9a5765458edb72c9102a45816d95"
-  }
-};
+const BASE_NAME=module.filename.split('/').pop().replace(/\.js$/,'');
+const BASE_FILES={"runtime.js":{"size":14763,"sha256":"2b447a9302e4e54d59ef32402dc2af2085d4be89cc43edf8b518dbe58e0d4bc5"},"ui.html":{"size":19676,"sha256":"ef43d478fc82396440d86a45ee1c047e4827b53bbf0c0ae441c238d74a5ae42a"},"sync.js":{"size":26619,"sha256":"6dfd2789945c5454b4fd87d58b6df0297e7c974fecbce448ac4e05f74b3bab4d"},"module-manager.js":{"size":4940,"sha256":"952dcde9d9265446df8dc05a639028265753f041a0d41b8334115b0b3e7a3148"},"services.js":{"size":8956,"sha256":"0e0767b183ab110c1f85a779e0a7c9d330f93fde9ff7d0282ffa90355316044c"},"catalog.json":{"size":11796,"sha256":"445045f409198a5f16bbe1e601a149335bc61ed7b1f4a04053a232ddc8e20726"},"Roboto-Regular.ttf":{"size":171676,"sha256":"79e851404657dac2106b3d22ad256d47824a9a5765458edb72c9102a45816d95"}};
 function* sha256Work(raw) {
   const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
   const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],n=raw.length,blocks=Math.ceil((n+9)/64),rotate=(v,b)=>(v>>>b)|(v<<(32-b));
@@ -77,8 +49,21 @@ async function startBase(){
    const pending=path+'.pending';fm.write(pending,data);check();if((await integrity(fm.read(pending))).sha256!==expected.sha256)throw Error('Không lưu được phần cài BPA.');if(fm.fileExists(path))fm.remove(path);fm.move(pending,path);await delay(1);check();return path;
   })();installing.set(name,job);try{return await job;}finally{installing.delete(name);}
  }
- try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,baseFiles:BASE_FILES,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:module.filename.split('/').pop().replace(/\.js$/,''),evaluate,delay,check,presentation});}
+ try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,baseFiles:BASE_FILES,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:BASE_NAME,evaluate,delay,check,presentation});}
  catch(error){if(!closed){try{await progress(error.message||String(error));}catch(_){}await presentation;}if(error.code!=='cancelled')console.error(error.message||String(error));}
 }
-await startBase();
+function widgetNotice(message){const widget=new ListWidget();widget.setPadding(16,16,16,16);widget.backgroundColor=new Color('#f9fbff');const title=widget.addText('BPA');title.font=Font.boldSystemFont(20);title.textColor=new Color('#102b73');widget.addSpacer(8);const text=widget.addText(message);text.font=Font.systemFont(13);widget.url='scriptable:///run?scriptName='+encodeURIComponent(BASE_NAME);Script.setWidget(widget);}
+async function runEntry(){
+ if(typeof config!=='undefined'&&config.runsInWidget){
+  const fm=FileManager.local(),root=fm.joinPath(fm.documentsDirectory(),'BPA'),hostPath=fm.joinPath(root,'module-host.json'),registryPath=fm.joinPath(root,'modules.json');
+  try{if(!fm.fileExists(hostPath)||!fm.fileExists(registryPath)||!JSON.parse(fm.readString(registryPath)).active?.widgets){widgetNotice('Mở BPA → Phần mở rộng → cài Widget.');return;}
+   const host=JSON.parse(fm.readString(hostPath));host.scriptName=BASE_NAME;if(!host.services||!fm.fileExists(host.services))throw Error('Cài lại phần Widget trong BPA.');
+   const parts=String(args.widgetParameter||'').trim().split(':'),known=['small','overview','widget2'].includes(parts[0]),kind=known?parts[0]:'overview',instance=(known?parts.slice(1):parts).join(':')||'main';
+   await importModule(host.services).runWidget(host,kind,instance);
+  }catch(error){widgetNotice(error.message||'Mở BPA để kiểm tra Widget.');}return;
+ }
+ if(typeof config!=='undefined'&&config.runsInApp===false){Safari.open('scriptable:///run?scriptName='+encodeURIComponent(BASE_NAME));return;}
+ await startBase();
+}
+await runEntry();
 Script.complete();
