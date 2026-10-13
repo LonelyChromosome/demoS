@@ -322,9 +322,10 @@ function installWidgetScripts(sourceOverride=null) {
   }
 }
 async function openOriginalApp() {
-  const bundle=await ensureLocalBundle(true);
+  const app=new WebView(),prepared=await prepareAppBundle(app);if(!prepared)return;
+  const {bundle}=prepared;
   if(preference('better_phenikaa_account_setup_complete_v1')===true)await ensureReminderAutomation();
-  const app=new WebView();bootingApp=app;bootingBundle=bundle;
+  bootingApp=app;bootingBundle=bundle;
   await app.loadHTML(localAppHTML(bundle),'https://bpa.local/');
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
@@ -333,7 +334,7 @@ async function openOriginalApp() {
   const state={phase:'app',epoch:0,closed:false,waiters:[],bundle,loginResume:null,failure:null,preferences:initialPreferences,syncRevision:readState('sync-revision.json',{}).requestId||null};
   appSessions.set(app,state);
   const jobs=new Set();
-  const presentation=app.present(true).then(()=>{state.closed=true;syncGeneration++;if(state.pollInterrupt)state.pollInterrupt();wakeAppSession(state);});
+  const presentation=(prepared.presentation||app.present(true)).then(()=>{state.closed=true;syncGeneration++;if(state.pollInterrupt)state.pollInterrupt();wakeAppSession(state);});
   while(!state.closed) {
     if(state.failure)throw state.failure;
     if(state.phase!=='app'){await waitForAppSession(state);continue;}

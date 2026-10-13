@@ -1,5 +1,5 @@
 const BPA_RESOURCE_ROOT='https://raw.githubusercontent.com/LonelyChromosome/demoS/scriptable-web/';
-function sha256Raw(raw) {
+function* sha256Work(raw) {
   const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
   const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],n=raw.length,blocks=Math.ceil((n+9)/64),rotate=(v,b)=>(v>>>b)|(v<<(32-b));
   for(let block=0;block<blocks;block++) {
@@ -9,8 +9,15 @@ function sha256Raw(raw) {
     let[a,b,c,d,e,f,g,h]=H;
     for(let i=0;i<64;i++){const t1=(h+(rotate(e,6)^rotate(e,11)^rotate(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rotate(a,2)^rotate(a,13)^rotate(a,22))+((a&b)^(a&c)^(b&c)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
     [a,b,c,d,e,f,g,h].forEach((v,i)=>H[i]=(H[i]+v)|0);
+    if(block%1024===1023)yield;
   }
   return H.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');
+}
+function sha256Raw(raw) {const work=sha256Work(raw);let value;do{value=work.next();}while(!value.done);return value.value;}
+async function sha256Cooperative(raw,check=()=>{}) {
+  const work=sha256Work(raw);let value;
+  do{check();value=work.next();if(!value.done)await nativeDelay(4);}while(!value.done);
+  check();return value.value;
 }
 function base64ByteView(base64) {
   const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',values={};for(let i=0;i<64;i++)values[alphabet[i]]=i;
@@ -23,7 +30,7 @@ function validBundlePath(path) {
   return typeof path==='string'&&path.length<300&&!path.startsWith('/')&&!path.includes('\\')&&!path.split('/').some(v=>v==='..'||v==='.'||v==='.git'||!v);
 }
 const BPA_REQUIRED_BUNDLE_FILES=['main.dart.js','widget-renderer.js','widget-palette.js','scriptable/BPA.js'];
-async function ensureLocalBundle(allowPending=false) {
+async function ensureLocalBundle(allowPending=false,options={}) {
   const active=readState('bundle.json',null),pending=readState('pending-bundle.json',null);
   if(allowPending&&pending) {
     if(pending.bootAttempted) {
@@ -37,10 +44,11 @@ async function ensureLocalBundle(allowPending=false) {
     }
   }
   if(active&&active.versionCode>=BPA_UPDATE_CHANNEL.versionCode&&Array.isArray(active.files)&&BPA_REQUIRED_BUNDLE_FILES.every(name=>active.files.includes(name)&&bpaFM.fileExists(bpaFM.joinPath(active.path,name))))return active;
-  const value=await stageLocalBundle(BPA_RESOURCE_ROOT+'bpa-package.json');writeState('bundle.json',value);return value;
+  const value=await stageLocalBundle(BPA_RESOURCE_ROOT+'bpa-package.json',null,options.progress||null,options.check||(()=>{}),options.verifier||null);(options.check||(()=>{}))();writeState('bundle.json',value);return value;
 }
-async function stageLocalBundle(indexURL,release=null,progress=null,check=()=>{}) {
+async function stageLocalBundle(indexURL,release=null,progress=null,check=()=>{},verifier=null) {
   if(typeof indexURL!=='string'||!/^https:\/\/[^/?#\s]+\//.test(indexURL))throw errorCode('invalid_url','Gói cập nhật yêu cầu HTTPS.');
+  if(progress)await progress(0,0,{phase:'manifest'});
   const request=new Request(indexURL);request.timeoutInterval=30;
   const text=await request.loadString();if(request.response.statusCode!==200)throw errorCode('bundle_unavailable','Tài nguyên BPA chưa được phát hành.');
   check();
@@ -60,15 +68,33 @@ async function stageLocalBundle(indexURL,release=null,progress=null,check=()=>{}
   if(!bpaFM.fileExists(directory))bpaFM.createDirectory(directory,true);
   // Files are staged under a content identity. The active pointer changes only
   // after every asset matches its declared size and digest.
-  for(const file of manifest.files) {
+  for(const [index,file] of manifest.files.entries()) {
     check();
     const path=bpaFM.joinPath(directory,file.path);
-    if(bpaFM.fileExists(path)&&dataSize(bpaFM.read(path))===file.size&&sha256Data(bpaFM.read(path))===file.sha256){bytes+=file.size;if(progress)await progress(bytes,total);continue;}
+    const meta={index:index+1,count:manifest.files.length};
+    if(progress)await progress(bytes,total,{...meta,phase:'verify'});
+    if(bpaFM.fileExists(path)) {
+      const cached=await resourceIntegrity(bpaFM.read(path),verifier,check);
+      if(cached.size===file.size&&cached.sha256===file.sha256){bytes+=file.size;if(progress)await progress(bytes,total,{...meta,phase:'reuse'});continue;}
+    }
+    // Reuse an older committed package only after checking this manifest's hash.
+    const active=readState('bundle.json',null),oldPath=active?.path&&bpaFM.joinPath(active.path,file.path);
+    if(oldPath&&oldPath!==path&&bpaFM.fileExists(oldPath)) {
+      const old=bpaFM.read(oldPath),integrity=await resourceIntegrity(old,verifier,check);
+      if(integrity.size===file.size&&integrity.sha256===file.sha256){
+        const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
+        check();bpaFM.write(path,old);bytes+=file.size;if(progress)await progress(bytes,total,{...meta,phase:'reuse'});continue;
+      }
+    }
+    if(progress)await progress(bytes,total,{...meta,phase:'download'});
     const req=new Request(resourceRoot+file.path.split('/').map(encodeURIComponent).join('/'));req.timeoutInterval=40;
     const data=await req.load();
-    if(req.response.statusCode!==200||dataSize(data)!==file.size||sha256Data(data)!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
+    if(req.response.statusCode!==200)throw errorCode('bundle_http','Không tải được tài nguyên BPA (HTTP '+req.response.statusCode+').');
+    if(progress)await progress(bytes,total,{...meta,phase:'verify'});
+    const integrity=await resourceIntegrity(data,verifier,check);
+    if(integrity.size!==file.size||integrity.sha256!==file.sha256)throw errorCode('bundle_integrity','Không xác minh được tài nguyên '+file.path);
     const parent=path.slice(0,path.lastIndexOf('/'));if(!bpaFM.fileExists(parent))bpaFM.createDirectory(parent,true);
-    check();bpaFM.write(path,data);bytes+=file.size;if(progress)await progress(bytes,total);
+    check();bpaFM.write(path,data);bytes+=file.size;if(progress)await progress(bytes,total,{...meta,phase:'download'});
   }
   const value={path:directory,versionCode:manifest.versionCode,versionName:manifest.versionName,digest,files:manifest.files.map(f=>f.path)};
   check();return value;

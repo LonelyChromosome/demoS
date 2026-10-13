@@ -39,7 +39,7 @@ for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc'
 host+='const BPA_BUNDLED_SHORTCUTS='+json.dumps(shortcuts,ensure_ascii=False)+';\n'
 
 host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'+(root/'scriptable/sync-stale-reminders.js').read_text()+'\n'
-host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/widget-shortcut.js').read_text()+'\n'+(root/'scriptable/sync-worker.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
+host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/bootstrap.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/widget-shortcut.js').read_text()+'\n'+(root/'scriptable/sync-worker.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
 (root/'scriptable/BPA.js').write_text(host)
 
 # Export envelope matches a real Scriptable-exported file; device import unverified.

@@ -4,6 +4,8 @@ function setup(){
  const files=new Map(),directories=new Set();class Data{constructor(b){this.bytes=Buffer.from(b);}toBase64String(){return this.bytes.toString('base64');}}
  const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>a+'/'+b,fileExists:p=>files.has(p)||directories.has(p),createDirectory:p=>directories.add(p),readString:p=>files.get(p).toString(),writeString:(p,v)=>files.set(p,Buffer.from(v)),read:p=>new Data(files.get(p)),write:(p,d)=>files.set(p,d.bytes),remove:p=>files.delete(p),move:(a,b)=>{if(!files.has(a))throw Error('missing '+a);files.set(b,files.get(a));files.delete(a);}};
  const c=vm.createContext({Buffer,setTimeout,clearTimeout,module:{exports:{},filename:'/docs/BPA.js'},FileManager:{local:()=>fm},UUID:{string:()=> 'verification-fixture'}});
+ c.Timer={schedule:(ms,repeat,fn)=>{const id=setTimeout(fn,ms);return {invalidate:()=>clearTimeout(id)};}};
+ c.WebView=class {async loadHTML(){}async evaluateJavaScript(script){const encoded=JSON.parse(script.match(/bpaIntegrity\.digest\(("[^" ]*")\)/)[1]),bytes=Buffer.from(encoded,'base64');return {size:bytes.length,sha256:hash(bytes)};}};
  vm.runInContext(fs.readFileSync('scriptable/BPA.js','utf8'),c);
  const index={schema:1,versionCode:52,versionName:'cooc.1.6',files:[]},assets=new Map();
  for(const name of ['main.dart.js','widget-renderer.js','widget-palette.js','scriptable/BPA.js']){const bytes=Buffer.from(name==='scriptable/BPA.js'?"const DEFAULT_KIND='small';":'public fixture '+name);assets.set(name,bytes);index.files.push({path:name,size:bytes.length,sha256:hash(bytes)});}

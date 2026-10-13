@@ -22,8 +22,8 @@ async function main(){
   const fakeFM={readString:p=>fs.readFileSync(p,'utf8'),joinPath:(a,b)=>path.join(a,b)};
   const ctx=vm.createContext({module:{exports:{}},FileManager:{local:()=>fakeFM},console});
   vm.runInContext(fs.readFileSync('scriptable/BPA.js','utf8'),ctx);ctx.bundle={path:root,files};
-  const html=vm.runInContext('localAppHTML(bundle)',ctx);
-  const server=http.createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end(html);});
+  const html=vm.runInContext('localAppHTML(bundle)',ctx),bootstrap=vm.runInContext('bootstrapHTML()',ctx);
+  const server=http.createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end(req.url==='/bootstrap'?bootstrap:html);});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   const engine=process.env.BPA_QA_ENGINE||'chromium',drivers=require(path.join(process.env.BPA_QA_NODE_MODULES,'playwright'));
   const browser=await drivers[engine].launch(engine==='chromium'?{headless:true,executablePath:process.env.BPA_QA_CHROME||'/usr/bin/google-chrome',args:['--no-sandbox']}:{headless:true});
@@ -62,6 +62,7 @@ async function main(){
   },qaUpdate);
   let failure=null,vfxCallbacks=0;
   try {
+    await require('./test_bootstrap_web.cjs')(page,'http://127.0.0.1:'+server.address().port+'/bootstrap',qaDir);
     await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
     await page.evaluate(()=>window.bpaHost.init({}));
     await page.waitForSelector('flutter-view',{timeout:30000});

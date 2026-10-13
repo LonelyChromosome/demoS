@@ -64,3 +64,33 @@ phải kiểm chứng trên thiết bị. Đây chưa phải bộ cài hoàn ch�
 Chỉ đưa người dùng `BPA.scriptable`. File tự chuẩn bị bộ chạy widget/nhắc lịch và chứa các Shortcut đã ký; việc nhập thành phần, cài NFC Helper miễn phí, thiết lập Automation nhắc lịch và thêm widget được hướng dẫn trong app. Đồng bộ dùng inline runner độc lập, gọi cùng transaction Dart, có account epoch, journal rollback và nhận lại trạng thái khi mở app. Không đưa người dùng file module hoặc fixture riêng.
 
 Chuyển app/khóa màn hình, callback UID, chuông, nhắc lịch và Home Screen đều là kiểm tra thực tế còn phải thực hiện. Không ghi nhận import/guide acknowledgment là thử nghiệm thành công.
+
+## Bản thử nghiệm 59 — sửa bộ nạp sau phản hồi iPhone
+
+Video người dùng cho thấy Scriptable chưa mở màn hình BPA trong khoảng quay;
+ảnh phản hồi báo chậm và nóng máy. Video không xác định được phiên bản/source
+đang chạy, cũng không đo được nhiệt độ hoặc CPU iPhone.
+
+Đã xác nhận từ source bản 58: `openOriginalApp` chờ tải/kiểm tra trọn gói trước
+khi tạo/present WebView. Gói 58 có 96 file, 128.277.994 byte. SHA-256 của từng
+file chạy đồng bộ bằng JS với truy cập từng byte base64; file cache còn bị đọc
+và encode hai lần. Đo thuật toán cũ trên Linux Node với 16 MiB: 3.823 ms;
+Node native: 11 ms; hai digest giống nhau. Đây không phải phép đo iPhone,
+không chứng minh toàn bộ nguyên nhân nóng máy và không dự đoán thời gian mở.
+
+Bản 59 mở ngay màn hình tiến trình trước khi bắt đầu tải manifest; tái sử dụng
+chính WebView đó để mở giao diện Flutter gốc. SHA-256 file dùng Web Crypto
+trong WebView, có kiểm tra khả dụng và timeout; fallback JS nhường event loop
+mỗi 64 KiB và kiểm tra hủy. Chỉ encode/đọc mỗi file một lần cho mỗi phép kiểm.
+Có Hủy, khóa chống hai lượt chuẩn bị đồng thời, tiếp tục từ file hợp lệ đã tải
+và dùng lại file gói cũ sau xác minh hash. Không bỏ font, ảnh hoặc chức năng để
+giảm dung lượng. Gói hoàn chỉnh mới thay pointer đang dùng; file sai hash bị
+chặn. Diagnostics cục bộ ghi build, tên script thực chạy, bước, backend và
+thời gian, không ghi thông tin đăng nhập hoặc lịch học.
+
+Kiểm tra bắt buộc: Node test cả startup/cancel/resume/corruption/rollback;
+Chromium + WebKit kiểm tra Web Crypto thực với dữ liệu nhị phân 0/256/8 MiB,
+UI tiến trình và Hủy, sau đó chạy lại toàn bộ QA giao diện Flutter/worker.
+Còn cần test trên iPhone: thời gian tới màn hình tiến trình và đăng nhập,
+Hủy/chạy lại, quay lại lần hai từ cache, nóng máy và ổn định khi đổi app.
+Dùng đúng script BPA bản 59; không xóa dữ liệu Scriptable để nâng bản.
