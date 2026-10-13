@@ -134,7 +134,8 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     }
     if(scriptableAvailable) {
       const BpaChannel('better_phenikaa/sync_worker').setMethodCallHandler((call) async {
-        if(call.method=='refresh' && !_syncing)await _refreshWorkerSnapshot();
+        if(call.method=='event' && call.arguments is Map &&
+            (call.arguments as Map)['type']=='refresh')await _refreshWorkerSnapshot();
       });
     }
     unawaited(_update.restore());
