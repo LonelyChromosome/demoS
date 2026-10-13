@@ -354,12 +354,9 @@ async function openOriginalApp() {
       await sendNativeEvent(app,'sync_worker','refresh');
     }
     for(const asset of packet.assets||[]) {
-      let result;
-      try {
-        if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw Error('Tài nguyên ngoài gói BPA.');
-        result={id:asset.id,data:bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String()};
-      } catch(error){result={id:asset.id,error:error.message};}
-      if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
+      const check=()=>{if(state.closed||epoch!==state.epoch||state.phase!=='app')throw errorCode('cancelled','Màn hình đã đổi.');};
+      try {await transmitLocalAsset(app,bundle,asset,check);}
+      catch(error){if(!state.closed&&epoch===state.epoch&&state.phase==='app')await app.evaluateJavaScript(`bpaAssetResult(${JSON.stringify({id:asset.id,error:error.message})});null`,false);}
     }
     for(const call of packet.calls) {
       if(state.closed||epoch!==state.epoch||state.phase!=='app')break;

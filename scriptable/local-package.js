@@ -113,3 +113,20 @@ function localAppHTML(bundle) {
     '<script>'+safe(read('local-assets.js'))+'</script>'+
     '<script>'+safe(read('flutter_bootstrap.js'))+';for(const build of _flutter.buildConfig.builds)build.mainJsPath=window.__bpaMainURL;</script></body></html>';
 }
+// Bound each JS bridge evaluation to 256 KiB base64 (192 KiB bytes).
+// Scriptable Data has no ranged-read API; only one native base64 encoding is
+// retained, while WebView decodes directly into one final binary allocation.
+const BPA_ASSET_CHUNK_CHARS=262144;
+async function transmitLocalAsset(web,bundle,asset,check=()=>{}) {
+  check();
+  if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw errorCode('bundle_asset','Tài nguyên ngoài gói BPA.');
+  const encoded=bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String();
+  const total=encoded.length/4*3-(encoded.endsWith('==')?2:encoded.endsWith('=')?1:0);
+  for(let position=0;position<encoded.length||position===0;position+=BPA_ASSET_CHUNK_CHARS) {
+    check();
+    const chunk=encoded.slice(position,position+BPA_ASSET_CHUNK_CHARS);
+    const packet={id:asset.id,chunk,total,offset:position/4*3,final:position+chunk.length===encoded.length};
+    await web.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(packet)});null`,false);
+    check();await nativeDelay(1);
+  }
+}

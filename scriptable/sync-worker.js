@@ -78,9 +78,7 @@ async function saveWorkerThroughOriginalDart(bundle,context) {
     const packet=await web.evaluateJavaScript('bpaHost.poll(completion);',true);
     if(packet.preferences!==null)writeState('preferences.json',packet.preferences);
     for(const asset of packet.assets||[]) {
-      if(!validBundlePath(asset.path)||!bundle.files.includes(asset.path))throw errorCode('sync_asset','Tài nguyên đồng bộ không hợp lệ.');
-      const result={id:asset.id,data:bpaFM.read(bpaFM.joinPath(bundle.path,asset.path)).toBase64String()};
-      await web.evaluateJavaScript(`bpaAssetResult(${JSON.stringify(result)});null`,false);
+      await transmitLocalAsset(web,bundle,asset,()=>checkBackgroundJob(context.job));
     }
     for(const call of packet.calls) {
       // No login, card, update, picker or presentation from the worker.

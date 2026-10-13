@@ -94,3 +94,29 @@ UI tiến trình và Hủy, sau đó chạy lại toàn bộ QA giao diện Flut
 Còn cần test trên iPhone: thời gian tới màn hình tiến trình và đăng nhập,
 Hủy/chạy lại, quay lại lần hai từ cache, nóng máy và ổn định khi đổi app.
 Dùng đúng script BPA bản 59; không xóa dữ liệu Scriptable để nâng bản.
+
+## Bản thử nghiệm 60 — chia khối xử lý tài nguyên WebView
+
+Đối chiếu manifest 58: tổng 128.277.994 byte, JS 4.183.586 byte (main.dart.js
+3.418.454 byte), PNG 83.579.468 byte. Không đưa toàn bộ 128 MB vào một đối tượng
+JS: font, ảnh, WASM chỉ đọc lúc Flutter yêu cầu. Tuy nhiên host cũ gửi từng file
+nguyên chuỗi base64 sang WebView; receiver dùng Uint8Array.from(atob(...)), có
+chuỗi nhị phân và thao tác lặp từng ký tự toàn file. Đây là điểm xử lý CPU/bộ
+nhớ riêng với vấn đề download và hash.
+
+Bản 60 chia mỗi lần evaluateJavaScript truyền asset tối đa 262.144 ký tự base64
+(tương ứng 196.608 byte nhị phân). Receiver giải mã từng khối bằng vòng lặp
+vào một Uint8Array cuối cùng, kiểm tra offset/size/final; host nhường event loop
+sau mỗi khối và dừng khi đổi/đóng màn hình. Cùng đường truyền dùng cho worker.
+Yêu cầu trùng đường dẫn đang chạy được gộp, kết quả không giữ cache JS lâu dài.
+File WASM 7.284.602 byte: payload mỗi lượt giảm khoảng 97,3%; không phải tuyên
+bố giảm 97,3% tổng RAM/CPU/nhiệt độ. Scriptable Data không cung cấp ranged-read:
+vẫn phải đọc/encode cả một file ở phía native, nhưng không chuyển/giải mã toàn
+chuỗi đó trong một lần ở WebView. Code Flutter 3,42 MB giữ nguyên compile để
+bảo toàn hoạt động; không cắt code JS tùy tiện. Tài nguyên đầy đủ giữ trên đĩa.
+
+Node tests kiểm tra byte parity 0/196.609/7.284.602 byte, kích thước mỗi khối,
+yêu cầu trùng, sai offset và cancellation. Browser QA chuyển các resource của
+Flutter thật theo cùng giao thức chunk trong Chromium/WebKit, kiểm tra cả login,
+ảnh/theme, card VFX và worker lưu/reopen. Hiệu năng và nhiệt độ iPhone vẫn cần
+đo trên thiết bị thật. Bản 60 bao gồm toàn bộ sửa startup của bản 59.

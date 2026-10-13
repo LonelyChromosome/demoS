@@ -33,10 +33,10 @@ test('fallback hashing yields to cancellation without accepting an incomplete di
 });
 test('resume reuses verified old assets; changed corrupt bytes cannot replace the active bundle',async()=>{
  const {c,Data,files,run}=fixture(),names=run('BPA_REQUIRED_BUNDLE_FILES'),assets=new Map(names.map(name=>[name,Buffer.from('fixture '+name)]));let requests=0;
- const manifest={schema:1,versionCode:59,versionName:'qa',files:names.map(path=>({path,size:assets.get(path).length,sha256:hash(assets.get(path))}))};
+ const manifest={schema:1,versionCode:run('BPA_UPDATE_CHANNEL.versionCode'),versionName:'qa',files:names.map(path=>({path,size:assets.get(path).length,sha256:hash(assets.get(path))}))};
  c.Request=class{constructor(url){this.url=url;this.response={statusCode:200};}async loadString(){return JSON.stringify(manifest);}async load(){requests++;return new Data(Buffer.from('corrupt'));}};
  run('writeState("bundle.json",{versionCode:58,path:"/old",files:BPA_REQUIRED_BUNDLE_FILES})');for(const [name,bytes]of assets)files.set('/old/'+name,bytes);
- const result=await run('ensureLocalBundle(true)');assert.equal(result.versionCode,59);assert.equal(requests,0);
- manifest.files[0].sha256=hash(Buffer.from('different'));manifest.versionCode=60;
- await assert.rejects(run('stageLocalBundle("https://example.test/bpa-package.json")'),e=>e.code==='bundle_integrity');assert.equal(run('readState("bundle.json").versionCode'),59);assert.equal(requests,1);
+ const result=await run('ensureLocalBundle(true)');assert.equal(result.versionCode,manifest.versionCode);assert.equal(requests,0);
+ manifest.files[0].sha256=hash(Buffer.from('different'));manifest.versionCode++; 
+ await assert.rejects(run('stageLocalBundle("https://example.test/bpa-package.json")'),e=>e.code==='bundle_integrity');assert.equal(run('readState("bundle.json").versionCode'),manifest.versionCode-1);assert.equal(requests,1);
 });

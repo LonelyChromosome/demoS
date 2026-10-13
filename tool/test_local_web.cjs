@@ -40,7 +40,9 @@ async function main(){
   await page.addInitScript(qaUpdate=>{
     window.__bpaVerifiedReplies=[];
     window.__bpaLoginSyncs=0;window.__bpaResumeClaims=0;
-    window.addEventListener('bpa-asset-request',async event=>{const result=await window.readAsset(event.detail);window.bpaAssetResult(result);});
+    window.addEventListener('bpa-asset-request',async event=>{const result=await window.readAsset(event.detail);if(result.error){window.bpaAssetResult(result);return;}
+      const encoded=result.data,total=encoded.length/4*3-(encoded.endsWith('==')?2:encoded.endsWith('=')?1:0);
+      for(let p=0;p<encoded.length||p===0;p+=262144){const chunk=encoded.slice(p,p+262144);window.bpaAssetResult({id:result.id,chunk,total,offset:p/4*3,final:p+chunk.length===encoded.length});await new Promise(resolve=>setTimeout(resolve,1));}});
     window.addEventListener('bpa-platform-call',event=>{
       const call=JSON.parse(event.detail),method=call.method;
       let result=method==='versionCode'?51:method==='versionName'?'cooc.1.6':method==='hasBoundCard'?false:method==='installStatus'?'idle':method==='status'?{lastSuccessAtMillis:0}:null;

@@ -13,11 +13,32 @@
       return original(state,title,url);
     };
   }
-  let sequence=0;const awaiting=new Map();
-  const bytes=b64=>Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
-  window.bpaAssetResult=packet=>{const pending=awaiting.get(packet.id);if(!pending)return;awaiting.delete(packet.id);packet.error?pending.reject(new Error(packet.error)):pending.resolve(bytes(packet.data));};
+  let sequence=0;const awaiting=new Map(),inFlight=new Map();
+  function decodeInto(base64,target,offset){const raw=atob(base64);for(let i=0;i<raw.length;i++)target[offset+i]=raw.charCodeAt(i);return raw.length;}
+  window.bpaAssetResult=packet=>{
+    const pending=awaiting.get(packet.id);if(!pending)return;
+    try {
+      if(packet.error)throw Error(packet.error);
+      // Compatibility with a previously installed host; new hosts use chunks.
+      if(typeof packet.data==='string'){
+        const raw=atob(packet.data),data=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)data[i]=raw.charCodeAt(i);
+        awaiting.delete(packet.id);pending.resolve(data);return;
+      }
+      if(!Number.isInteger(packet.total)||packet.total<0||packet.total>100000000||packet.offset!==(pending.offset||0)||typeof packet.chunk!=='string'||packet.chunk.length>262144)throw Error('Invalid asset chunk');
+      if(!pending.data){if(packet.offset!==0)throw Error('Missing asset start');pending.data=new Uint8Array(packet.total);pending.offset=0;}
+      if(pending.data.length!==packet.total)throw Error('Changed asset size');
+      const size=packet.chunk.length/4*3-(packet.chunk.endsWith('==')?2:packet.chunk.endsWith('=')?1:0);
+      if(!Number.isInteger(size)||pending.offset+size>packet.total)throw Error('Asset chunk overflow');
+      pending.offset+=decodeInto(packet.chunk,pending.data,pending.offset);
+      if(packet.final){if(pending.offset!==packet.total)throw Error('Incomplete asset');awaiting.delete(packet.id);pending.resolve(pending.data);}
+    }catch(error){awaiting.delete(packet.id);pending.reject(error);}
+  };
   function assetPath(value){const url=new URL(typeof value==='string'?value:value.url,document.baseURI);if(url.hostname!=='bpa.local')return null;return decodeURIComponent(url.pathname).replace(/^\//,'');}
-  window.bpaReadAsset=path=>new Promise((resolve,reject)=>{const id=++sequence;awaiting.set(id,{resolve,reject});window.dispatchEvent(new CustomEvent('bpa-asset-request',{detail:{id,path}}));});
+  window.bpaReadAsset=path=>{
+    if(inFlight.has(path))return inFlight.get(path);
+    const promise=new Promise((resolve,reject)=>{const id=++sequence;awaiting.set(id,{resolve,reject});window.dispatchEvent(new CustomEvent('bpa-asset-request',{detail:{id,path}}));});
+    inFlight.set(path,promise);promise.then(()=>inFlight.delete(path),()=>inFlight.delete(path));return promise;
+  };
   const originalFetch=window.fetch.bind(window);
   window.fetch=async(input,options)=>{
     const path=assetPath(input);if(path===null)return originalFetch(input,options);
