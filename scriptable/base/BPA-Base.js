@@ -8,8 +8,8 @@ const BASE_FILES={
     "sha256": "e00598651c9b09cea20c0fbf45b88432c94fa5d0aaf9133bca00878dcefb2c3c"
   },
   "ui.html": {
-    "size": 19519,
-    "sha256": "f27248e9bfaccb934c4567c2c840114a2859d4cc1113f7d1483ab104b05df663"
+    "size": 19644,
+    "sha256": "17a6267fbcece3fab7f30d0af9fd6c9f8e62d896e3015aff662c64481cbe3026"
   },
   "sync.js": {
     "size": 26619,
@@ -24,8 +24,8 @@ const BASE_FILES={
     "sha256": "04c1e72e9743a21b3436987bd40a47009dfb3ea3a91638312f6ab75f34809d72"
   },
   "catalog.json": {
-    "size": 11773,
-    "sha256": "93020c5f455eedbf505c3cc9740203131e33d470cd577b5478fe0163b0d8d8f4"
+    "size": 11796,
+    "sha256": "445045f409198a5f16bbe1e601a149335bc61ed7b1f4a04053a232ddc8e20726"
   },
   "Roboto-Regular.ttf": {
     "size": 171676,
@@ -77,7 +77,7 @@ async function startBase(){
    const pending=path+'.pending';fm.write(pending,data);check();if((await integrity(fm.read(pending))).sha256!==expected.sha256)throw Error('Không lưu được phần cài BPA.');if(fm.fileExists(path))fm.remove(path);fm.move(pending,path);await delay(1);check();return path;
   })();installing.set(name,job);try{return await job;}finally{installing.delete(name);}
  }
- try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:module.filename.split('/').pop().replace(/\.js$/,''),evaluate,delay,check,presentation});}
+ try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,baseFiles:BASE_FILES,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:module.filename.split('/').pop().replace(/\.js$/,''),evaluate,delay,check,presentation});}
  catch(error){if(!closed){try{await progress(error.message||String(error));}catch(_){}await presentation;}if(error.code!=='cancelled')console.error(error.message||String(error));}
 }
 await startBase();

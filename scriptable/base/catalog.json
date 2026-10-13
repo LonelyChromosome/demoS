@@ -298,8 +298,8 @@
       "files": [
         {
           "path": "scriptable/base/modules/cards.js",
-          "size": 7282,
-          "sha256": "95bd17a9fe45efee99f5023d1e8281bc2894f0823bae8c0d028851749d5d8daa"
+          "size": 7639,
+          "sha256": "f24d30f1d5ec550569f216abb21fe4b75df98abcce838b9b6679c89e8b0196ce"
         },
         {
           "path": "scriptable/shortcuts/BPA-NFC.shortcut",
@@ -318,12 +318,14 @@
       "id": "updater",
       "title": "Cập nhật",
       "entry": "scriptable/base/modules/updater.js",
-      "requires": [],
+      "requires": [
+        "cards"
+      ],
       "files": [
         {
           "path": "scriptable/base/modules/updater.js",
-          "size": 1518,
-          "sha256": "7f431273648d2949584e60a14b75228a4c820e2f1aee9ebf6a614bca273188d5"
+          "size": 2147,
+          "sha256": "41ae682bdff5cbc28b8b89a65022b5bd75f5a78783e0db6938dc0e8f0e0abf09"
         }
       ],
       "assets": []
