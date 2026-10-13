@@ -52,8 +52,15 @@ test('the single installer embeds the signed NFC bridge and records only that it
  assert.equal(imports,1);assert.ok(states.get('shortcut-import-shown.json').nfc);assert.equal(states.has('cardBound'),false);
 });
 test('cancel during native NFC import prevents launching the reader afterwards',async()=>{
- const {c}=fixture();let started=0;
+ const {c}=fixture();let started=0;c.prepareNFCReader=async()=>{};
  c.QuickLook={async present(){vm.runInContext('cardGeneration++',c);}};
  c.CallbackURL=class {addParameter(){}async open(){started++;}};
  await assert.rejects(vm.runInContext('requestCardUIDFromShortcut()',c),e=>e.code==='cancelled');assert.equal(started,0);
+});
+
+test('NFC setup opens the free reader listing without claiming installation or starting a scan',async()=>{
+ const {c,states}=fixture();let opened;
+ c.Alert=class {addAction(){}addCancelAction(){}async presentAlert(){return 1;}};c.Safari={open:url=>opened=url};
+ await assert.rejects(vm.runInContext('prepareNFCReader()',c),e=>e.code==='nfc_install_required');
+ assert.equal(opened,'https://apps.apple.com/app/id6472720100');assert.equal(states.has('nfc-reader-setup.json'),false);
 });

@@ -49,6 +49,10 @@ async function main(){
       if(call.channel==='better_phenikaa/qldt_scriptable'&&method==='sync') {
         window.__bpaLoginSyncs++;result=window.__bpaLoginFixture;
       }
+      if(call.channel==='better_phenikaa/sync_worker') {
+        window.__bpaWorkerCalls=window.__bpaWorkerCalls||[];window.__bpaWorkerCalls.push(method);
+        if(method==='payload')result=window.__bpaWorkerFixture;
+      }
       if(call.channel==='better_phenikaa/update_http'&&method==='fetch')result=call.arguments.url.endsWith('.sig')?(window.__bpaBadSignature?qaUpdate.badSignature:qaUpdate.signature):qaUpdate.manifest;
       if(call.channel==='better_phenikaa/update'&&method==='verifyReply')window.__bpaVerifiedReplies.push(call.arguments);
       window.dispatchEvent(new CustomEvent('bpa-platform-result',{detail:JSON.stringify({id:call.id,result})}));
@@ -110,6 +114,19 @@ async function main(){
     if(resume.claims!==1||resume.syncs!==1||resume.setup!=='true')throw Error('Login resume duplicated the task or skipped the original setup/save: '+JSON.stringify(resume));
     fs.writeFileSync(qaDir+'/login-resume.json',JSON.stringify({resume,note:'Synthetic QA data; original Dart name/save flow, not a university or iPhone session'},null,2));
     await page.screenshot({path:qaDir+'/login-resume-timetable.png'});
+    // Run the actual original Dart save from the hidden worker entry. Synthetic
+    // QA data only; verifies transaction/diff/maintenance, not iOS background time.
+    const committedPreferences=await page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)])));
+    await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
+    const changed={...semester,subjects:[...semester.subjects,{...semester.subjects[0],subjectId:'qa-worker-added',name:'Worker QA',normalizedName:'worker qa',studySchedules:[{...rows[0],id:'qa-worker-added',subjectName:'Worker QA',startAt:today+'T17:00:00',endAt:today+'T18:00:00'}]}]};
+    await page.evaluate(({preferences,fixture})=>{window.__bpaWorkerFixture=fixture;window.bpaHost.init(preferences,{syncWorker:true});},{preferences:committedPreferences,fixture:{semester:changed,termStartedAt:today+'T00:00:00'}});
+    await page.waitForFunction(()=>window.__bpaWorkerCalls?.includes('complete')||window.__bpaWorkerCalls?.includes('failed'),{},{timeout:30000});
+    const worker=await page.evaluate(()=>{
+      let snapshot=localStorage.getItem('flutter.better_phenikaa_snapshot_v1');for(let i=0;i<2&&typeof snapshot==='string';i++)snapshot=JSON.parse(snapshot);
+      return {calls:window.__bpaWorkerCalls,syncs:window.__bpaLoginSyncs,records:snapshot.records.length,preferences:Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)]))};
+    });
+    if(worker.calls.join(',')!=='payload,complete'||worker.syncs!==0||worker.records!==5)throw Error('Original worker save did not commit once: '+JSON.stringify(worker));
+    fs.writeFileSync(qaDir+'/original-dart-worker.json',JSON.stringify({calls:worker.calls,syncs:worker.syncs,records:worker.records,note:'Original Dart transaction with synthetic data; not a device scheduling test'},null,2));
     await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
     // Exercise the exact source HTML. This is not an NFC hardware test.

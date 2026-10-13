@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 bool get available => html.document.documentElement?.dataset['bpaScriptable'] == 'ready';
 bool get loginResuming => available && html.document.documentElement?.dataset['bpaLoginResume'] == 'true';
+bool get syncWorker => available && html.document.documentElement?.dataset['bpaSyncWorker'] == 'true';
 int _sequence = 0;
 final _handlers = <String, Future<dynamic> Function(MethodCall)>{};
 bool _listening = false;
@@ -39,6 +40,8 @@ Future<dynamic> invoke(String channel, String method, dynamic arguments) async {
   html.window.addEventListener('bpa-platform-result', receive);
   try {
     html.window.dispatchEvent(html.CustomEvent('bpa-platform-call', detail: jsonEncode({'id':id,'channel':channel,'method':method,'arguments':arguments})));
-    return await completer.future.timeout(const Duration(seconds: 120));
+    final timeout = channel == 'better_phenikaa/qldt_scriptable' && method == 'sync'
+        ? const Duration(minutes: 22) : const Duration(seconds: 120);
+    return await completer.future.timeout(timeout);
   } finally { html.window.removeEventListener('bpa-platform-result', receive); }
 }

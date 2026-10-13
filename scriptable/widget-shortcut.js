@@ -10,13 +10,14 @@ async function ensureWidgetShortcut() {
   async function probe() {
     const requestId=UUID.string(),response=await invokeBundledShortcut('widgets',{mode:'probe',requestId});
     const value=JSON.parse(response.result||'null');
-    if(!value||value.status!=='BPA_WIDGET_BRIDGE_READY'||value.requestId!==requestId)throw errorCode('widget_bridge_setup','Chưa hoàn tất chuẩn bị widget BPA.');
+    if(!value||value.status!=='BPA_WIDGET_BRIDGE_READY'||value.protocol!==2||value.requestId!==requestId)throw errorCode('widget_bridge_setup','Chưa hoàn tất chuẩn bị widget BPA.');
   }
   try {await probe();}
   catch(_) {await QuickLook.present(asset.path,true);await probe();}
   writeState('widget-shortcut.json',{readyDigest:asset.sha256});
 }
 async function requestWidgetRefresh(returnHome=false) {
+  if(syncWorkerContext)return false;
   if(returnHome)await ensureWidgetShortcut();
   else if(!widgetShortcutReady()) {
     writeState('widget-refresh.json',{status:'setup_required',at:Date.now()});return false;
@@ -35,6 +36,7 @@ async function requestWidgetRefresh(returnHome=false) {
 async function widgetCommand(input) {
   if(typeof input==='string')input=JSON.parse(input);
   if(!input||typeof input!=='object'||typeof input.requestId!=='string'||!input.requestId)throw errorCode('widget_action','Yêu cầu widget không hợp lệ.');
+  if(input.action==='sync')return await runBackgroundSyncWorker(input);
   if(!input.action)return {status:'BPA_WIDGET_NO_CHANGE',requestId:input.requestId};
   if(!['previous','next','mode'].includes(input.action)||!['small','overview','widget2'].includes(input.kind)||typeof input.instance!=='string'||!input.instance||input.instance.length>512)throw errorCode('widget_action','Yêu cầu widget không hợp lệ.');
   await widgetAction(input.action,input.kind,input.instance,{engineOnly:true});

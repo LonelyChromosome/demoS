@@ -63,7 +63,7 @@ class _BetterPhenikaaScheduleAppState extends State<BetterPhenikaaScheduleApp> {
           theme: buildBetterTheme(palette),
           builder: (context, child) => ThemeDustSurface(
             key: ThemeDustSurface.surfaceKey,
-            child: scriptableLoginResuming
+            child: scriptableLoginResuming || scriptableSyncWorker
                 ? child ?? const SizedBox.shrink()
                 : BpaPenTraceSplash(child: child ?? const SizedBox.shrink()),
           ),
@@ -128,6 +128,10 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     _update.addListener(_handleThemeChanged);
     // Both jobs start on entry. Cache restoration, network checking and
     // the independent pen-trace animation never wait for one another.
+    if (scriptableSyncWorker) {
+      unawaited(_runScriptableSyncWorker());
+      return;
+    }
     unawaited(_update.restore());
     if (!scriptableLoginResuming) unawaited(_checkLatestOnLaunch());
     unawaited(_loadAppVersionName());
@@ -539,7 +543,22 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     }
   }
 
-  Future<SemesterDifference?> _save(QldtLoginResult result) async {
+  Future<void> _runScriptableSyncWorker() async {
+    const channel = BpaChannel('better_phenikaa/sync_worker');
+    try {
+      final value = await channel.invokeMapMethod<String, dynamic>('payload');
+      if (value == null) throw StateError('SYNC_WORKER_PAYLOAD_MISSING');
+      final semester = CurrentSemester.fromJson(Map<String, dynamic>.from(value['semester'] as Map));
+      await _save(QldtLoginResult(schedule: semester.toImportedScheduleData(),
+        semester: semester, termStartedAt: DateTime.parse(value['termStartedAt'] as String)),
+        awaitMaintenance: true);
+      await channel.invokeMethod<void>('complete');
+    } on Object {
+      await channel.invokeMethod<void>('failed');
+    }
+  }
+
+  Future<SemesterDifference?> _save(QldtLoginResult result, {bool awaitMaintenance = false}) async {
     final prefs = await SharedPreferences.getInstance();
     final store = CurrentSemesterStore();
     final differenceStore = SemesterDifferenceStore();
@@ -617,7 +636,11 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
           !await prefs.setString(_routeKey, result.registrationRoute!)) {
         throw StateError('Không thể lưu đường dẫn đăng ký trên thiết bị.');
       }
-      unawaited(_afterSuccessfulSaveMaintenance(publishedData));
+      if (awaitMaintenance) {
+        await _afterSuccessfulSaveMaintenance(publishedData);
+      } else {
+        unawaited(_afterSuccessfulSaveMaintenance(publishedData));
+      }
       return difference;
     } on Object {
       if (previousSemester == null) {
@@ -740,7 +763,9 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
         final saveStarted = DateTime.now();
         SemesterDifference? difference;
         try {
-          difference = await _save(imported);
+          difference = imported.savedByScriptableWorker
+              ? await SemesterDifferenceStore().read()
+              : await _save(imported);
           // The first-login mini-game is considered complete only after the
           // verified semester has been committed by the app. A chosen name
           // left by an interrupted login must not skip this mandatory step.

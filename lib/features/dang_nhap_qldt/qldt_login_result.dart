@@ -7,10 +7,12 @@ final class QldtLoginResult {
     this.semester,
     this.registrationRoute,
     this.termStartedAt,
+    this.savedByScriptableWorker = false,
   });
 
   final ImportedScheduleData schedule;
   final CurrentSemester? semester;
   final String? registrationRoute;
   final DateTime? termStartedAt;
+  final bool savedByScriptableWorker;
 }

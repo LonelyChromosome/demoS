@@ -5,9 +5,11 @@ function fixture(){
  vm.runInContext(fs.readFileSync('scriptable/BPA.js','utf8'),c);
  c.readState=(k,f)=>states.has(k)?states.get(k):f;c.writeState=(k,v)=>states.set(k,v);
  c.localAppHTML=()=>'<html>BPA</html>';
+ c.UUID={string:()=> 'request-0001'};c.ensureWidgetShortcut=async()=>{};
+ c.invokeBundledShortcut=async(_kind,input)=>{const session=JSON.parse(keys.get('BPA.qldt-session'));const value=await c.fetchNativeQldt(session);const result=c.commitPortalResult(value,0);c.writeState('sync-job-'+input.requestId+'.json',{...result,status:'committed'});return {};};
  const session={tokenJWT:'test-token',userId:'student',iM:'0',appId:'app',strChucNangId:'function'};
  let probes=0,loads=0,fetches=0,finishFetch;
- const app={async loadURL(url){assert.equal(url,'https://qldtbeta.phenikaa-uni.edu.vn/');loads++;},async loadHTML(html){assert.equal(html,'<html>BPA</html>');},async evaluateJavaScript(source){if(source==='bpaHost.suspend();')return {'flutter.theme':'test'};if(source.startsWith('bpaHost.init(')){assert.match(source,/loginResume.*true/);return;}probes++;return probes===1?null:JSON.stringify(session);},present(){throw Error('Login must not present or wait for Done');}};
+ const app={async loadURL(url){assert.equal(url,'https://qldtbeta.phenikaa-uni.edu.vn/');loads++;},async loadHTML(html){assert.equal(html,'<html>BPA</html>');},async evaluateJavaScript(source){if(source==='bpaHost.suspend();')return {'flutter.theme':'test'};if(source.startsWith('bpaHost.replacePreferences('))return;if(source.startsWith('bpaHost.init(')){assert.match(source,/loginResume.*true/);return;}probes++;return probes===1?null:JSON.stringify(session);},present(){throw Error('Login must not present or wait for Done');}};
  c.app=app;c.state={phase:'app',epoch:0,closed:false,waiters:[],bundle:{},loginResume:null};
  vm.runInContext('appSessions.set(app,state)',c);
  const result={semester:{semesterId:'2026_2027_1',displayName:'Test',subjects:[]},termStartedAt:'2026-09-01T00:00:00'};
@@ -18,7 +20,7 @@ test('login detects a live session without Done, restores the same view and hand
  const f=fixture(),{c,keys,states}=f;
  const original=vm.runInContext('syncPortal(app)',c);
  while(!f.fetches)await new Promise(r=>setTimeout(r,10));
- assert.equal(c.state.phase,'app');assert.equal(c.state.epoch,1);assert.equal(f.loads,1);assert.equal(f.probes,2);
+ assert.equal(c.state.phase,'worker');assert.equal(c.state.epoch,1);assert.equal(f.loads,1);assert.equal(f.probes,2);
  assert.equal(states.get('preferences.json')['flutter.theme'],'test');assert.equal(JSON.parse(keys.get('BPA.qldt-session')).tokenJWT,'test-token');
  assert.equal(vm.runInContext('takeLoginResume(app)',c),true);assert.equal(vm.runInContext('takeLoginResume(app)',c),false);
  const resumed=vm.runInContext('syncPortal(app)',c);assert.equal(resumed,original);

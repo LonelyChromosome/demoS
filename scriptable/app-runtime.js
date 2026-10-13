@@ -10,11 +10,15 @@ function bpaDirectory() {
 }
 function bpaPath(name) { return bpaFM.joinPath(bpaDirectory(),name); }
 function readState(name,fallback={}) {
+  if(syncWorkerContext && syncWorkerContext.states.has(name))return syncWorkerContext.states.get(name);
   const p=bpaPath(name);
   if(!bpaFM.fileExists(p)&&bpaFM.fileExists(p+'.backup'))bpaFM.move(p+'.backup',p);
   return bpaFM.fileExists(p)?JSON.parse(bpaFM.readString(p)):fallback;
 }
-function writeState(name,value) { saveVerified(bpaFM,bpaPath(name),value); }
+function writeState(name,value) {
+  if(syncWorkerContext){syncWorkerContext.states.set(name,value);return;}
+  saveVerified(bpaFM,bpaPath(name),value);
+}
 function preference(key) {
   const prefs=readState('preferences.json');
   const name=Object.keys(prefs).find(k=>k===key||k.endsWith('.'+key));
@@ -41,6 +45,8 @@ function normalizeCardUID(value) {
   return uid;
 }
 async function requestCardUIDFromShortcut(expectedGeneration=cardGeneration) {
+  await prepareNFCReader();
+  if(expectedGeneration!==cardGeneration)throw errorCode('cancelled','Đã hủy yêu cầu thẻ.');
   await ensureNFCShortcut();
   if(expectedGeneration!==cardGeneration)throw errorCode('cancelled','Đã hủy yêu cầu thẻ.');
   const requestId=UUID.string(),started=Date.now();
@@ -107,6 +113,8 @@ function syncPortal(app=null) {
   return job;
 }
 async function performPortalSync(generation,app) {
+  if(app)return await dispatchBackgroundSync(app,generation);
+
   if(Keychain.contains('BPA.qldt-session')) {
     let session;
     try {session=JSON.parse(Keychain.get('BPA.qldt-session'));}
@@ -190,10 +198,12 @@ async function assistantNotification(useCase) {
 }
 async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
+  if(channel==='sync_worker')return handleSyncWorkerCall(method);
   if(channel==='qldt_scriptable') {
     if(method==='sync')return await syncPortal(app);
     if(method==='takeLoginResume')return takeLoginResume(app);
     if(method==='clear'){
+      invalidateBackgroundSync();
       syncGeneration++;syncInFlight=null;
       for(const key of ['BPA.credentials','BPA.qldt-session'])if(Keychain.contains(key))Keychain.remove(key);
       // A new student can share the university's semester ID, but must not
@@ -229,7 +239,7 @@ async function handlePlatform(call,app) {
   }
   if(channel==='assistant_test'&&method==='trigger')return await assistantNotification(args);
   if(channel==='daily_sync') {
-    if(method==='syncReminders')return await scheduleExamReminders();
+    if(method==='syncReminders'){if(syncWorkerContext){syncWorkerContext.reminders=true;return null;}return await scheduleExamReminders();}
     if(method==='recordAppSyncSuccess'){
       writeState('sync-status.json',{lastSuccessAtMillis:Date.now()});
       const event=examChangeEvent(preference('better_phenikaa_semester_difference_v1'));
@@ -353,6 +363,7 @@ async function openOriginalApp() {
   await presentation;
 }
 async function bpaMain() {
+  recoverBackgroundCommit();
   const params=typeof args==='undefined'?{}:args.queryParameters||{};
   let widgetOptions={};
   if(typeof args!=='undefined'&&args.widgetParameter) {

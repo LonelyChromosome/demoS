@@ -202,3 +202,11 @@ Host hiện mở cổng QLĐT trong WebView Scriptable và chờ người dùng 
 - The single BPA installer embeds verified signed Clock, read-only NFC and widget bridges. Widget navigation commits once in an inline runner and requests the native RefreshAllWidgetsIntent. This is not evidence of actual Home Screen paint or animation.
 - Browser QA exercises managed login resume through the original name arrangement, original save transaction and timetable. The name-screen capture now waits for the original route transition to settle.
 - Background sync and physical iPhone NFC/Clock/widget verification remain open. No complete-app handoff or new public update feed has been issued.
+
+## Integrated background implementation 2026-10-13
+
+- Inline runner protocol 2 performs native QLDT fetch independently of the presented app. First login returns verified data to the original name setup; subsequent sync starts a hidden original Flutter runtime and calls the same `_save` transaction and maintenance. The foreground consumes the committed result without saving again.
+- Local account epochs and a request lease reject stale workers, expired sessions open managed login once, preference deltas preserve independent changes, and a journal rolls failed commits back. No credentials are included in Shortcut inputs or signing submissions.
+- Native widget refresh follows the inline worker. The new bundled signed Shortcut supports sync without a Return to Home Screen action in sync mode. Only widget-navigation mode returns home.
+- NFC includes an in-app first-use guide to the free native reader, its documented read callback, strict UID/nonce validation and the existing VFX/Keychain flow. The exact physical callback/card compatibility remains a device test; no NDEF substitution or success from an import screen.
+- Clock, NFC, widgets and detached sync now have implementations to exercise together from the single BPA installer. Actual iOS extension lifetime, import, tag compatibility, notification delivery, Clock ringing and Home Screen rendering remain UNVERIFIED. These are test candidates, not a confirmed complete-app release.

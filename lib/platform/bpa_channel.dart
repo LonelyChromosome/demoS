@@ -4,6 +4,7 @@ import 'scriptable_bridge_stub.dart'
 
 bool get scriptableAvailable => bridge.available;
 bool get scriptableLoginResuming => bridge.loginResuming;
+bool get scriptableSyncWorker => bridge.syncWorker;
 
 /// Native channels keep their original implementation. In Scriptable, only
 /// the platform transport is replaced; app widgets and controllers are reused.

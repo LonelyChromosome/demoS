@@ -40,6 +40,7 @@ Future<QldtLoginResult?> openQldtLogin(BuildContext context) async {
     if (value == null) return null;
     final semester=CurrentSemester.fromJson(Map<String,dynamic>.from(value['semester'] as Map));
     final prefs=await SharedPreferences.getInstance();
+    if(value['savedByScriptableWorker']==true) await prefs.reload();
     await prefs.setString('better_phenikaa_scriptable_name',semester.displayName);
     if (!await isQldtFirstLoginSetupComplete()) {
       if (!context.mounted) return null;
@@ -50,7 +51,8 @@ Future<QldtLoginResult?> openQldtLogin(BuildContext context) async {
       if(!await prefs.setString('better_phenikaa_account_display_name_v1',chosen)) throw StateError('ACCOUNT_DISPLAY_NAME_NOT_PERSISTED');
     }
     return QldtLoginResult(schedule:semester.toImportedScheduleData(),semester:semester,
-      termStartedAt:DateTime.parse(value['termStartedAt'] as String));
+      termStartedAt:DateTime.parse(value['termStartedAt'] as String),
+      savedByScriptableWorker:value['savedByScriptableWorker']==true);
   }
   return showDialog<QldtLoginResult>(
     context: context,

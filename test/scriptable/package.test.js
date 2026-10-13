@@ -39,7 +39,7 @@ test('NFC bridge rejects invalid UID rather than treating content as an ID',()=>
   for(const value of ['NoIdentifierInCompatibilityMode','https://example.com','123','ZZ:11:22:33']){c.uid=value;assert.throws(()=>vm.runInContext('normalizeCardUID(uid)',c));}
 });
 test('NFC receipt must match this request nonce and scan time',async()=>{
-  const c=context();c.UUID={string:()=> 'request-1'};c.ensureNFCShortcut=async()=>{};c.retryNFCImport=()=>{};
+  const c=context();c.UUID={string:()=> 'request-1'};c.prepareNFCReader=async()=>{};c.ensureNFCShortcut=async()=>{};c.retryNFCImport=()=>{};
   c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-2',scannedAt:new Date().toISOString()})};}};
   await assert.rejects(vm.runInContext('requestCardUIDFromShortcut()',c),/yêu cầu BPA/);
   c.CallbackURL=class {addParameter(){}async open(){return {result:JSON.stringify({uid:'04A27F1B5E8000',requestId:'request-1',scannedAt:'2000-01-01T00:00:00Z'})};}};

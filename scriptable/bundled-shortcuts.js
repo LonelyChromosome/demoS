@@ -37,6 +37,19 @@ function parseReaderCallback(raw,requestId) {
   return normalizeCardUID(value.tagid);
 }
 
+async function prepareNFCReader() {
+  const setup=readState('nfc-reader-setup.json',{});
+  if(setup.guideAcknowledged)return;
+  const alert=new Alert();alert.title='Chuẩn bị đọc thẻ';
+  alert.message='BPA dùng NFC Helper miễn phí để mở đầu đọc thẻ trên iPhone. Cài NFC Helper, sau đó quay lại BPA để tiếp tục.';
+  alert.addAction('Đã cài, tiếp tục');alert.addAction('Mở App Store');alert.addCancelAction('Hủy');
+  const choice=await alert.presentAlert();
+  if(choice===1){Safari.open('https://apps.apple.com/app/id6472720100');throw errorCode('nfc_install_required','Cài NFC Helper rồi mở lại chức năng thẻ trong BPA.');}
+  if(choice!==0)throw errorCode('cancelled','Đã hủy chuẩn bị đầu đọc.');
+  // Acknowledged guidance only. A real read callback verifies the reader later.
+  writeState('nfc-reader-setup.json',{guideAcknowledged:true});
+}
+
 async function ensureNFCShortcut() {
   const asset=bundledShortcut('nfc'),setup=readState('shortcut-import-shown.json',{});
   if(setup.nfc===asset.sha256)return;

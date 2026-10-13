@@ -31,7 +31,7 @@ test('ready widget button URLs target the inline Shortcut directly while calenda
 });
 test('the inline command refuses app or arbitrary actions instead of presenting UI from an extension',async()=>{
  const {c}=fixture();
- for(const action of ['sync','calendar','open','delete']) {
+ for(const action of ['calendar','open','delete']) {
   c.input={action,kind:'overview',instance:'main',requestId:'request'};
   await assert.rejects(vm.runInContext('widgetCommand(input)',c),e=>e.code==='widget_action');
  }

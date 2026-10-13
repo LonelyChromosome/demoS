@@ -18,12 +18,18 @@
   window.bpaHost={
     init(preferences, options={}) {
       document.documentElement.dataset.bpaLoginResume=options.loginResume===true?'true':'false';
+      document.documentElement.dataset.bpaSyncWorker=options.syncWorker===true?'true':'false';
       originalClear.call(localStorage);
       for (const [key,value] of Object.entries(preferences || {})) originalSet.call(localStorage,key,value);
       document.documentElement.dataset.bpaScriptable='ready';
       document.documentElement.dataset.betterPhenikaaBridge='ready';
       window.dispatchEvent(new CustomEvent('better-phenikaa-bridge-ready'));
       return window.bpaStart();
+    },
+    replacePreferences(preferences) {
+      originalClear.call(localStorage);
+      for(const [key,value] of Object.entries(preferences||{}))originalSet.call(localStorage,key,value);
+      dirty=false;
     },
     suspend() {
       notify();
