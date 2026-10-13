@@ -1,6 +1,6 @@
 # BPA — Scriptable host
 
-**Đang triển khai; chưa đủ điều kiện gọi là BPA hoàn chỉnh.**
+**Bản tích hợp để kiểm tra toàn app trên iPhone; chưa xác nhận parity thiết bị.**
 Đầu ra là Scriptable + WebView + Shortcuts, miễn phí, không IPA và không iCloud.
 
 `BPA.js` là điểm khởi chạy thống nhất: tự chuẩn bị thư mục dữ liệu, tải và
@@ -58,3 +58,9 @@ cần, rồi xác minh companion đã sẵn sàng trước khi tạo báo thức
 Dữ liệu ký và hash đều phải khớp; đóng màn import không được tính là đã cài.
 Bước import/chạy Clock vẫn chưa thử trên iPhone. Companion NFC dùng đầu đọc NFC Helper miễn phí; UID/callback và chuyển app vẫn
 phải kiểm chứng trên thiết bị. Đây chưa phải bộ cài hoàn chỉnh để giao người dùng.
+
+## Bản kiểm tra tích hợp 2026-10-13
+
+Chỉ đưa người dùng `BPA.scriptable`. File tự chuẩn bị bộ chạy widget/nhắc lịch và chứa các Shortcut đã ký; việc nhập thành phần, cài NFC Helper miễn phí, thiết lập Automation nhắc lịch và thêm widget được hướng dẫn trong app. Đồng bộ dùng inline runner độc lập, gọi cùng transaction Dart, có account epoch, journal rollback và nhận lại trạng thái khi mở app. Không đưa người dùng file module hoặc fixture riêng.
+
+Chuyển app/khóa màn hình, callback UID, chuông, nhắc lịch và Home Screen đều là kiểm tra thực tế còn phải thực hiện. Không ghi nhận import/guide acknowledgment là thử nghiệm thành công.
