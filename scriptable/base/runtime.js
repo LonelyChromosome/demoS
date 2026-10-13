@@ -16,7 +16,7 @@ function portalOverlay(ui,nonce,state){
    const queue=[];let current=${JSON.stringify(state)};
    window.bpaBaseNative={media:value=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},media:value},'*'),drain:()=>JSON.stringify(queue.splice(0)),set:value=>{current=value;frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');}};
    window.addEventListener('message',event=>{if(event.source===frame.contentWindow&&event.data?.bpa===${JSON.stringify(nonce)}&&event.data.command)queue.push(event.data.command);});
-   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');frame.srcdoc=${JSON.stringify(html)};document.documentElement.append(frame);
+   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');document.documentElement.append(frame);frame.srcdoc=${JSON.stringify(html)};
   }else window.bpaBaseNative.set(${JSON.stringify(state)});
   return 'mounted';
  })()`;

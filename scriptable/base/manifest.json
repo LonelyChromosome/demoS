@@ -4,11 +4,11 @@
   "files": {
     "runtime.js": {
       "size": 14457,
-      "sha256": "e00598651c9b09cea20c0fbf45b88432c94fa5d0aaf9133bca00878dcefb2c3c"
+      "sha256": "e9b02a974932c187674d9b5e0cf10a4562b7391389bafa2e2b13086eed40c168"
     },
     "ui.html": {
-      "size": 19644,
-      "sha256": "17a6267fbcece3fab7f30d0af9fd6c9f8e62d896e3015aff662c64481cbe3026"
+      "size": 19676,
+      "sha256": "ef43d478fc82396440d86a45ee1c047e4827b53bbf0c0ae441c238d74a5ae42a"
     },
     "sync.js": {
       "size": 26619,
