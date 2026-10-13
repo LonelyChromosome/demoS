@@ -1,0 +1,332 @@
+{
+  "schema": 1,
+  "modules": [
+    {
+      "id": "themes",
+      "title": "Giao diện",
+      "entry": "scriptable/base/modules/themes.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/themes.js",
+          "size": 3025,
+          "sha256": "1f8965691b37057bc4ce13073af8f3c75303be65f74d31dba6028b0bb442accd"
+        },
+        {
+          "path": "scriptable/base/modules/theme-presets.json",
+          "size": 5466,
+          "sha256": "fdb33a471913b6033c4bc932c8789fe6b13077b03941e8a8f507cb201dc52e38"
+        },
+        {
+          "path": "web/widget-palette.js",
+          "size": 3326,
+          "sha256": "692351ff74b0806ce823a2ebe2187220ea363ee606ef352ace90059d892d9377"
+        },
+        {
+          "path": "assets/fonts/minecraft.ttf",
+          "size": 31240,
+          "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "id": "tienmon",
+      "title": "Tiên Môn Premium",
+      "entry": "scriptable/base/modules/tienmon.js",
+      "requires": [
+        "themes"
+      ],
+      "files": [
+        {
+          "path": "scriptable/base/modules/tienmon.js",
+          "size": 827,
+          "sha256": "8ee4fbe927c69b40c6c8166e9d23c07e42a4a6f2f18c1ba5735021286331c282"
+        },
+        {
+          "path": "assets/tien_mon_premium/scene_manifest.json",
+          "size": 3023,
+          "sha256": "1e9edcca5ebd3c6628f8983adf4b6c1f7f5c3a3231896e3f76a2047e15f8bdf7"
+        },
+        {
+          "path": "assets/tien_mon_premium/fonts/FzCoTrang.ttf",
+          "size": 223100,
+          "sha256": "1a7b3066c5bb45bf7d3073280a8f27d77dc5b050a4dd564390468dd9071aaeea"
+        }
+      ],
+      "assets": [
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_1_1440x2560.png",
+          "size": 6490215,
+          "sha256": "3cf6aea2aa50bfeb6e2579f73675d7c0b2b8796eac0288c39386972ef840cbc3"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_2_1440x2560.png",
+          "size": 6575341,
+          "sha256": "001e9ee15101ec7fe88b5f1f6d7b78c38637506c2bcf89c0139ff91398f1511f"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_3_1440x2560.png",
+          "size": 6469795,
+          "sha256": "330bb9539d5a093bc1e86230a122c266bf8a6e378fdd34c898ff52ce26dc8b52"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_4_1440x2560.png",
+          "size": 6676294,
+          "sha256": "e36ee371ebfbc4637f1f0e3a654306eefcb3b2500032686230ae1842b8f0d659"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_5_1440x2560.png",
+          "size": 6044507,
+          "sha256": "b5f40b34567ea7db08d45fca86fd15619c100c003e0b5db3586c1d7f30b99bfe"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_6_1440x2560.png",
+          "size": 5825270,
+          "sha256": "1a953c5cd9febbd5dafbbab95fcc2e2b26dfe52f1fe02817339bf946de1e8f76"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_7_1440x2560.png",
+          "size": 6077958,
+          "sha256": "b815b90165177c98c9ca3c872d52f519715deae58dcfb773ef8d8092dae6675d"
+        },
+        {
+          "path": "assets/tien_mon_premium/app_backgrounds/tienmon_8_1440x2560.png",
+          "size": 6619392,
+          "sha256": "5edef3e6c2180ea36105208326227922f523b26abc7c346afd63a76b3cafd786"
+        },
+        {
+          "path": "assets/tien_mon_premium/widget_overview/w_toi.png",
+          "size": 3015617,
+          "sha256": "5a4b62a7a81b6ac62798bd41ea9f2f88ec55da707421b341fdfcd77b9bac510a"
+        },
+        {
+          "path": "assets/tien_mon_premium/widget_overview/wid_chieu.png",
+          "size": 3124925,
+          "sha256": "c0612706eecf76ee32cbd02401ad1d094f322de9da1432b56ccee6c0fe404fa0"
+        },
+        {
+          "path": "assets/tien_mon_premium/widget_overview/wid_sang.png",
+          "size": 3120053,
+          "sha256": "77ab81b16374d894f036dcddf40deaefe1c1f50f95dd3adbe2bf723d55c042e4"
+        }
+      ]
+    },
+    {
+      "id": "widgets",
+      "title": "Widget",
+      "entry": "scriptable/base/modules/widgets.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/widgets.js",
+          "size": 11742,
+          "sha256": "3908d1ae4d8b9f55a2897dc42cef9f75db42e6b1e25c7af112edc59bfed4597b"
+        },
+        {
+          "path": "web/widget-renderer.js",
+          "size": 14625,
+          "sha256": "5d85df993e1285dea0598bfd1f2e93fb662e4af21b5bf8fdf670b999bce4f871"
+        },
+        {
+          "path": "web/widget-palette.js",
+          "size": 3326,
+          "sha256": "692351ff74b0806ce823a2ebe2187220ea363ee606ef352ace90059d892d9377"
+        },
+        {
+          "path": "scriptable/shortcuts/BPA-Widgets.shortcut",
+          "size": 24468,
+          "sha256": "feb69376f6a90ddf137ae32cae04691efdae604b4d5d498ad30f24f35a92a322"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/macdinh.png",
+          "size": 2673373,
+          "sha256": "f28c84d177407ebbcd16716b05fa987d70417e1f46477ea1413d7b95c9dbb6be"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_overview_chevron_left.svg",
+          "size": 220,
+          "sha256": "ff14f6eb084400bb35eacf6c674beea158d18a143c7413f4a0567564cb4a230f"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_overview_chevron_right.svg",
+          "size": 219,
+          "sha256": "e0651e5a1e8d0800a53c0d1ea234f689544b60ae466de2f0c82eadb8e8b32a72"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_back.svg",
+          "size": 172,
+          "sha256": "f5df1f0cc484974d0d44affb9aed396dba808c289da684f6b97975173ad715d9"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_bell.svg",
+          "size": 256,
+          "sha256": "420a08691d0b2d96307b867597e495a062d2714ec8480a36da0e8fb27db1e5b7"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_calendar.svg",
+          "size": 326,
+          "sha256": "caf8cac82371aec0bf43237f95cc0007c34ed2de012800df59cb89d15f213ff5"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_down.svg",
+          "size": 150,
+          "sha256": "88cfa9bd2f1fe719e855135d45474f013a4810f7c9e5da3e79c36294dcc4533f"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_reload.svg",
+          "size": 246,
+          "sha256": "b80459cf3445a44ec311295c01da539086f05fffc02ae5756c6da8de97834eeb"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_study.svg",
+          "size": 209,
+          "sha256": "50d945e546cbbf11ad3dc01c5335fabbc6fe2ae0819d95940ae1102d34a6fa5b"
+        },
+        {
+          "path": "scriptable/base/modules/icons/ic_widget_up.svg",
+          "size": 150,
+          "sha256": "c8882236bf94be0470e16bf68a0ea7aeaeeb4dd570c932dd9d9aa86279a507f4"
+        }
+      ],
+      "assets": [
+        {
+          "path": "ios/WidgetAssets/widget2_themes/ben10.png.webp",
+          "size": 74882,
+          "sha256": "f72cc96349a073af477a5d5428b59423d3366e3f14681f0af82de1c104f0f37f"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/facebooj.png",
+          "size": 1696320,
+          "sha256": "185815548396fb1867a7f50fe16f016eec6b2cef195d8fc891a4b0be339d4273"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/lol.jpg",
+          "size": 269822,
+          "sha256": "3414b3342cd562765400381203d2bed825d1657039da125104da2aeb1a4c62f2"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/minecraft.jpg",
+          "size": 184076,
+          "sha256": "1ce0adda74875425337e5c2fb2abf13232fba0c1be5ac51556a746518f9f5fa7"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/shoppee.png",
+          "size": 1979369,
+          "sha256": "287381f463538107d2d044b70d0f946b8a73e675beef710093096cf9006d4a96"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/steam.png",
+          "size": 2705456,
+          "sha256": "baba4f014c6b582d475371516d926d0cb4aef820262691d7950a19605a14a7a0"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/tienmon-sang.png",
+          "size": 3254549,
+          "sha256": "69ff1d1f4391a97e84ef0c96d2a495c5e15b6dd9e3ccdbfe3311086c9d4d07e5"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/tienmon-toi.png",
+          "size": 3453685,
+          "sha256": "1ba9368a3b530af1bc5eebd77499f6599e63ad8263edd8cf20476945423861db"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/tiktok.png",
+          "size": 2451950,
+          "sha256": "8fce31e82a89d736f1aa79462e17cee1c1289b776ff2426021ccdd76af50ecda"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/tinemon-trua.png",
+          "size": 3321189,
+          "sha256": "d3d936240901cfc271859b60b53fbd04cb63d3a5e1a5de934dcfbd25fdff3bba"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/vlr.jpg",
+          "size": 231295,
+          "sha256": "a47bb50127372ad25db4f5191fa552b9ff632a3a7e1f568dc1dccca75e9b0a80"
+        },
+        {
+          "path": "ios/WidgetAssets/widget2_themes/ytb.png",
+          "size": 1992054,
+          "sha256": "6a1e54198ec677bab44af3ec821e24771a2f6d9f6c809b3e6f1e84ee9fdd7b81"
+        }
+      ]
+    },
+    {
+      "id": "reminders",
+      "title": "Nhắc lịch / Trợ lý",
+      "entry": "scriptable/base/modules/reminders.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/reminders.js",
+          "size": 24770,
+          "sha256": "ad5ef2d1748b410b3c913cb89e5b51ee4ac825256805fc4697eeb8fcb2cb3112"
+        },
+        {
+          "path": "scriptable/assistant_pack_texts.json",
+          "size": 13104,
+          "sha256": "208117024745848f3e294cc2ac5f166e9d8699d575fed3e1721090670a2348f7"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "id": "alarms",
+      "title": "Báo thức",
+      "entry": "scriptable/base/modules/alarms.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/alarms.js",
+          "size": 4224,
+          "sha256": "221d8e706f0529f58b4696651e1669d06bcdd46dc5cb1a3edef12d8eff43055d"
+        },
+        {
+          "path": "scriptable/shortcuts/BPA-Alarm.shortcut",
+          "size": 25594,
+          "sha256": "da7f9e83d429f2e33d7a22cf8ef72bef1ceb873055d200575ec6570a0a3eb9ea"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "id": "cards",
+      "title": "Thẻ NFC / VFX",
+      "entry": "scriptable/base/modules/cards.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/cards.js",
+          "size": 7282,
+          "sha256": "95bd17a9fe45efee99f5023d1e8281bc2894f0823bae8c0d028851749d5d8daa"
+        },
+        {
+          "path": "scriptable/shortcuts/BPA-NFC.shortcut",
+          "size": 23771,
+          "sha256": "3e97f9ed0424c2cad4119790a6a0637f5c6efb525a41e91be40bb7813e9bc8e2"
+        },
+        {
+          "path": "assets/card_vfx/link.html",
+          "size": 25141,
+          "sha256": "d539afe7dfca74a080b337ba36e97e11e11027267b92dbf9ba806211e2e2d390"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "id": "updater",
+      "title": "Cập nhật",
+      "entry": "scriptable/base/modules/updater.js",
+      "requires": [],
+      "files": [
+        {
+          "path": "scriptable/base/modules/updater.js",
+          "size": 1518,
+          "sha256": "7f431273648d2949584e60a14b75228a4c820e2f1aee9ebf6a614bca273188d5"
+        }
+      ],
+      "assets": []
+    }
+  ]
+}

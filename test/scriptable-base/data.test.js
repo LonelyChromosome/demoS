@@ -13,7 +13,7 @@ test('retained old exams survive while old classes are not added to new semester
  assert.deepEqual(runtime.flatten(semester,old).records.map(r=>r.id),['class','exam','old-exam']);
 });
 test('base manifest matches every installable module and excludes full app bundles',()=>{
- const manifest=JSON.parse(fs.readFileSync('scriptable/base/manifest.json'));assert.deepEqual(Object.keys(manifest.files).sort(),['Roboto-Regular.ttf','runtime.js','sync.js','ui.html']);for(const [name,item]of Object.entries(manifest.files)){const data=fs.readFileSync('scriptable/base/'+name);assert.equal(data.length,item.size);assert.equal(crypto.createHash('sha256').update(data).digest('hex'),item.sha256);}
+ const manifest=JSON.parse(fs.readFileSync('scriptable/base/manifest.json'));assert.deepEqual(Object.keys(manifest.files).sort(),['Roboto-Regular.ttf','catalog.json','module-manager.js','runtime.js','services.js','sync.js','ui.html']);for(const [name,item]of Object.entries(manifest.files)){const data=fs.readFileSync('scriptable/base/'+name);assert.equal(data.length,item.size);assert.equal(crypto.createHash('sha256').update(data).digest('hex'),item.sha256);}
  const envelope=JSON.parse(fs.readFileSync('scriptable/base/BPA.scriptable'));assert.ok(Buffer.byteLength(envelope.script)<10000);assert.doesNotMatch(envelope.script,/BPA_BUNDLED_SHORTCUTS|installWidgetScripts|main\.dart\.js|canvaskit/);
 });
 test('base sync uses the original live page transport, not Scriptable Request',()=>{

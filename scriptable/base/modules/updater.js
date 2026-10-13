@@ -1,0 +1,8 @@
+function create(ctx){return {async handle(){
+ const a=new Alert();a.title='Cập nhật BPA';a.addAction('Kiểm tra bản mới');a.addAction('Kiểm tra / cài lại phần đang dùng');a.addCancelAction('Đóng');const choice=await a.presentAlert();if(choice<0)return;
+ if(choice===1){for(const item of ctx.list().filter(m=>m.installed))await ctx.installOne(item.id);return;}
+ const req=new Request('https://api.github.com/repos/LonelyChromosome/demoS/git/ref/heads/feature/scriptable-base');req.timeoutInterval=15;const ref=await req.loadJSON();if(req.response.statusCode!==200||!/^[0-9a-f]{40}$/.test(ref?.object?.sha))throw Error('Chưa kiểm tra được bản mới.');ctx.check();const release=ref.object.sha;
+ const request=new Request('https://raw.githubusercontent.com/LonelyChromosome/demoS/'+release+'/scriptable/base/BPA.scriptable');request.timeoutInterval=30;const envelope=await request.loadJSON();if(request.response.statusCode!==200||envelope.name!=='BPA Base'||typeof envelope.script!=='string'||envelope.script.length>30000||!envelope.script.includes('const BASE_RELEASE='))throw Error('Bộ cài mới không hợp lệ.');
+ envelope.script=envelope.script.replace('"__BPA_BASE_RELEASE__"',JSON.stringify(release));if(envelope.script.includes('__BPA_BASE_RELEASE__'))throw Error('Bộ cài mới chưa hoàn chỉnh.');ctx.check();const path=ctx.path('BPA-update.scriptable');ctx.fm.writeString(path,JSON.stringify(envelope));await QuickLook.present(path,true);
+ }};}
+module.exports={create};

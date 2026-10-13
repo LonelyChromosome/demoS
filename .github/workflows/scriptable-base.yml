@@ -2,7 +2,7 @@ name: BPA cooc 1.0 Scriptable base
 on:
   push:
     branches: [feature/scriptable-base]
-    paths: [scriptable/base/**, test/scriptable-base/**, tool/test_base_web.cjs, tool/test_base_portal.cjs, .github/workflows/scriptable-base.yml]
+    paths: [scriptable/base/**, test/scriptable-base/**, tool/test_base_web.cjs, tool/test_base_portal.cjs, tool/test_base_modules.cjs, .github/workflows/scriptable-base.yml]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,7 +21,7 @@ jobs:
       - name: Build pinned base installer and verify protocol/data contracts
         run: |
           python3 scriptable/base/build.py --release "$GITHUB_SHA"
-          git diff --exit-code -- scriptable/base/sync.js scriptable/base/manifest.json
+          git diff --exit-code -- scriptable/base/sync.js scriptable/base/manifest.json scriptable/base/catalog.json scriptable/base/modules
           TZ=Asia/Ho_Chi_Minh node --test test/scriptable/*.test.js test/scriptable-base/*.test.js
       - name: Base login and day/week calendar in Chromium
         env:

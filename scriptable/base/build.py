@@ -1,6 +1,7 @@
 """Build the small Scriptable base without full runtime/Shortcut dependencies."""
 from pathlib import Path
-import json,re,hashlib,argparse
+import json,re,hashlib,argparse,runpy
+runpy.run_path(str(Path(__file__).with_name('build_modules.py')))
 root=Path(__file__).resolve().parents[2];here=root/'scriptable/base'
 parser=argparse.ArgumentParser();parser.add_argument('--release',default='__BPA_BASE_RELEASE__');args=parser.parse_args()
 mobile=(root/'lib/features/dang_nhap_qldt/qldt_login_mobile.dart').read_text();session=re.search(r"source: r'''(.*?)'''",mobile[mobile.index('Future<void> _checkReady()'):],re.S).group(1)
@@ -12,7 +13,7 @@ sync=(root/'scriptable/core.js').read_text()+'\nconst REGISTRATION_SCRIPT='+json
 local=(root/'scriptable/local-package.js').read_text();hash_code=local[local.index('function* sha256Work'):local.index('function validBundlePath')]
 # Avoid unused cooperative helper in the small top-level script.
 hash_code=re.sub(r'async function sha256Cooperative\(.*?\n}\n','',hash_code,flags=re.S)
-files={name:{'size':(here/name).stat().st_size,'sha256':hashlib.sha256((here/name).read_bytes()).hexdigest()} for name in ['runtime.js','ui.html','sync.js']}
+files={name:{'size':(here/name).stat().st_size,'sha256':hashlib.sha256((here/name).read_bytes()).hexdigest()} for name in ['runtime.js','ui.html','sync.js','module-manager.js','services.js','catalog.json']}
 if (here/'Roboto-Regular.ttf').exists():files['Roboto-Regular.ttf']={'size':(here/'Roboto-Regular.ttf').stat().st_size,'sha256':hashlib.sha256((here/'Roboto-Regular.ttf').read_bytes()).hexdigest()}
 (here/'manifest.json').write_text(json.dumps({'schema':1,'scope':'cooc 1.0 base: in-app day/week calendar and verified QLDT sync','files':files},ensure_ascii=False,indent=2)+'\n')
 entry=(here/'launcher.js').read_text().replace('__RELEASE__',json.dumps(args.release)).replace('__FILES__',json.dumps(files,ensure_ascii=False,indent=2)).replace('__HASH__',hash_code)

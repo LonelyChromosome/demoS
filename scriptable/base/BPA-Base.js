@@ -4,16 +4,28 @@
 const BASE_RELEASE="__BPA_BASE_RELEASE__";
 const BASE_FILES={
   "runtime.js": {
-    "size": 10642,
-    "sha256": "14e0721bc0ee565b74ec657fb447595b71b1e32f17f5ec90c687785e87fc600c"
+    "size": 14386,
+    "sha256": "29eeb6a754aefe56eb9461683a2acb3b6dcd1cc6c815aaffea942b3f08ac4cf6"
   },
   "ui.html": {
-    "size": 13909,
-    "sha256": "ab9ea7b2dca594ba2c891cf63cb2345a871b0f8baac3b70b59e2f03a7ebee4ef"
+    "size": 19301,
+    "sha256": "8fe4ea5bf905151bbbdb50c723bb5ae667d65312e0823a64062f4e67a8fb67ba"
   },
   "sync.js": {
     "size": 26619,
     "sha256": "6dfd2789945c5454b4fd87d58b6df0297e7c974fecbce448ac4e05f74b3bab4d"
+  },
+  "module-manager.js": {
+    "size": 4940,
+    "sha256": "952dcde9d9265446df8dc05a639028265753f041a0d41b8334115b0b3e7a3148"
+  },
+  "services.js": {
+    "size": 8599,
+    "sha256": "04c1e72e9743a21b3436987bd40a47009dfb3ea3a91638312f6ab75f34809d72"
+  },
+  "catalog.json": {
+    "size": 11773,
+    "sha256": "93020c5f455eedbf505c3cc9740203131e33d470cd577b5478fe0163b0d8d8f4"
   },
   "Roboto-Regular.ttf": {
     "size": 171676,
@@ -55,16 +67,17 @@ async function startBase(){
  await web.loadHTML('<!doctype html><html lang="vi"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="margin:0;background:#f9fbff;color:#102b73;font:17px -apple-system,sans-serif"><main style="padding:28px;min-height:90vh;display:flex;justify-content:center;flex-direction:column"><h1>BPA</h1><p>cooc 1.0 base</p><p id="status" role="status">Đang mở BPA…</p><p style="font-size:13px;color:#7180a0">Lần đầu cần mạng để cài phần trong app. Đóng màn hình để dừng; chạy lại để tiếp tục.</p></main></body></html>','https://bpa.local/');
  const presentation=web.present(true).then(()=>{closed=true;rejectClose(stopped);});
  const installing=new Map();
- async function install(name){
-  check();if(!Object.prototype.hasOwnProperty.call(BASE_FILES,name))throw Error('Phần cài không thuộc bản BPA này.');
+ async function integrity(data){const raw=base64ByteView(data.toBase64String()),work=sha256Work(raw);let step;do{check();step=work.next();if(!step.done)await delay(1);}while(!step.done);return {size:raw.length,sha256:step.value};}
+ async function install(name,resource=null){
+  check();if(resource?(!name.startsWith('@')||!/^[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*$/.test(name.slice(1))||name.slice(1).split('/').some(x=>x==='.'||x==='..')||!Number.isInteger(resource.size)||resource.size>25000000||resource.size<0||!/^[0-9a-f]{64}$/.test(resource.sha256)):!Object.prototype.hasOwnProperty.call(BASE_FILES,name))throw Error('Phần cài không thuộc bản BPA này.');
   if(installing.has(name))return await installing.get(name);
-  const job=(async()=>{const expected=BASE_FILES[name],path=fm.joinPath(directory,name);if(fm.fileExists(path)){const data=fm.read(path);if(sha256Data(data)===expected.sha256)return path;}
-   await progress(name==='sync.js'?'Đang chuẩn bị kết nối QLĐT…':'Đang chuẩn bị giao diện BPA…');await delay(1);check();const request=new Request('https://raw.githubusercontent.com/LonelyChromosome/demoS/'+BASE_RELEASE+'/scriptable/base/'+name);request.timeoutInterval=30;
-   const data=await Promise.race([request.load(),cancellation]);check();if(request.response.statusCode!==200||dataSize(data)!==expected.size||sha256Data(data)!==expected.sha256)throw Error('Không xác minh được phần cài BPA. Hãy chạy lại.');
-   const pending=path+'.pending';fm.write(pending,data);check();if(sha256Data(fm.read(pending))!==expected.sha256)throw Error('Không lưu được phần cài BPA.');if(fm.fileExists(path))fm.remove(path);fm.move(pending,path);await delay(1);check();return path;
+  const job=(async()=>{const expected=resource||BASE_FILES[name],relative=resource?'resources/'+name.slice(1):name,path=fm.joinPath(directory,relative),parent=path.slice(0,path.lastIndexOf('/'));if(!fm.fileExists(parent))fm.createDirectory(parent,true);if(fm.fileExists(path)){const data=fm.read(path);const cached=await integrity(data);if(cached.sha256===expected.sha256&&cached.size===expected.size)return path;}
+   await progress(name==='sync.js'?'Đang chuẩn bị kết nối QLĐT…':'Đang chuẩn bị giao diện BPA…');await delay(1);check();const request=new Request('https://raw.githubusercontent.com/LonelyChromosome/demoS/'+BASE_RELEASE+'/'+(resource?name.slice(1):'scriptable/base/'+name));request.timeoutInterval=30;
+   const data=await Promise.race([request.load(),cancellation]);check();const verified=await integrity(data);if(request.response.statusCode!==200||verified.size!==expected.size||verified.sha256!==expected.sha256)throw Error('Không xác minh được phần cài BPA. Hãy chạy lại.');
+   const pending=path+'.pending';fm.write(pending,data);check();if((await integrity(fm.read(pending))).sha256!==expected.sha256)throw Error('Không lưu được phần cài BPA.');if(fm.fileExists(path))fm.remove(path);fm.move(pending,path);await delay(1);check();return path;
   })();installing.set(name,job);try{return await job;}finally{installing.delete(name);}
  }
- try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,evaluate,delay,check,presentation});}
+ try{const runtime=importModule(await install('runtime.js'));check();await runtime.run(web,{fm,install,installResource:f=>install('@'+f.path,f),release:BASE_RELEASE,runtimePath:fm.joinPath(directory,'runtime.js'),scriptName:module.filename.split('/').pop().replace(/\.js$/,''),evaluate,delay,check,presentation});}
  catch(error){if(!closed){try{await progress(error.message||String(error));}catch(_){}await presentation;}if(error.code!=='cancelled')console.error(error.message||String(error));}
 }
 await startBase();
