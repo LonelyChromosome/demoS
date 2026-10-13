@@ -157,19 +157,20 @@ const SCHEDULE_SCRIPT="\n      (function () {\n        function scheduleStage(va
 // exactly one outstanding callback evaluation and its completion is captured.
 async function portalCall(web,evaluate,source,resultHandler,errorHandler,check){
  check();const code=`(()=>{
-  const done=completion,previousBridge=window.flutter_inappwebview;
-  let finished=false;
+  const done=completion,existingBridge=window.flutter_inappwebview,previousBridge=existingBridge?.__bpaPortalBridge===true?existingBridge.__bpaPrevious:existingBridge;
+  let finished=false,ownedBridge=null;
   const original=window.edu&&edu.system;
-  function finish(value){if(finished)return;finished=true;clearTimeout(timer);window.flutter_inappwebview=previousBridge;done(value);}
+  function finish(value){if(finished)return;finished=true;clearTimeout(timer);setTimeout(()=>{if(ownedBridge&&window.flutter_inappwebview===ownedBridge)window.flutter_inappwebview=previousBridge;},0);done(value);}
   const timer=setTimeout(()=>finish({error:'QLDT_REQUEST_TIMEOUT'}),20000);
   if(!original||typeof original.makeRequest!=='function'){finish({error:'SESSION_EXPIRED'});return;}
   const bpaSystem=Object.create(original);
   bpaSystem.makeRequest=(options,...rest)=>{if(finished)return;const guarded={...options,success:value=>{if(!finished)options.success(value);},error:(...args)=>{if(!finished&&options.error)options.error(...args);}};return original.makeRequest.call(original,guarded,...rest);};
-  window.flutter_inappwebview={callHandler(name,attempt,value){
+  ownedBridge={__bpaPortalBridge:true,__bpaPrevious:previousBridge,callHandler(name,attempt,value){
+   if(finished)return Promise.resolve(null);
    if(name===${JSON.stringify(resultHandler)})finish({value});
    else if(name===${JSON.stringify(errorHandler)})finish({error:String(value||'QLDT_ERROR')});
    return Promise.resolve(null);
-  }};
+  }};window.flutter_inappwebview=ownedBridge;
   try{const result=${source.trim().replace(/;$/,'')};if(['SESSION_EXPIRED','BRIDGE_MISSING','BRIDGE_EXCEPTION','bridge_unavailable','portal_unavailable','request_exception'].includes(result))finish({error:result});}catch(error){finish({error:'QLDT_PAGE_ERROR'});}
  })();`;
  const result=await evaluate(web,code,true,25000);check();

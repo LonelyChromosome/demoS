@@ -19,3 +19,9 @@ test('base manifest matches every installable module and excludes full app bundl
 test('base sync uses the original live page transport, not Scriptable Request',()=>{
  const source=fs.readFileSync('scriptable/base/sync.js','utf8');assert.match(source,/original\.makeRequest\.call\(original/);assert.doesNotMatch(source,/new Request\(/);assert.match(source,/QLDT_REQUEST_TIMEOUT/);
 });
+test('duplicate completion in the same page callback is ignored and original bridge is restored',async()=>{
+ const original={marker:'university'},page=vm.createContext({window:{edu:{system:{makeRequest(){}}},flutter_inappwebview:original},edu:{system:{makeRequest(){}}},setTimeout,clearTimeout});
+ const c=vm.createContext({module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);
+ c.evaluate=(_web,code)=>new Promise((resolve,reject)=>{page.completion=resolve;try{vm.runInContext(code,page);}catch(error){reject(error);}});c.source='(()=>{window.flutter_inappwebview.callHandler("ok",1,"{}");window.flutter_inappwebview.callHandler("ok",1,"{}");return "done";})()';
+ const result=await vm.runInContext('portalCall(null,evaluate,source,"ok","error",()=>{})',c);assert.equal(JSON.stringify(result),'{}');await new Promise(r=>setTimeout(r,5));assert.equal(page.window.flutter_inappwebview,original);
+});
