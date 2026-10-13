@@ -16,7 +16,6 @@ test('base manifest matches every installable module and excludes full app bundl
  const manifest=JSON.parse(fs.readFileSync('scriptable/base/manifest.json'));assert.deepEqual(Object.keys(manifest.files).sort(),['Roboto-Regular.ttf','runtime.js','sync.js','ui.html']);for(const [name,item]of Object.entries(manifest.files)){const data=fs.readFileSync('scriptable/base/'+name);assert.equal(data.length,item.size);assert.equal(crypto.createHash('sha256').update(data).digest('hex'),item.sha256);}
  const envelope=JSON.parse(fs.readFileSync('scriptable/base/BPA.scriptable'));assert.ok(Buffer.byteLength(envelope.script)<10000);assert.doesNotMatch(envelope.script,/BPA_BUNDLED_SHORTCUTS|installWidgetScripts|main\.dart\.js|canvaskit/);
 });
-test('base native transport keeps the original QLDT envelope and rejects HTTP 503',async()=>{
- const calls=[],c=vm.createContext({Buffer,module:{exports:{}},Request:class{constructor(url){this.url=url;this.response={statusCode:503};calls.push(this);}async loadString(){return '<html>503</html>';}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);c.session={tokenJWT:'local-test',userId:'student',iM:'secret-mode',appId:'app',strChucNangId:'function'};
- await assert.rejects(vm.runInContext('module.exports.fetch(session,()=>{})',c),e=>e.code==='qldt_http');assert.equal(calls.length,1);assert.match(calls[0].headers.Authorization,/Bearer local-test/);assert.match(calls[0].body,/^A=/);assert.equal(calls[0].url.startsWith('https://qldtbeta.phenikaa-uni.edu.vn/'),true);
+test('base sync uses the original live page transport, not Scriptable Request',()=>{
+ const source=fs.readFileSync('scriptable/base/sync.js','utf8');assert.match(source,/original\.makeRequest\.call\(original/);assert.doesNotMatch(source,/new Request\(/);assert.match(source,/QLDT_REQUEST_TIMEOUT/);
 });

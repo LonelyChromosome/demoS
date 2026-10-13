@@ -34,3 +34,20 @@ Generated source commit contains placeholder export; use CI's pinned installer o
 the supplied file, never the placeholder repository export. Native launcher mocks,
 actual base runtime/transport fixtures and Chromium/WebKit day/week UI checks are
 separate from physical Scriptable import and actual-account login tests.
+
+## Live-page session fix after first iPhone login feedback
+
+The first base imported/opened and reached QLDT, but returned to BPA and remained
+at connecting. That proves import/open progressed; actual sync did not succeed.
+Original base replaced the QLDT document and fetched with native Scriptable Request.
+This fix preserves the authenticated QLDT document and its edu.system.makeRequest;
+registration and schedule use the original Android scripts in that live context.
+A sandboxed iframe overlays BPA calendar above the portal. Refresh uses the same
+live page; no second WebView or native Request replays the login session. Native
+input polling now drains a JSON string synchronously rather than leaving a callback
+pending across navigation. Request callbacks capture completion and ignore late
+responses after timeout. Status phases are logged without credentials/student data.
+Tests include the live parent transport, sandboxed UI commands, a second refresh
+without replacing the portal, and retained old data after portal errors. These
+checks still do not establish actual-account/iPhone success or university-site CSP
+compatibility; the supplied new pinned installer is a device fix candidate.

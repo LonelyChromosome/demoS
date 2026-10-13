@@ -4,8 +4,10 @@ import json,re,hashlib,argparse
 root=Path(__file__).resolve().parents[2];here=root/'scriptable/base'
 parser=argparse.ArgumentParser();parser.add_argument('--release',default='__BPA_BASE_RELEASE__');args=parser.parse_args()
 mobile=(root/'lib/features/dang_nhap_qldt/qldt_login_mobile.dart').read_text();session=re.search(r"source: r'''(.*?)'''",mobile[mobile.index('Future<void> _checkReady()'):],re.S).group(1)
-transport=(root/'scriptable/native-transport.js').read_text().replace("async function qldtPost(session,action,func,extra) {","async function qldtPost(session,action,func,extra) {\n  activeCheck();").replace("const text=await request.loadString(),status=request.response.statusCode;","const text=await request.loadString(),status=request.response.statusCode;activeCheck();")
-sync=(root/'scriptable/core.js').read_text()+'\nfunction errorCode(code,message){return Object.assign(Error(message),{code});}\nlet activeCheck=()=>{};\n'+transport+'\nmodule.exports={probeScript:'+json.dumps(session,ensure_ascii=False)+",retain:BPACore.retain,async fetch(session,check){activeCheck=check;try{check();return await fetchNativeQldt(session);}finally{activeCheck=()=>{};}}};\n"
+registration=re.search(r"String get _script => r\'\'\'(.*?)\'\'\';",(root/'lib/features/dang_nhap_qldt/tracuu_api.dart').read_text(),re.S).group(1).replace('__ATTEMPT__','1')
+registration=registration.replace('const system = window.edu && edu.system;', 'const system = bpaSystem;')
+schedule=re.search(r"final script =\s*\'\'\'(.+?)\'\'\';",mobile[mobile.index('const concurrency = 8;'):],re.S).group(1).replace('$epoch','1').replace('$concurrency','8').replace('$chunksJson','__BPA_CHUNKS__').replace('edu.system.makeRequest({','bpaSystem.makeRequest({')
+sync=(root/'scriptable/core.js').read_text()+'\nconst REGISTRATION_SCRIPT='+json.dumps(registration,ensure_ascii=False)+';\nconst SCHEDULE_SCRIPT='+json.dumps(schedule,ensure_ascii=False)+';\n'+(here/'portal-sync.js').read_text()+'\nmodule.exports={probeScript:'+json.dumps(session,ensure_ascii=False)+',retain:BPACore.retain,fetch:fetchInPortal};\n'
 (here/'sync.js').write_text(sync)
 local=(root/'scriptable/local-package.js').read_text();hash_code=local[local.index('function* sha256Work'):local.index('function validBundlePath')]
 # Avoid unused cooperative helper in the small top-level script.

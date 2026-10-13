@@ -2,7 +2,7 @@ name: BPA cooc 1.0 Scriptable base
 on:
   push:
     branches: [feature/scriptable-base]
-    paths: [scriptable/base/**, test/scriptable-base/**, tool/test_base_web.cjs, .github/workflows/scriptable-base.yml]
+    paths: [scriptable/base/**, test/scriptable-base/**, tool/test_base_web.cjs, tool/test_base_portal.cjs, .github/workflows/scriptable-base.yml]
   workflow_dispatch:
 permissions:
   contents: read
