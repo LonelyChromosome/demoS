@@ -3,6 +3,15 @@ from pathlib import Path
 import re, json, hashlib, base64
 root=Path(__file__).resolve().parents[1]
 source=root/'lib/features/dang_nhap_qldt'
+def scriptable_literal(value, depth=0):
+    """Bound editor line lengths; preserve every embedded string byte."""
+    pad='  '*depth
+    if isinstance(value,str) and len(value)>240:
+        parts=[json.dumps(value[i:i+120],ensure_ascii=False) for i in range(0,len(value),120)]
+        return '[\n'+',\n'.join(pad+'  '+part for part in parts)+'\n'+pad+"].join('')"
+    if isinstance(value,dict):
+        return '{\n'+',\n'.join(pad+'  '+json.dumps(k,ensure_ascii=False)+': '+scriptable_literal(v,depth+1) for k,v in value.items())+'\n'+pad+'}'
+    return json.dumps(value,ensure_ascii=False)
 registration=re.search(r"String get _script => r'''(.*?)''';",(source/'tracuu_api.dart').read_text(),re.S).group(1).replace('__ATTEMPT__','1')
 mobile=(source/'qldt_login_mobile.dart').read_text()
 session_script=re.search(r"source: r'''(.*?)'''",mobile[mobile.index('Future<void> _checkReady()'):],re.S).group(1)
@@ -22,11 +31,11 @@ print(output)
 shared_runtime=(root/'scriptable/runtime.js').read_text().split("if (typeof Script !== 'undefined')")[0]
 host_header='// Variables used by Scriptable.\n// icon-color: deep-blue; icon-glyph: calendar-alt;\n// BPA 1.6 — original Flutter UI + Scriptable bridge.\n'
 host=host_header+(root/'scriptable/core.js').read_text()+'\n'
-host+='const REGISTRATION_SCRIPT='+json.dumps(registration,ensure_ascii=False)+';\n'
-host+='const SCHEDULE_SCRIPT='+json.dumps(schedule,ensure_ascii=False)+';\n'
+host+='const REGISTRATION_SCRIPT='+scriptable_literal(registration)+';\n'
+host+='const SCHEDULE_SCRIPT='+scriptable_literal(schedule)+';\n'
 host+='function scheduleScript(chunks) { return SCHEDULE_SCRIPT.replace("__BPA_CHUNKS__",JSON.stringify(chunks)); }\n'
-host+='const SESSION_SCRIPT='+json.dumps(session_script,ensure_ascii=False)+';\n'
-host+='const BPA_ASSISTANT_CATALOG='+json.dumps(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()),ensure_ascii=False)+';\n'
+host+='const SESSION_SCRIPT='+scriptable_literal(session_script)+';\n'
+host+='const BPA_ASSISTANT_CATALOG='+scriptable_literal(json.loads((root/'scriptable/assistant_pack_texts.json').read_text()))+';\n'
 host+='const BPA_UPDATE_CHANNEL='+json.dumps(json.loads((root/'scriptable/update-channel.json').read_text()))+';\n'
 shortcuts={}
 for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc','BPA-NFC','BPA — Quét thẻ'),('widgets','BPA-Widgets','BPA — Làm mới widget')]:
@@ -36,7 +45,7 @@ for kind,stem,name in [('alarm','BPA-Alarm','BPA — Đặt báo thức'),('nfc'
     if not binary.startswith(b'AEA1') or len(binary)!=metadata['size'] or hashlib.sha256(binary).hexdigest()!=metadata['signed_sha256'] or hashlib.sha256((directory/(stem+'.cherri')).read_bytes()).hexdigest()!=metadata['workflow_source_sha256']:
         raise RuntimeError('Bundled Shortcut source/artifact mismatch: '+stem)
     shortcuts[kind]={'name':name,'size':len(binary),'sha256':metadata['signed_sha256'],'base64':base64.b64encode(binary).decode()}
-host+='const BPA_BUNDLED_SHORTCUTS='+json.dumps(shortcuts,ensure_ascii=False)+';\n'
+host+='const BPA_BUNDLED_SHORTCUTS='+scriptable_literal(shortcuts)+';\n'
 
 host+=(root/'scriptable/exam-reminders.js').read_text()+'\n'+(root/'scriptable/sync-stale-reminders.js').read_text()+'\n'
 host+=shared_runtime+'\n'+(root/'scriptable/local-package.js').read_text()+'\n'+(root/'scriptable/bootstrap.js').read_text()+'\n'+(root/'scriptable/native-transport.js').read_text()+'\n'+(root/'scriptable/widgets.js').read_text()+'\n'+(root/'scriptable/web-updater.js').read_text()+'\n'+(root/'scriptable/portal-login.js').read_text()+'\n'+(root/'scriptable/bundled-shortcuts.js').read_text()+'\n'+(root/'scriptable/widget-shortcut.js').read_text()+'\n'+(root/'scriptable/sync-worker.js').read_text()+'\n'+(root/'scriptable/app-runtime.js').read_text()
