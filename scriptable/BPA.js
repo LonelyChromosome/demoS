@@ -494,7 +494,7 @@ function acquireStartupLease() {
   if(old&&bpaFM.fileExists(path))bpaFM.remove(path);
   const id=UUID.string(),claim=bpaPath('startup-claim-'+id+'.json');
   bpaFM.writeString(claim,JSON.stringify({id,at:Date.now()}));
-  try{bpaFM.move(claim,path);}catch(error){if(bpaFM.fileExists(claim))bpaFM.remove(claim);throw errorCode('startup_busy','Một lượt chuẩn bị BPA đang chạy.');}
+  try{bpaFM.copy(claim,path);bpaFM.remove(claim);}catch(error){if(bpaFM.fileExists(claim))bpaFM.remove(claim);throw errorCode('startup_busy','Một lượt chuẩn bị BPA đang chạy.');}
   return {check(){if(readState(name,null)?.id!==id)throw errorCode('cancelled','Lượt chuẩn bị đã bị hủy.');},heartbeat(){this.check();writeState(name,{id,at:Date.now()});},release(){if(readState(name,null)?.id===id)bpaFM.remove(path);}};
 }
 async function prepareAppBundle(app) {
