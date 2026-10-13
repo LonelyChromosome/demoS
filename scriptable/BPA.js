@@ -1236,7 +1236,7 @@ async function assistantNotification(useCase) {
 }
 async function handlePlatform(call,app) {
   const method=call.method,args=call.arguments,channel=call.channel.replace('better_phenikaa/','');
-  if(channel==='sync_worker')return handleSyncWorkerCall(method);
+  if(channel==='sync_worker'){if(method==='refreshed'&&!syncWorkerContext)return null;return handleSyncWorkerCall(method);}
   if(channel==='qldt_scriptable') {
     if(method==='sync')return await syncPortal(app);
     if(method==='takeLoginResume')return takeLoginResume(app);

@@ -51,6 +51,7 @@ async function main(){
       }
       if(call.channel==='better_phenikaa/sync_worker') {
         window.__bpaWorkerCalls=window.__bpaWorkerCalls||[];window.__bpaWorkerCalls.push(method);
+        if(method==='refreshed')window.__bpaWorkerRefresh=call.arguments;
         if(method==='payload')result=window.__bpaWorkerFixture;
       }
       if(call.channel==='better_phenikaa/update_http'&&method==='fetch')result=call.arguments.url.endsWith('.sig')?(window.__bpaBadSignature?qaUpdate.badSignature:qaUpdate.signature):qaUpdate.manifest;
@@ -134,8 +135,13 @@ async function main(){
     await page.waitForSelector('canvas',{timeout:30000});
     await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
     await page.locator('[aria-label="Lịch học"]').or(page.getByText('Lịch học',{exact:true})).first().waitFor({state:'visible',timeout:30000});
+    await page.waitForTimeout(1200);
+    const beforeRefresh=await page.screenshot();
     await page.evaluate(preferences=>{window.bpaHost.replacePreferences(preferences);window.bpaHost.event('better_phenikaa/sync_worker','event',{type:'refresh'});},worker.preferences);
-    await page.getByText('Worker QA',{exact:true}).first().waitFor({state:'visible',timeout:30000});
+    await page.waitForFunction(()=>window.__bpaWorkerRefresh?.records===5,{},{timeout:30000});
+    const afterRefresh=await page.screenshot();
+    if(beforeRefresh.equals(afterRefresh))throw Error('Worker refresh acknowledged but the app frame did not change');
+    fs.writeFileSync(qaDir+'/worker-reopened-before.png',beforeRefresh);fs.writeFileSync(qaDir+'/worker-reopened-after.png',afterRefresh);
     if(await page.evaluate(()=>window.__bpaLoginSyncs)!==0)throw Error('Receiving a committed worker result started another sync');
     await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');

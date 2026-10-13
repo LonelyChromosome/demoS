@@ -565,6 +565,8 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     }
     _examNotice=await DailySync.examNotice();
     await _refreshDifference();await _refreshSyncStatus();
+    await WidgetsBinding.instance.endOfFrame;
+    if(mounted)await const BpaChannel('better_phenikaa/sync_worker').invokeMethod<void>('refreshed',{'records':data.records.length});
   }
 
   Future<void> _runScriptableSyncWorker() async {
