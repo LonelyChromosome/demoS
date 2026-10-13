@@ -1,7 +1,7 @@
 // Exercise the actual portal adapter and sandboxed calendar overlay in browsers.
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 module.exports=async function(browser,url,dir){
- const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,timezoneId:'Asia/Ho_Chi_Minh'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true,timezoneId:'Asia/Ho_Chi_Minh'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const c=vm.createContext({module:{exports:{}}});vm.runInContext(fs.readFileSync('scriptable/base/sync.js','utf8'),c);const sync=c.module.exports,runtime=require('../scriptable/base/runtime');
  let ui=fs.readFileSync('scriptable/base/ui.html','utf8');ui=ui.replace('<style>',`<style>@font-face{font-family:Roboto;src:url(data:font/ttf;base64,${fs.readFileSync('scriptable/base/Roboto-Regular.ttf').toString('base64')})}`);
  try{
