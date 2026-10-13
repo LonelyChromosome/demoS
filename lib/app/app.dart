@@ -132,6 +132,11 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
       unawaited(_runScriptableSyncWorker());
       return;
     }
+    if(scriptableAvailable) {
+      const BpaChannel('better_phenikaa/sync_worker').setMethodCallHandler((call) async {
+        if(call.method=='refresh' && !_syncing)await _refreshWorkerSnapshot();
+      });
+    }
     unawaited(_update.restore());
     if (!scriptableLoginResuming) unawaited(_checkLatestOnLaunch());
     unawaited(_loadAppVersionName());
@@ -541,6 +546,24 @@ class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
     if (mounted) {
       setState(() => _booting = false);
     }
+  }
+
+  Future<void> _refreshWorkerSnapshot() async {
+    final prefs=await SharedPreferences.getInstance();await prefs.reload();
+    final raw=prefs.getString(_storageKey);
+    if(raw==null||!mounted)return;
+    final data=ImportedScheduleData.decode(raw);
+    final name=await readQldtAccountDisplayName();
+    if(!mounted)return;
+    setState((){_data=data;_accountDisplayName=name;_lastSuccessfulSync=data.syncedAt;});
+    _scheduleExamClock();
+    final semester=await CurrentSemesterStore().read();
+    if(semester!=null){
+      final start=SemesterRetention.startOf(semester,prefs.getString(SemesterRetention.currentStartKey));
+      if(start!=null)_scheduleSemesterExpiry(RetainedSemester(semester,start),SemesterRetention.readPrevious(prefs,DateTime.now()));
+    }
+    _examNotice=await DailySync.examNotice();
+    await _refreshDifference();await _refreshSyncStatus();
   }
 
   Future<void> _runScriptableSyncWorker() async {

@@ -50,6 +50,7 @@ function commitBackgroundState(job,context,result) {
   changes['preferences.json']=mergeWorkerPreferences(job.preferences,changes['preferences.json']||job.preferences,diskState('preferences.json',{}));
   // Theme loading is incidental to the hidden runtime; foreground theme wins.
   delete changes['theme.json'];delete changes['widget-refresh.json'];
+  changes['sync-revision.json']={requestId:job.requestId,epoch:job.epoch};
   const before={};for(const name of Object.keys(changes))before[name]=diskState(name,null);
   diskWrite('sync-commit.json',{requestId:job.requestId,epoch:job.epoch,before});
   try {
@@ -107,6 +108,7 @@ async function runBackgroundSyncWorker(input) {
     checkBackgroundJob(job);
     syncWorkerContext=null;
     const receipt=commitBackgroundState(job,context,{...context.payload,savedByScriptableWorker:job.save});
+    if(context.stale){checkBackgroundJob(job);try {await scheduleStaleReminder(true);}catch(error){diskWrite('sync-maintenance.json',{requestId:job.requestId,stale:'pending',code:error.code||'notification_error'});}}
     if(context.reminders) {
       try {await scheduleExamReminders();}catch(error){diskWrite('sync-maintenance.json',{requestId:job.requestId,reminders:'pending',code:error.code||'notification_error'});}
     }
@@ -143,7 +145,8 @@ async function dispatchBackgroundSync(app,generation) {
       const result=diskState(workerJobPath(requestId),null);
       if(result?.status==='failed')throw errorCode(result.code,'Đồng bộ chưa hoàn tất.');
       if(result?.status!=='committed')throw callbackError||errorCode('sync_not_committed','Tác vụ nền chưa xác nhận lưu lịch.');
-      await app.evaluateJavaScript(`bpaHost.replacePreferences(${JSON.stringify(readState('preferences.json'))});null`,false);
+      state.preferences=readState('preferences.json');state.syncRevision=readState('sync-revision.json',{}).requestId||null;
+      await app.evaluateJavaScript(`bpaHost.replacePreferences(${JSON.stringify(state.preferences)});null`,false);
       return result;
     } finally {
       const lease=diskState('sync-lease.json',null);if(lease?.requestId===requestId)diskWrite('sync-lease.json',null);

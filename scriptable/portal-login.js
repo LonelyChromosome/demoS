@@ -49,7 +49,8 @@ async function restoreAppAfterLogin(app,state,generation) {
   await app.loadHTML(localAppHTML(state.bundle),'https://bpa.local/');
   checkSyncGeneration(generation);
   if(state.closed)return;
-  await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))},{loginResume:true});null`,false);
+  state.preferences=readState('preferences.json');
+  await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(state.preferences)},{loginResume:true});null`,false);
   state.phase='app';wakeAppSession(state);
 }
 async function authenticatePortalInApp(app,generation) {

@@ -127,6 +127,16 @@ async function main(){
     });
     if(worker.calls.join(',')!=='payload,complete'||worker.syncs!==0||worker.records!==5)throw Error('Original worker save did not commit once: '+JSON.stringify(worker));
     fs.writeFileSync(qaDir+'/original-dart-worker.json',JSON.stringify({calls:worker.calls,syncs:worker.syncs,records:worker.records,note:'Original Dart transaction with synthetic data; not a device scheduling test'},null,2));
+    // A separately reopened presentation receives committed worker preferences
+    // without another QLDT fetch/save or a new launch animation.
+    await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'load'});
+    await page.evaluate(preferences=>window.bpaHost.init(preferences),committedPreferences);
+    await page.waitForSelector('canvas',{timeout:30000});
+    await page.locator('flt-semantics-placeholder').evaluate(element=>element.click());
+    await page.locator('[aria-label="Lịch học"]').or(page.getByText('Lịch học',{exact:true})).first().waitFor({state:'visible',timeout:30000});
+    await page.evaluate(preferences=>{window.bpaHost.replacePreferences(preferences);window.bpaHost.event('better_phenikaa/sync_worker','event',{type:'refresh'});},worker.preferences);
+    await page.getByText('Worker QA',{exact:true}).first().waitFor({state:'visible',timeout:30000});
+    if(await page.evaluate(()=>window.__bpaLoginSyncs)!==0)throw Error('Receiving a committed worker result started another sync');
     await require('./test_widget_web.cjs')(browser,root,qaDir);
     if(!assetRequests.some(p=>p.includes('tien_mon_premium/app_backgrounds/')))throw Error('Original premium background did not load from local assets');
     // Exercise the exact source HTML. This is not an NFC hardware test.

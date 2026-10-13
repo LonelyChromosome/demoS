@@ -239,9 +239,10 @@ async function handlePlatform(call,app) {
   }
   if(channel==='assistant_test'&&method==='trigger')return await assistantNotification(args);
   if(channel==='daily_sync') {
-    if(method==='syncReminders'){if(syncWorkerContext){syncWorkerContext.reminders=true;return null;}return await scheduleExamReminders();}
+    if(method==='syncReminders'){if(syncWorkerContext){syncWorkerContext.reminders=true;return null;}await ensureReminderAutomation();return await scheduleExamReminders();}
     if(method==='recordAppSyncSuccess'){
       writeState('sync-status.json',{lastSuccessAtMillis:Date.now()});
+      if(syncWorkerContext)syncWorkerContext.stale=true;else await scheduleStaleReminder(true);
       const event=examChangeEvent(preference('better_phenikaa_semester_difference_v1'));
       // Android foreground sync records exam notice without a system notification.
       if(event===4||event===5)writeState('exam-notice.json',{message:assistantTemplate(4),initialized:true});
@@ -255,8 +256,8 @@ async function handlePlatform(call,app) {
     if(method==='status')return readState('sync-status.json',{lastSuccessAtMillis:0});
     if(method==='examNotice')return readState('exam-notice.json',{message:null}).message;
     if(method==='clearReminders'){
-      await Notification.removePending((await Notification.allPending()).filter(n=>n.identifier.startsWith('bpa.exam.')||n.identifier==='bpa.stale'||n.identifier==='bpa.changes').map(n=>n.identifier));
-      await Notification.removeDelivered(['bpa.stale','bpa.changes']);writeState('exam-notice.json',{message:null});writeState('exam-reminders.json',{delivered:[],records:{}});return null;
+      await Notification.removePending((await Notification.allPending()).filter(n=>n.identifier.startsWith('bpa.exam.')||n.identifier==='bpa.stale'||n.identifier.startsWith('bpa.stale.')||n.identifier==='bpa.changes').map(n=>n.identifier));
+      await Notification.removeDelivered((await Notification.allDelivered()).filter(n=>n.identifier==='bpa.stale'||n.identifier.startsWith('bpa.stale.')||n.identifier==='bpa.changes').map(n=>n.identifier));writeState('sync-stale.json',{});writeState('exam-notice.json',{message:null});writeState('exam-reminders.json',{delivered:[],records:{}});return null;
     }
     if(method==='ackExamNotice'){
       writeState('exam-notice.json',{message:null,initialized:true});
@@ -312,8 +313,9 @@ async function handlePlatform(call,app) {
 }
 function installWidgetScripts(sourceOverride=null) {
   const source=sourceOverride||bpaFM.readString(module.filename);
-  const engine=source.replace(/\nif\(typeof Script!=='undefined'\)bpaMain\(\)/,"\nif(false)bpaMain()")+'\nmodule.exports={widgetCommand};\n';
+  const engine=source.replace(/\nif\(typeof Script!=='undefined'\)bpaMain\(\)/,"\nif(false)bpaMain()")+'\nmodule.exports={widgetCommand,reminderMaintenance};\n';
   bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA — WidgetEngine.js'),engine);
+  bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),'BPA — Nhắc lịch.js'),engine+'\nif(typeof Script!=="undefined")reminderMaintenance().then(result=>{Script.setShortcutOutput(JSON.stringify(result));Script.complete();}).catch(error=>{writeState("reminder-error.json",{code:error.code||"reminder_error",at:Date.now()});Script.complete();});\n');
   for(const [name,kind]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']]) {
     const content=source.replace(/const DEFAULT_KIND='(?:small|overview|widget2)';/,`const DEFAULT_KIND='${kind}';`);
     bpaFM.writeString(bpaFM.joinPath(bpaFM.documentsDirectory(),name+'.js'),content);
@@ -321,12 +323,14 @@ function installWidgetScripts(sourceOverride=null) {
 }
 async function openOriginalApp() {
   const bundle=await ensureLocalBundle(true);
+  if(preference('better_phenikaa_account_setup_complete_v1')===true)await ensureReminderAutomation();
   const app=new WebView();bootingApp=app;bootingBundle=bundle;
   await app.loadHTML(localAppHTML(bundle),'https://bpa.local/');
   const ready=await app.evaluateJavaScript('typeof bpaHost!=="undefined"&&typeof bpaStart==="function"',false);
   if(!ready)throw errorCode('web_build_unavailable','Bản giao diện BPA chưa sẵn sàng ở địa chỉ build.');
-  await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(readState('preferences.json'))});null`,false);
-  const state={phase:'app',epoch:0,closed:false,waiters:[],bundle,loginResume:null,failure:null};
+  const initialPreferences=readState('preferences.json');
+  await app.evaluateJavaScript(`bpaHost.init(${JSON.stringify(initialPreferences)});null`,false);
+  const state={phase:'app',epoch:0,closed:false,waiters:[],bundle,loginResume:null,failure:null,preferences:initialPreferences,syncRevision:readState('sync-revision.json',{}).requestId||null};
   appSessions.set(app,state);
   const jobs=new Set();
   const presentation=app.present(true).then(()=>{state.closed=true;syncGeneration++;if(state.pollInterrupt)state.pollInterrupt();wakeAppSession(state);});
@@ -338,7 +342,16 @@ async function openOriginalApp() {
     try {packet=await pollAppPacket(app,state);}
     catch(error){if(state.closed)break;if(epoch!==state.epoch||state.phase!=='app')continue;throw error;}
     if(!packet||state.closed||epoch!==state.epoch||state.phase!=='app')continue;
-    if(packet.preferences!==null)writeState('preferences.json',packet.preferences);
+    if(packet.preferences!==null){
+      const preferences=mergeWorkerPreferences(state.preferences,packet.preferences,readState('preferences.json'));
+      writeState('preferences.json',preferences);state.preferences=preferences;
+    }
+    const revision=readState('sync-revision.json',{}).requestId||null;
+    if(revision!==state.syncRevision){
+      state.syncRevision=revision;state.preferences=readState('preferences.json');
+      await app.evaluateJavaScript(`bpaHost.replacePreferences(${JSON.stringify(state.preferences)});null`,false);
+      await sendNativeEvent(app,'sync_worker','refresh');
+    }
     for(const asset of packet.assets||[]) {
       let result;
       try {
