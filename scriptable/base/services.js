@@ -13,6 +13,15 @@ function create(options){
   const end=Date.now()+15000;while(Date.now()<end){check();const raw=await view.evaluateJavaScript('window.result',false);if(raw){const r=JSON.parse(raw);if(r.error)throw Error(r.error);return r.pixels;}await delay(100);}throw Error('Đọc ảnh quá thời gian.');
  }
  function snapshot(){const s=preference('better_phenikaa_snapshot_v1');return {classes:(s?.records||[]).filter(r=>!r.isExam),exams:(s?.records||[]).filter(r=>r.isExam)};}
+ async function renderCaptureHTML(html,vendor,width,height){
+  if(typeof html!=='string'||html.length>24000000||!(width>=200&&width<=2000&&height>=200&&height<=3000))throw Error('Khung chụp không hợp lệ.');
+  const view=new WebView(),code=fm.readString(vendor).replace(/<\/script/gi,'<\\/script');
+  // A separate native WebView has no university document or inherited sandbox.
+  // Only the serialized BPA DOM and its embedded local media cross this boundary.
+  await view.loadHTML(html.replace('</body>','<script>'+code+'</script></body>'));
+  await view.evaluateJavaScript(`window.__capture=null;for(const e of document.querySelectorAll('[data-bpa-scroll]'))e.scrollTop=Number(e.dataset.bpaScroll);html2canvas(document.body,{scale:1.5,width:${width},height:${height},windowWidth:${width},windowHeight:${height},logging:false,backgroundColor:getComputedStyle(document.documentElement).backgroundColor}).then(c=>window.__capture={png:c.toDataURL('image/png').split(',')[1]}).catch(e=>window.__capture={error:String(e)});null`,false);
+  const end=Date.now()+20000;while(Date.now()<end){check();const info=await view.evaluateJavaScript('window.__capture?JSON.stringify({error:window.__capture.error,length:window.__capture.png?.length}):null',false);if(info){const r=JSON.parse(info);if(r.error)throw Error(r.error);if(!r.length||r.length>16000000)throw Error('Ảnh chụp quá lớn.');let result='';for(let at=0;at<r.length;at+=196608){check();result+=await view.evaluateJavaScript(`window.__capture.png.slice(${at},${at+196608})`,false);await delay(1);}return result;}await delay(100);}throw Error('Chụp màn hình quá thời gian.');
+ }
  const localISO=d=>{const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;},isoDay=d=>localISO(d).slice(0,10),addDays=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
  const scriptName=options.scriptName||readState('module-host.json').scriptName||'BPA Base';
  const actionURL=(action,kind='overview',id='main')=>'scriptable:///run?'+Object.entries({scriptName,action,kind,instance:id}).map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
@@ -40,7 +49,7 @@ function create(options){
   if(kind==='widgets'){for(const [name,id]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']])fm.writeString(fm.joinPath(fm.documentsDirectory(),name+'.js'),prefix+`await engine.runWidget(host,${JSON.stringify(id)});`);fm.writeString(fm.joinPath(fm.documentsDirectory(),'BPA — WidgetEngine.js'),prefix+'module.exports={widgetCommand:input=>engine.widgetCommand(host,input)};');}
   if(kind==='reminders')fm.writeString(fm.joinPath(fm.documentsDirectory(),'BPA — Nhắc lịch.js'),prefix+'await engine.runReminders(host);');
  }
- return {...options,fm,path,readState,writeState,preference,setPreference,setPreferences,sampleImage,snapshot,localISO,isoDay,addDays,actionURL,errorCode,pickManaged,renderBitmap,cardVFX,installRunner,check,delay,openApp(action='open'){Safari.open(actionURL(action));}};
+ return {...options,fm,path,readState,writeState,preference,setPreference,setPreferences,sampleImage,renderCaptureHTML,snapshot,localISO,isoDay,addDays,actionURL,errorCode,pickManaged,renderBitmap,cardVFX,installRunner,check,delay,openApp(action='open'){Safari.open(actionURL(action));}};
 }
 async function headless(host){const fm=FileManager.local(),runtime=importModule(host.runtime);let manager;const services=create({fm,runtime,release:host.release,scriptName:host.scriptName,runtimePath:host.runtime,catalogPath:host.catalog,servicesPath:host.services,async getManager(){return manager;},async installResource(){throw Error('Mở phần tương ứng trong BPA để tải tài nguyên lần đầu.');},async status(){},check(){}});manager=importModule(host.manager).create(services,JSON.parse(fm.readString(host.catalog)));return manager;}
 async function runWidget(host,kind,instance=null){const m=await headless(host),api=m.load('widgets'),input=args.queryParameters||{};if(input.action)await api.widgetAction(input.action,kind,input.instance||'main',{});const widget=await api.render(kind,instance||args.widgetParameter||'main');Script.setWidget(widget);if(!config.runsInWidget)await widget.presentMedium();Script.complete();}

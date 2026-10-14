@@ -3,12 +3,12 @@
   "scope": "cooc 1.0 base: in-app day/week calendar and verified QLDT sync",
   "files": {
     "runtime.js": {
-      "size": 15822,
-      "sha256": "f2f5e7673db8756abd125fa15287e405baae028a427c4dde01546c779b88b5bb"
+      "size": 16125,
+      "sha256": "549edf78079e051a75e372d1d4fb006db3774bc5fbe60ba727a831d0093d7b30"
     },
     "ui.html": {
-      "size": 21178,
-      "sha256": "da0cf2394ae5492ec08bb0c7edbeda1620441f1b296c560b4231b7014d243cca"
+      "size": 21434,
+      "sha256": "b919c0bf81bf49ea605905767944d9eeef868d0fbd344b6ddb87198648bae5ed"
     },
     "sync.js": {
       "size": 26619,
@@ -19,12 +19,12 @@
       "sha256": "952dcde9d9265446df8dc05a639028265753f041a0d41b8334115b0b3e7a3148"
     },
     "services.js": {
-      "size": 10890,
-      "sha256": "51db72d39d83e6ed00f4b0cd0c5c7873bc193d345d550912d602a80bc1abc2e7"
+      "size": 12559,
+      "sha256": "423f082330266be42d971fc02882be53d29a5dda6145f247b790f9953e176ae1"
     },
     "catalog.json": {
       "size": 12598,
-      "sha256": "caba88e0b7d76ade135930eca3bd59ce6f3cc5d9a6c56433ee27e0050b086c71"
+      "sha256": "eb654ae34ad6eb497d95e8e9ce310288a8685fc78e88ac8c15ff09b4103390e3"
     },
     "Roboto-Regular.ttf": {
       "size": 171676,

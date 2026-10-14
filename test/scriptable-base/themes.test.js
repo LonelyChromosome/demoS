@@ -29,3 +29,7 @@ test('clearing a decoded image cannot replace a successful sample with a late im
  const c=vm.createContext({module:{exports:{}},WebView:class{async loadHTML(){}async evaluateJavaScript(s,callback){assert.equal(callback,false);return vm.runInContext(s,browser);}}});vm.runInContext(fs.readFileSync('scriptable/base/services.js','utf8'),c);
  const api=c.module.exports.create({fm:{documentsDirectory:()=>'/docs',joinPath:(a,b)=>a+'/'+b,fileExists:()=>true,read:()=>({toBase64String:()=> '/9j/AA=='})},runtime:{},scriptName:'QA',async delay(){}});assert.deepEqual(Array.from(await api.sampleImage('/docs/BPA/files/image.jpg')),[1,2,3,255]);
 });
+test('native snapshot staging rejects stale or missing chunks before any theme mutation',async()=>{
+ const f=fixture();let p=await f.api.handle({op:'mix',colors:['#aabbcc','#112233']});const key=p.draft.id;await f.api.handle({op:'save',name:'Capture'});p=await f.api.handle({op:'prepare-delete',key});const token=p.deleteReady.token,old=structuredClone(f.values.get('theme.json'));
+ await assert.rejects(f.api.handle({op:'capture-part',token:'other',offset:0,chunk:'x'}),/hết hạn/);await assert.rejects(f.api.handle({op:'capture-part',token,offset:1,chunk:'x'}),/không hợp lệ/);await assert.rejects(f.api.handle({op:'capture-end',token,offset:0,width:390,height:844}),/chưa đủ/);const staged=await f.api.handle({op:'capture-part',token,offset:0,chunk:'<html></html>'});assert.equal(staged.defer,true);assert.deepEqual(f.values.get('theme.json'),old);
+});

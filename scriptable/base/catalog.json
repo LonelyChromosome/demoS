@@ -9,8 +9,8 @@
       "files": [
         {
           "path": "scriptable/base/modules/themes.js",
-          "size": 7496,
-          "sha256": "3e624805c0b6aae93432bddec92282937e1c23af0a7c89c2d3641f910096cd17"
+          "size": 8345,
+          "sha256": "6e054271b8324c42f27f2fb5c5e9970feef8450ead96b58653a7367a489d492b"
         },
         {
           "path": "scriptable/base/modules/theme-presets.json",
@@ -24,8 +24,8 @@
         },
         {
           "path": "scriptable/base/modules/theme-client.js",
-          "size": 14528,
-          "sha256": "079de63e15553a504f12c2b00f78301799fdd081e7b2c5ecd1b6351d9b774fc2"
+          "size": 16040,
+          "sha256": "0393db691789b0f840d3fe4a657f43c888cc3d68ecf7bee31e13cd14dbef83bd"
         },
         {
           "path": "web/widget-palette.js",

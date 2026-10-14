@@ -30,7 +30,7 @@
   if(p.revision!==revision){revision=p.revision;current=p;dialog.replaceChildren();node('h2','Giao diện');if(s.error){const e=node('p',s.message);e.className='theme-error';}if(p.draft)editor(p.draft);else {
    node('h3','Theme có sẵn');for(const preset of p.presets){const b=button((p.selected===preset.id?'✓ ':'')+preset.name,'preset',{key:preset.id});b.disabled=!preset.available;b.style.border='1px solid '+css(preset.primary);}
    node('h3','Tạo theme');button('Tạo từ 2 màu','mix',{colors:['#1747b5','#e9a531'],weights:[1,1],dark:'auto'});button('Tạo bảng màu từ ảnh','image',{dark:'auto'});button('Ảnh nền trong app','background');
-   node('h3','Lịch sử theme');if(!p.history.length)node('p','Chưa có theme tùy chỉnh.');for(const d of [...p.history].reverse()){const row=node('div');row.className='theme-row';node('strong',(p.selected==='custom:'+d.id?'✓ ':'')+d.name,row);swatches(d.tokens,row);button('Áp dụng','apply',{key:d.id},row);button('Sửa','edit',{key:d.id},row);button('Sao chép','copy',{key:d.id},row);const b=button('Xóa','prepare-delete',{key:d.id},row);b.onclick=()=>{if(!deleteBusy&&confirm('Xóa theme “'+d.name+'”?'))send('prepare-delete',{key:d.id});};}
+   node('h3','Lịch sử theme');if(!p.history.length)node('p','Chưa có theme tùy chỉnh.');for(const d of [...p.history].reverse()){const row=node('div');row.className='theme-row';node('strong',(p.selected==='custom:'+d.id?'✓ ':'')+d.name,row);swatches(d.tokens,row);button('Áp dụng','apply',{key:d.id},row);button('Sửa','edit',{key:d.id},row);button('Sao chép','copy',{key:d.id},row);const b=button('Xóa','prepare-delete',{key:d.id},row);b.onclick=()=>{if(deleteBusy)return;if(b.dataset.confirm==='yes')send('prepare-delete',{key:d.id});else{b.dataset.confirm='yes';b.textContent='Xác nhận xóa';const cancel=node('button','Hủy xóa',row);cancel.onclick=()=>{b.dataset.confirm='';b.textContent='Xóa';cancel.remove();};}};}
   }button('Đóng','close');const modules=document.getElementById('modulePanel');if(modules?.open)modules.close();if(!dialog.open)dialog.showModal();}
   for(const b of dialog.querySelectorAll('button'))b.disabled=s.busy||deleteBusy||(b.textContent.includes('Tiên Môn')&&!p.presets.find(v=>v.id==='tien_mon_premium')?.available);
   if(p.deleteReady&&!deleteBusy&&!s.error&&!attemptedDeletes.has(p.deleteReady.token)){attemptedDeletes.add(p.deleteReady.token);capture(p.deleteReady);}
@@ -39,10 +39,31 @@
  window.addEventListener('bpa-state',e=>{if(e.detail.panel==null&&dialog.open&&!e.detail.busy&&!deleteBusy)dialog.close();render(e.detail);});
  function cleanup(){clearTimeout(captureTimer);if(cover){const layer=cover.parentElement;cover.remove();layer?.remove();}cover=null;waitingToken=null;deleteBusy=false;for(const b of dialog.querySelectorAll('button'))b.disabled=!!api.state().busy;}
  async function capture(request){
-  deleteBusy=true;for(const b of dialog.querySelectorAll('button'))b.disabled=true;
-  try{const until=Date.now()+5000;while(typeof window.html2canvas!=='function'&&Date.now()<until)await new Promise(r=>setTimeout(r,50));if(typeof window.html2canvas!=='function')throw Error('Chưa nạp được hiệu ứng.');const canvas=await html2canvas(document.body,{scale:1.5,logging:false,backgroundColor:getComputedStyle(document.documentElement).backgroundColor,useCORS:false,ignoreElements:el=>el.tagName==='SCRIPT',onclone:doc=>{const originals=document.body.querySelectorAll('*'),clones=doc.body.querySelectorAll('*'),c=document.createElement('canvas');c.width=c.height=1;const x=c.getContext('2d');for(let i=0;i<Math.min(originals.length,clones.length);i++){const s=getComputedStyle(originals[i]);for(const k of ['color','backgroundColor','borderTopColor','borderBottomColor','borderLeftColor','borderRightColor']){const value=s[k];if(/^(color\(|okl|lab|lch)/.test(value)){x.clearRect(0,0,1,1);x.fillStyle=value;x.fillRect(0,0,1,1);const a=x.getImageData(0,0,1,1).data;clones[i].style[k]=`rgba(${a[0]},${a[1]},${a[2]},${a[3]/255})`;}}}} });if(!dialog.open)throw Error('Màn hình đã đóng.');cover=canvas;canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;pointer-events:auto';const layer=document.createElement('dialog');layer.style.cssText='position:fixed;inset:0;margin:0;padding:0;border:0;width:100%;height:100%;max-width:none;max-height:none;background:transparent;overflow:hidden';layer.addEventListener('cancel',e=>e.preventDefault());document.body.append(layer);layer.append(canvas);layer.showModal();waitingToken=request.token;captureTimer=setTimeout(()=>{if(waitingToken){cleanup();const e=node('p','Xóa quá thời gian. Mở lại lịch sử để kiểm tra kết quả.');e.className='theme-error';}},20000);send('delete',{key:request.id,token:request.token});}
-  catch(e){cleanup();const p=node('p','Chưa xóa theme: '+e.message);p.className='theme-error';}
+  deleteBusy=true;waitingToken=request.token;for(const b of dialog.querySelectorAll('button'))b.disabled=true;
+  try{
+   const root=document.documentElement.cloneNode(true),originals=[document.documentElement,...document.documentElement.querySelectorAll('*')],clones=[root,...root.querySelectorAll('*')],pixel=document.createElement('canvas');pixel.width=pixel.height=1;const px=pixel.getContext('2d');
+   for(let i=0;i<originals.length;i++){
+    const o=originals[i],n=clones[i],s=getComputedStyle(o);
+    for(const k of ['color','backgroundColor','borderTopColor','borderBottomColor','borderLeftColor','borderRightColor']){const v=s[k];if(/^(color\(|okl|lab|lch)/.test(v)){px.clearRect(0,0,1,1);px.fillStyle=v;px.fillRect(0,0,1,1);const a=px.getImageData(0,0,1,1).data;n.style[k]=`rgba(${a[0]},${a[1]},${a[2]},${a[3]/255})`;}}
+    if(o.scrollTop)n.dataset.bpaScroll=o.scrollTop;
+    if(o===dialog){const r=o.getBoundingClientRect();n.style.cssText+=`;position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;margin:0;max-height:none;max-width:none`;}
+   }
+   for(const e of root.querySelectorAll('script,iframe'))e.remove();
+   let html='<!doctype html>'+root.outerHTML;const blobs=[...new Set(html.match(/blob:[^\s"')]+/g)||[])];
+   for(const url of blobs){const blob=await (await fetch(url)).blob(),data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});html=html.split(url).join(data);}
+   if(html.length>24000000)throw Error('Màn hình có quá nhiều ảnh.');
+   captureTimer=setTimeout(()=>{if(waitingToken){cleanup();const e=node('p','Chụp màn hình quá thời gian; theme vẫn được giữ.');e.className='theme-error';}},40000);
+   for(let offset=0;offset<html.length;offset+=65536)api.transport({action:'theme-capture',op:'capture-part',token:request.token,offset,chunk:html.slice(offset,offset+65536)});
+   api.transport({action:'theme-capture',op:'capture-end',token:request.token,offset:html.length,width:innerWidth,height:innerHeight});
+  }catch(e){cleanup();const p=node('p','Chưa xóa theme: '+e.message);p.className='theme-error';}
  }
+ window.addEventListener('bpa-snapshot',async event=>{
+  if(!waitingToken||!current?.deleteReady||current.deleteReady.token!==waitingToken)return;
+  try{const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=event.detail.url;});if(!waitingToken)return;
+   const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;canvas.getContext('2d').drawImage(image,0,0);URL.revokeObjectURL(event.detail.url);cover=canvas;canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:auto';
+   const layer=document.createElement('dialog');layer.style.cssText='position:fixed;inset:0;margin:0;padding:0;border:0;width:100%;height:100%;max-width:none;max-height:none;background:transparent;overflow:hidden';layer.addEventListener('cancel',e=>e.preventDefault());document.body.append(layer);layer.append(canvas);layer.showModal();send('delete',{key:current.deleteReady.id,token:waitingToken});
+  }catch(error){cleanup();const p=node('p','Ảnh chụp chưa mở được; chưa xóa theme.');p.className='theme-error';}
+ });
  function playDust(snapshot){
   if(!snapshot)return;const canvas=document.createElement('canvas');canvas.width=snapshot.width;canvas.height=snapshot.height;canvas.style.cssText=snapshot.style.cssText;const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:false});
   const layer=snapshot.parentElement;if(!gl){snapshot.animate([{opacity:1},{opacity:0}],{duration:2400}).finished.finally(()=>layer.remove());return;}
