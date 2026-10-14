@@ -9,13 +9,23 @@
       "files": [
         {
           "path": "scriptable/base/modules/themes.js",
-          "size": 3025,
-          "sha256": "1f8965691b37057bc4ce13073af8f3c75303be65f74d31dba6028b0bb442accd"
+          "size": 7496,
+          "sha256": "3e624805c0b6aae93432bddec92282937e1c23af0a7c89c2d3641f910096cd17"
         },
         {
           "path": "scriptable/base/modules/theme-presets.json",
           "size": 5466,
           "sha256": "fdb33a471913b6033c4bc932c8789fe6b13077b03941e8a8f507cb201dc52e38"
+        },
+        {
+          "path": "scriptable/base/modules/theme-engine.js",
+          "size": 5675,
+          "sha256": "7a6c81282504d566a83b6045cfd5c2983a4fde6e1bb062662f917c3aa5b98e95"
+        },
+        {
+          "path": "scriptable/base/modules/theme-client.js",
+          "size": 14372,
+          "sha256": "7a5b7d75b762fc525797ae0e2f029eda259a7381d2d89ab01e1d2b55b17c1034"
         },
         {
           "path": "web/widget-palette.js",
@@ -28,7 +38,18 @@
           "sha256": "b2fb818c712ef4e0498db55a6c537fb47603d9df95b963993dd11320a81a8f4d"
         }
       ],
-      "assets": []
+      "assets": [
+        {
+          "path": "scriptable/base/modules/vendor/html2canvas.min.js",
+          "size": 198690,
+          "sha256": "669b68b0b6828272e5298a36f20a646b027b2cdf5b524ec05b2410009e75063e"
+        },
+        {
+          "path": "scriptable/base/modules/vendor/LICENSE.html2canvas",
+          "size": 1062,
+          "sha256": "f3eca6ff762533fa5a77caf954a143e48afa204668cf97dce758c45a9e006be3"
+        }
+      ]
     },
     {
       "id": "tienmon",

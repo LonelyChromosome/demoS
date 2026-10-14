@@ -3,7 +3,16 @@ function create(options){
  const fm=options.fm,root=fm.joinPath(fm.documentsDirectory(),'BPA'),path=name=>fm.joinPath(root,name),runtime=options.runtime;
  const readState=(name,fallback={})=>runtime.readJSON(fm,path(name),fallback),writeState=(name,value)=>runtime.saveAtomic(fm,path(name),value),preference=key=>runtime.prefValue(readState('preferences.json'),key);
  const check=options.check||(()=>{}),delay=options.delay|| (ms=>new Promise(resolve=>Timer.schedule(ms,false,resolve)));
- function setPreference(key,value){check();const p=readState('preferences.json');runtime.prefWrite(p,key,value);writeState('preferences.json',p);}
+ function setPreferences(values){check();const p=readState('preferences.json');for(const [key,value]of Object.entries(values))runtime.prefWrite(p,key,value);writeState('preferences.json',p);}
+ function setPreference(key,value){setPreferences({[key]:value});}
+ async function sampleImage(file){
+  const view=new WebView();await view.loadHTML('<html><body></body></html>');
+  await view.evaluateJavaScript('window.parts=[];window.result=null;null',false);
+  const data=fm.read(managed(file)).toBase64String();
+  for(let i=0;i<data.length;i+=196608){check();await view.evaluateJavaScript(`{const s=atob(${JSON.stringify(data.slice(i,i+196608))}),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);parts.push(a);}null`,false);await delay(1);}
+  await view.evaluateJavaScript(`(()=>{const u=URL.createObjectURL(new Blob(parts));parts=null;const im=new Image();im.onload=()=>{try{const scale=Math.min(1,96/im.naturalWidth,96/im.naturalHeight),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);result=JSON.stringify({pixels:Array.from(x.getImageData(0,0,c.width,c.height).data)});}catch(e){result=JSON.stringify({error:String(e)});}finally{URL.revokeObjectURL(u);im.src='';}};im.onerror=()=>{URL.revokeObjectURL(u);result=JSON.stringify({error:'Ảnh không đọc được.'});};im.src=u;})();null`,false);
+  const end=Date.now()+15000;while(Date.now()<end){check();const raw=await view.evaluateJavaScript('window.result',false);if(raw){const r=JSON.parse(raw);if(r.error)throw Error(r.error);return r.pixels;}await delay(100);}throw Error('Đọc ảnh quá thời gian.');
+ }
  function snapshot(){const s=preference('better_phenikaa_snapshot_v1');return {classes:(s?.records||[]).filter(r=>!r.isExam),exams:(s?.records||[]).filter(r=>r.isExam)};}
  const localISO=d=>{const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;},isoDay=d=>localISO(d).slice(0,10),addDays=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
  const scriptName=options.scriptName||readState('module-host.json').scriptName||'BPA Base';
@@ -32,7 +41,7 @@ function create(options){
   if(kind==='widgets'){for(const [name,id]of [['BPA — Nhỏ','small'],['BPA — Tổng quan','overview'],['BPA — Widget 2','widget2']])fm.writeString(fm.joinPath(fm.documentsDirectory(),name+'.js'),prefix+`await engine.runWidget(host,${JSON.stringify(id)});`);fm.writeString(fm.joinPath(fm.documentsDirectory(),'BPA — WidgetEngine.js'),prefix+'module.exports={widgetCommand:input=>engine.widgetCommand(host,input)};');}
   if(kind==='reminders')fm.writeString(fm.joinPath(fm.documentsDirectory(),'BPA — Nhắc lịch.js'),prefix+'await engine.runReminders(host);');
  }
- return {...options,fm,path,readState,writeState,preference,setPreference,snapshot,localISO,isoDay,addDays,actionURL,errorCode,pickManaged,renderBitmap,cardVFX,installRunner,check,delay,openApp(action='open'){Safari.open(actionURL(action));}};
+ return {...options,fm,path,readState,writeState,preference,setPreference,setPreferences,sampleImage,snapshot,localISO,isoDay,addDays,actionURL,errorCode,pickManaged,renderBitmap,cardVFX,installRunner,check,delay,openApp(action='open'){Safari.open(actionURL(action));}};
 }
 async function headless(host){const fm=FileManager.local(),runtime=importModule(host.runtime);let manager;const services=create({fm,runtime,release:host.release,scriptName:host.scriptName,runtimePath:host.runtime,catalogPath:host.catalog,servicesPath:host.services,async getManager(){return manager;},async installResource(){throw Error('Mở phần tương ứng trong BPA để tải tài nguyên lần đầu.');},async status(){},check(){}});manager=importModule(host.manager).create(services,JSON.parse(fm.readString(host.catalog)));return manager;}
 async function runWidget(host,kind,instance=null){const m=await headless(host),api=m.load('widgets'),input=args.queryParameters||{};if(input.action)await api.widgetAction(input.action,kind,input.instance||'main',{});const widget=await api.render(kind,instance||args.widgetParameter||'main');Script.setWidget(widget);if(!config.runsInWidget)await widget.presentMedium();Script.complete();}

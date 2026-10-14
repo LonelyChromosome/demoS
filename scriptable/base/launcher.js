@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // icon-color: deep-blue; icon-glyph: calendar-alt;
-// BPA cooc 1.0 base. Additional features are not initialized by this installer.
+// BPA cooc 1.0 base; optional features load on demand.
 const BASE_RELEASE=__RELEASE__;
 const BASE_NAME=module.filename.split('/').pop().replace(/\.js$/,'');
 const BASE_FILES=__FILES__;

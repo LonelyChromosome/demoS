@@ -23,5 +23,6 @@ module.exports=async function(browser,url,dir){
   const services=c.module.exports.create({fm,runtime,scriptName:'BPA Base',delay:ms=>new Promise(r=>setTimeout(r,ms)),check(){}}),resource=p=>p,ensureAsset=async p=>p,rendered=[];
   try{for(const kind of ['small','overview','widget2']){const value=await services.renderBitmap({kind,day:'2026-10-13',examMode:false,index:0,count:1,items:[snapshot.records[0]],hostHeight:158},resource,ensureAsset);if(!value.png||!value.hitBands?.length)throw Error('Widget '+kind+' missing bitmap or actions');rendered.push(kind);fs.writeFileSync(dir+'/module-widget-'+kind+'.png',Buffer.from(value.png,'base64'));}}finally{for(const view of views)await (await view.ready).close();}
   if(errors.length)throw Error(errors.join('\n'));fs.writeFileSync(dir+'/modules-result.json',JSON.stringify({errors,moduleCount:7,installCommand:install[0].id,alarmSelectedRecord:alarm[0].rowId,examMode:true,themePalette:true,chunkedMedia:true,callbackFreeWidgets:rendered,note:'Synthetic browser/native API QA; actual Scriptable, Clock, NFC and Home Screen still need device tests'},null,2));
+  await require('./test_base_themes.cjs')(browser,url,dir);
  }catch(error){await page.screenshot({path:dir+'/modules-failure.png'});throw error;}finally{await page.close();}
 };
