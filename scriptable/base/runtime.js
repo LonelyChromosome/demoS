@@ -11,7 +11,7 @@ function portalOverlay(ui,nonce,state){
  return `(()=>{
   if(!window.bpaBaseNative){
    const viewport=document.querySelector('meta[name=viewport]')||document.head.appendChild(document.createElement('meta'));viewport.name='viewport';viewport.content='width=device-width,initial-scale=1,viewport-fit=cover';
-   document.documentElement.style.setProperty('transform','none','important');document.documentElement.style.setProperty('zoom','1','important');
+   document.documentElement.style.setProperty('transform','none','important');document.documentElement.style.setProperty('zoom','1','important');for(const [property,value]of Object.entries({filter:'none',perspective:'none',contain:'none','will-change':'auto',height:'100%','min-height':'100%'}))document.documentElement.style.setProperty(property,value,'important');
    const frame=document.createElement('iframe');frame.id='bpa-base-frame';frame.setAttribute('sandbox','allow-scripts allow-forms');frame.style.cssText='all:initial;position:fixed;inset:0;width:100%;height:100%;box-sizing:border-box;border:0;z-index:2147483647;background:#f9fbff;transform:none;zoom:1';
    const queue=[];let current=${JSON.stringify(state)};
    function paint(value){const n=value.theme?.pageEnd,c=typeof n==='number'?'#'+(n>>>0).toString(16).padStart(8,'0').slice(2):'#f2f6ff';for(const el of [document.documentElement,document.body,frame])el.style.setProperty('background-color',c,'important');}

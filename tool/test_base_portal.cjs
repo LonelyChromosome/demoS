@@ -6,7 +6,7 @@ module.exports=async function(browser,url,dir){
  let ui=fs.readFileSync('scriptable/base/ui.html','utf8');ui=ui.replace('<style>',`<style>@font-face{font-family:Roboto;src:url(data:font/ttf;base64,${fs.readFileSync('scriptable/base/Roboto-Regular.ttf').toString('base64')})}`);
  try{
   await page.goto(url);await page.evaluate(()=>{
-   document.documentElement.style.height='600px';document.documentElement.style.backgroundColor='white';document.body.style.height='600px';document.querySelector('meta[name=viewport]').content='width=980';document.body.style.transform='scale(0.6)';document.body.style.transformOrigin='0 0';
+   document.documentElement.style.height='600px';document.documentElement.style.filter='blur(0px)';document.documentElement.style.contain='paint';document.documentElement.style.backgroundColor='white';document.body.style.height='600px';document.querySelector('meta[name=viewport]').content='width=980';document.body.style.transform='scale(0.6)';document.body.style.transformOrigin='0 0';
    window.__portalInstance='live-same-page';window.__portalCalls=[];window.__portalFail=false;
    window.edu={system:{tokenJWT:'QA-local-token',userId:'student',iM:'mode',appId:'',strChucNang_Id:'',makeRequest(options){
     if(this!==window.edu.system||window.__portalInstance!=='live-same-page')throw Error('Portal context replaced');const func=options.data.func;window.__portalCalls.push(func);
