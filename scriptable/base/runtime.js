@@ -14,9 +14,11 @@ function portalOverlay(ui,nonce,state){
    document.documentElement.style.setProperty('transform','none','important');document.documentElement.style.setProperty('zoom','1','important');
    const frame=document.createElement('iframe');frame.id='bpa-base-frame';frame.setAttribute('sandbox','allow-scripts allow-forms');frame.style.cssText='all:initial;position:fixed;inset:0;width:100%;height:100%;box-sizing:border-box;border:0;z-index:2147483647;background:#f9fbff;transform:none;zoom:1';
    const queue=[];let current=${JSON.stringify(state)};
-   window.bpaBaseNative={media:value=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},media:value},'*'),drain:()=>JSON.stringify(queue.splice(0)),set:value=>{current=value;frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');}};
+   function paint(value){const n=value.theme?.pageEnd,c=typeof n==='number'?'#'+(n>>>0).toString(16).padStart(8,'0').slice(2):'#f2f6ff';for(const el of [document.documentElement,document.body,frame])el.style.setProperty('background-color',c,'important');}
+   function fit(){frame.style.width=Math.max(window.innerWidth,document.documentElement.clientWidth)+'px';frame.style.height=Math.max(window.innerHeight,document.documentElement.clientHeight,window.visualViewport?.height||0)+'px';}fit();window.addEventListener('resize',fit);window.visualViewport?.addEventListener('resize',fit);paint(current);
+   window.bpaBaseNative={media:value=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},media:value},'*'),drain:()=>JSON.stringify(queue.splice(0)),set:value=>{current=value;paint(current);fit();frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');}};
    window.addEventListener('message',event=>{if(event.source===frame.contentWindow&&event.data?.bpa===${JSON.stringify(nonce)}&&event.data.command)queue.push(event.data.command);});
-   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');document.documentElement.append(frame);frame.srcdoc=${JSON.stringify(html)};
+   frame.onload=()=>frame.contentWindow.postMessage({bpa:${JSON.stringify(nonce)},state:current},'*');document.documentElement.append(frame);fit();frame.srcdoc=${JSON.stringify(html)};
   }else window.bpaBaseNative.set(${JSON.stringify(state)});
   return 'mounted';
  })()`;

@@ -3,12 +3,12 @@
   "scope": "cooc 1.0 base: in-app day/week calendar and verified QLDT sync",
   "files": {
     "runtime.js": {
-      "size": 14763,
-      "sha256": "2b447a9302e4e54d59ef32402dc2af2085d4be89cc43edf8b518dbe58e0d4bc5"
+      "size": 15391,
+      "sha256": "2a3bcfe467eabc338cc7d8465c63f55bb03a8b03a086d2a74d55f2dac9695d8e"
     },
     "ui.html": {
-      "size": 19676,
-      "sha256": "ef43d478fc82396440d86a45ee1c047e4827b53bbf0c0ae441c238d74a5ae42a"
+      "size": 19823,
+      "sha256": "54a242b568e932ff67ab0b1aaa551f49937b55c9e2d95f04800ead6241541f99"
     },
     "sync.js": {
       "size": 26619,
