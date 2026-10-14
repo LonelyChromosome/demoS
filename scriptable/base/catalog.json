@@ -24,8 +24,8 @@
         },
         {
           "path": "scriptable/base/modules/theme-client.js",
-          "size": 14372,
-          "sha256": "7a5b7d75b762fc525797ae0e2f029eda259a7381d2d89ab01e1d2b55b17c1034"
+          "size": 14528,
+          "sha256": "079de63e15553a504f12c2b00f78301799fdd081e7b2c5ecd1b6351d9b774fc2"
         },
         {
           "path": "web/widget-palette.js",
