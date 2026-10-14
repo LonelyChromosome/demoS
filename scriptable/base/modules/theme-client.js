@@ -24,7 +24,7 @@
   button('Lưu và áp dụng','save',()=>({name:name.value}));button('Hủy chỉnh sửa','cancel');
  }
  function render(s){
-  const p=s.panel;if(s.error&&cover){cleanup();}if(s.error&&dialog.open){let e=dialog.querySelector('.theme-error');if(!e){e=node('p',null);e.className='theme-error';}e.textContent=s.message;}
+  const p=s.panel;if(s.error&&deleteBusy){const request=current?.deleteReady;cleanup();if(request){const b=node('button','Xóa không hiệu ứng');b.onclick=()=>send('delete',{key:request.id,token:request.token});}}if(s.error&&dialog.open){let e=dialog.querySelector('.theme-error');if(!e){e=node('p',null);e.className='theme-error';}e.textContent=s.message;}
   if(p?.id!=='themes')return;
   if(p.deleteDone&&p.deleteDone===waitingToken){waitingToken=null;clearTimeout(captureTimer);playDust(cover);cover=null;deleteBusy=false;}
   if(p.revision!==revision){revision=p.revision;current=p;dialog.replaceChildren();node('h2','Giao diện');if(s.error){const e=node('p',s.message);e.className='theme-error';}if(p.draft)editor(p.draft);else {
@@ -46,7 +46,7 @@
     const o=originals[i],n=clones[i],s=getComputedStyle(o);
     for(const k of ['color','backgroundColor','borderTopColor','borderBottomColor','borderLeftColor','borderRightColor']){const v=s[k];if(/^(color\(|okl|lab|lch)/.test(v)){px.clearRect(0,0,1,1);px.fillStyle=v;px.fillRect(0,0,1,1);const a=px.getImageData(0,0,1,1).data;n.style[k]=`rgba(${a[0]},${a[1]},${a[2]},${a[3]/255})`;}}
     if(o.scrollTop)n.dataset.bpaScroll=o.scrollTop;
-    if(o===dialog){const r=o.getBoundingClientRect();n.style.cssText+=`;position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;margin:0;max-height:none;max-width:none`;}
+    if(o===dialog){const r=o.getBoundingClientRect();n.style.cssText+=`;position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;margin:0;max-height:none;max-width:none;z-index:1000000`;const backdrop=document.createElement('div');backdrop.style.cssText='position:fixed;inset:0;z-index:999999;background:'+getComputedStyle(o,'::backdrop').backgroundColor;n.before(backdrop);}
    }
    for(const e of root.querySelectorAll('script,iframe'))e.remove();
    let html='<!doctype html>'+root.outerHTML;const blobs=[...new Set(html.match(/blob:[^\s"')]+/g)||[])];
@@ -55,7 +55,7 @@
    captureTimer=setTimeout(()=>{if(waitingToken){cleanup();const e=node('p','Chụp màn hình quá thời gian; theme vẫn được giữ.');e.className='theme-error';}},40000);
    for(let offset=0;offset<html.length;offset+=65536)api.transport({action:'theme-capture',op:'capture-part',token:request.token,offset,chunk:html.slice(offset,offset+65536)});
    api.transport({action:'theme-capture',op:'capture-end',token:request.token,offset:html.length,width:innerWidth,height:innerHeight});
-  }catch(e){cleanup();const p=node('p','Chưa xóa theme: '+e.message);p.className='theme-error';}
+  }catch(e){cleanup();const p=node('p','Chưa xóa theme: '+e.message);p.className='theme-error';const b=node('button','Xóa không hiệu ứng');b.onclick=()=>send('delete',{key:request.id,token:request.token});}
  }
  window.addEventListener('bpa-snapshot',async event=>{
   if(!waitingToken||!current?.deleteReady||current.deleteReady.token!==waitingToken)return;
