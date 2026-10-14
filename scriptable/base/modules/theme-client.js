@@ -49,7 +49,7 @@
     if(o===dialog){const r=o.getBoundingClientRect();n.style.cssText+=`;position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;margin:0;max-height:none;max-width:none;z-index:1000000`;const backdrop=document.createElement('div');backdrop.style.cssText='position:fixed;inset:0;z-index:999999;background:'+getComputedStyle(o,'::backdrop').backgroundColor;n.before(backdrop);}
    }
    for(const e of root.querySelectorAll('script,iframe'))e.remove();
-   let html='<!doctype html>'+root.outerHTML;const blobs=[...new Set(html.match(/blob:[^\s"')]+/g)||[])];
+   let html='<!doctype html>'+root.outerHTML;const blobs=[...new Set(html.match(/blob:[^\s"')&]+/g)||[])];
    for(const url of blobs){const blob=await (await fetch(url)).blob(),data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});html=html.split(url).join(data);}
    if(html.length>24000000)throw Error('Màn hình có quá nhiều ảnh.');
    captureTimer=setTimeout(()=>{if(waitingToken){cleanup();const e=node('p','Chụp màn hình quá thời gian; theme vẫn được giữ.');e.className='theme-error';}},40000);
